@@ -1,4 +1,5 @@
 import tkinter as tk
+import json
 from support import *
 from WindowFrames.databasePickerFrame import DatabasePickerFrame
 
@@ -15,6 +16,10 @@ class App:
         self.window.config(bg=BACKGROUND_COLOR_1) # Background Color
         self.window.title("Ελληνική Αστυνομία, Ατομικοί Φάκελοι") # Window Title
 
+        """ Getting the App Data """
+        with open(APP_DATA_PATH, 'r', encoding='utf-8') as json_file:
+            self.app_data = json.load(json_file)
+
         """ Creating some usefull options about the Application """
         self.createOptions()
 
@@ -26,12 +31,13 @@ class App:
     
     def createOptions(self):
         self.options = {
+            "app-data": self.app_data,
             "window": self.window,
             "window-width": self.window_width,
             "window-height": self.window_height,
-            "bg-color": BACKGROUND_COLOR_1,
-            "bg-color-dark": BACKGROUND_COLOR_2,
-            "bg-color-very-dark": BACKGROUND_COLOR_3,
+            "theme-color": BACKGROUND_COLOR_1,
+            "theme-color-dark": BACKGROUND_COLOR_2,
+            "theme-color-very-dark": BACKGROUND_COLOR_3,
             "label-fg-color": "white"}
 
     def setWindowIcon(self):
