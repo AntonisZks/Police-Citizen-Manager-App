@@ -8,6 +8,7 @@ import tkinter as tk
 import json
 from support import *
 from WindowFrames.databasePickerFrame import DatabasePickerFrame
+from WindowFrames.mainMenuFrame import MainMenuFrame
 
 # The class App stands for the main application
 class App:
@@ -55,9 +56,13 @@ class App:
         self.__createOptions()
 
         # Creating the frames used by the main window
-        self.__createFrames() # Create the frames
+        self.createFrames() # Create the frames
 
-    def __createFrames(self) -> None:
+        # Set the active frame
+        self.active_frame = None
+        self.setActiveFrame(self.databasePickerFrame)
+
+    def createFrames(self) -> None:
         """
         The __createFrames() method creates all the frames used by the application.
         By default the first frame ever used is the DatabasePickerFrame which gives the user
@@ -65,6 +70,21 @@ class App:
 
         """
         self.databasePickerFrame = DatabasePickerFrame(self.options)
+        self.mainMenuFrame = MainMenuFrame(self.options)
+
+    def setActiveFrame(self, frame: tk.Frame) -> None:
+        """
+        The setActiveFrame() method sets the given frame as an active one to the application.
+
+        Args:
+            frame (Frame): The frame passed in order to be set as active
+        
+        """
+        if self.active_frame is not None:
+            self.active_frame.destroy()
+        
+        self.active_frame = frame
+        self.active_frame.build()
     
     def __createOptions(self) -> None:
         """
@@ -74,6 +94,7 @@ class App:
         """
         self.options = {
             "app-data": self.app_data,
+            "object": self,
             "window": self.window,
             "window-width": self.window_width,
             "window-height": self.window_height,
@@ -128,11 +149,11 @@ if __name__ == '__main__':
     myApp = App()
     myApp.run()
     
-    attributes = vars(myApp.databasePickerFrame)
-    attribute_types = {attr: type(value).__name__ for attr, value in attributes.items()}
-    for attr, attr_type in attribute_types.items():
-        print(f"Attribute: {attr}, type: {attr_type}")
+    # attributes = vars(myApp.databasePickerFrame)
+    # attribute_types = {attr: type(value).__name__ for attr, value in attributes.items()}
+    # for attr, attr_type in attribute_types.items():
+    #     print(f"Attribute: {attr}, type: {attr_type}")
 
-    methods = [method for method in dir(myApp.databasePickerFrame) if callable(getattr(myApp.databasePickerFrame, method))]
-    for method in methods:
-        print("Method:", method)
+    # methods = [method for method in dir(myApp.databasePickerFrame) if callable(getattr(myApp.databasePickerFrame, method))]
+    # for method in methods:
+    #     print("Method:", method)

@@ -67,17 +67,23 @@ class DatabasePickerFrame:
         are being build while some additional data are being initialized such as images and some options.
 
         """
+        # Creating the actual frame
+        self.parent_widget = data['window'] # The parent widget is going to be the main window
+        self.app = data['object'] # Storing the application object
+        self.frame = tk.Frame(self.parent_widget, bg=data['theme-color'])
+        self.frame.pack()
+        
         # Setup the header, body, and footer options and initialize the images used
         self.__setupStructureOptions(data)
         self.__initializeImages()
 
-        # Creating the actual frame
-        self.parent_widget = self.parent_data['window'] # The parent widget is going to be the main window
-        self.frame = tk.Frame(self.parent_widget, bg=self.parent_data['theme-color']) # creating the actual frame
-        self.frame.pack()
-
-        # Creating the structure of the frame (Header, Body, Footer)
+    def build(self) -> None:
+        """The build() method builds the actual frame"""
         self.__buildStructure()
+
+    def destroy(self) -> None:
+        """The destroy() method destroys the frame"""
+        self.frame.destroy()
 
     def __initializeImages(self) -> None:
         """
@@ -97,6 +103,7 @@ class DatabasePickerFrame:
         
         """
         self.parent_data = data
+        self.__createExcelFileButtonContextMenu() # Create the context menu for each button
 
         # Setting up the Header Options
         self.header_options = {
@@ -121,6 +128,10 @@ class DatabasePickerFrame:
             "font": ('Arial', round(0.018*max(self.parent_data['window-width'], self.parent_data['window-height'])))
         }
 
+    def gotoMainMenu(self) -> None:
+        """The gotoMainMenu() method changes the active frame to the Main Menu one and also stores the active database of the application"""
+        self.app.setActiveFrame(self.app.mainMenuFrame)
+
     def __createExcelFileButton(self, parent: tk.Tk, path: str) -> tk.Button:
         """
         The __createExcelFileButton() creates a button corresponding to an Excel File.
@@ -134,7 +145,7 @@ class DatabasePickerFrame:
 
         """
         button_width = round(0.022*self.parent_data['window-width'])
-        new_button = tk.Button(parent, text=getFileName(path), font=self.body_options['files-font'], width=button_width)
+        new_button = tk.Button(parent, text=getFileName(path), font=self.body_options['files-font'], width=button_width, command=self.gotoMainMenu)
         return new_button
 
     def __addExcelFile(self) -> None:
@@ -253,8 +264,6 @@ class DatabasePickerFrame:
         self.__createBodyFrame() # Then create the body
         self.__createFooterFrame() # Finally create the footer
 
-        self.__createExcelFileButtonContextMenu() # Create the context menu for each button
-
         # Getting the stored databases
         stored_databases = self.parent_data['app-data']['stored-databases']
 
@@ -286,8 +295,8 @@ class DatabasePickerFrame:
         """
         for child_widget in self.frame.winfo_children():
             child_widget.destroy()
-
         self.__buildStructure()
+        self.__setupStructureOptions(self.parent_data)
 
     def __createHeaderFrame(self) -> None:
         """

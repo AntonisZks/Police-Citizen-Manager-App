@@ -110,6 +110,10 @@ BACKGROUND_COLOR_3 = "#0D2750"
 # Defining all the images used for the Application
 POLICE_LOGO_PNG_PATH = resourcePath("..\\Assets\\Images\\greek_police_logo.png")
 ADD_PNG_PATH = resourcePath("..\\Assets\\Images\\add.png")
+CHANGE_PNG_PATH = resourcePath("..\\Assets\\Images\\change.png")
+SEARCH_PNG_PATH = resourcePath("..\\Assets\\Images\\search.png")
+INSERT_PNG_PATH = resourcePath("..\\Assets\\Images\\insert.png")
+UPDATE_PNG_PATH = resourcePath("..\\Assets\\Images\\update.png")
 
 # Defining the App Data path
 APP_DATA_PATH = resourcePath('..\\Data\\appData.json')
