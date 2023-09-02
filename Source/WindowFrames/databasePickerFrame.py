@@ -8,8 +8,8 @@ from tkinter import ttk, filedialog, messagebox
 class DatabasePickerFrame:
     def __init__(self, data: dict[str, any]) -> None:
         # Setup the header, body, and footer options and initialize the images used
-        self.setupStructureOptions(data)
-        self.initializeImages()
+        self.__setupStructureOptions(data)
+        self.__initializeImages()
 
         # Creating the actual frame
         self.parent_widget = self.parent_data['window'] # The parent widget is going to be the main window
@@ -17,13 +17,13 @@ class DatabasePickerFrame:
         self.frame.pack()
 
         # Creating the structure of the frame (Header, Body, Footer)
-        self.buildStructure()
+        self.__buildStructure()
 
-    def initializeImages(self) -> None:
+    def __initializeImages(self) -> None:
         self.police_logo_image = tk.PhotoImage(file=self.header_options['image-path'])
         self.add_image = tk.PhotoImage(file=self.footer_options['add-button-image-path'])
 
-    def setupStructureOptions(self, data: dict[str, any]) -> None:
+    def __setupStructureOptions(self, data: dict[str, any]) -> None:
         self.parent_data = data
 
         # Setting up the Header Options
@@ -49,23 +49,12 @@ class DatabasePickerFrame:
             "font": ('Arial', round(0.018*max(self.parent_data['window-width'], self.parent_data['window-height'])))
         }
 
-    def onMousewheel(self, event: any) -> None:
-        # Get the current scroll position (as a fraction) relative to the maximum scroll
-        current_scroll_frac = self.file_picker_area.yview()[0]
-
-        if event.delta > 0:  # Scrolling upwards
-            if current_scroll_frac <= 0.0: return  # Don't scroll further up if already at the top
-            self.file_picker_area.yview_scroll(int(-1*(event.delta/120)), "units")
-        else:  # Scrolling downwards
-            if current_scroll_frac >= 1.0: return  # Don't scroll further down if already at the bottom
-            self.file_picker_area.yview_scroll(int(-1*(event.delta/120)), "units")
-
-    def createFileButton(self, parent: tk.Widget, path: str) -> tk.Button:
+    def __createFileButton(self, parent: tk.Widget, path: str) -> tk.Button:
         button_width = round(0.022*self.parent_data['window-width'])
         new_button = tk.Button(parent, text=getFileName(path), font=self.body_options['files-font'], width=button_width)
         return new_button
 
-    def addFile(self) -> None:
+    def __addFile(self) -> None:
         filetypes = (("Excel files", "*.xls"), ("Excel files", "*.xlsx")) # Define the available file types
 
         new_file_path = filedialog.askopenfilename(title="Επιλογή Αρχείου", filetypes=filetypes)
@@ -84,9 +73,9 @@ class DatabasePickerFrame:
             with open(APP_DATA_PATH, 'w', encoding='utf-8') as json_file:
                 json.dump(app_data, json_file)
 
-        self.rebuildStructure()
+        self.__rebuildStructure()
 
-    def openFileFolder(self, index: int) -> None:
+    def __openFileFolder(self, index: int) -> None:
         with open(APP_DATA_PATH, 'r', encoding='utf-8') as json_file:
             app_data = json.load(json_file)
 
@@ -94,7 +83,7 @@ class DatabasePickerFrame:
         folder_path = os.path.dirname(file_path)
         os.startfile(folder_path)
 
-    def deleteFileButton(self, button: tk.Button, index: int) -> None:
+    def __deleteFileButton(self, button: tk.Button, index: int) -> None:
         if messagebox.askyesno("Αφαίρεση Προεπιλεγμένου Αρχείου", "Θέλετε σίγουρα να αφαιρέσετε το αρχείο;"):
             button.destroy()
             with open(APP_DATA_PATH, 'r', encoding='utf-8') as json_file:
@@ -104,16 +93,16 @@ class DatabasePickerFrame:
 
             with open(APP_DATA_PATH, 'w', encoding='utf-8') as json_file:
                 json.dump(app_data, json_file)
-            self.rebuildStructure()
+            self.__rebuildStructure()
 
-    def openExcelFile(self, index: int) -> None:
+    def __openExcelFile(self, index: int) -> None:
         with open(APP_DATA_PATH, 'r', encoding='utf-8') as json_file:
             app_data = json.load(json_file)
 
         file_path = app_data['stored-databases'][index]
         os.startfile(file_path)
 
-    def createContextMenu(self) -> None:
+    def __createContextMenu(self) -> None:
         # Create a context menu for each file button when the user right clicks on it
         self.button_context_menu = tk.Menu(self.frame, tearoff=False)
         self.button_context_menu.add_command(label="Άνοιγμα Excel")
@@ -121,17 +110,18 @@ class DatabasePickerFrame:
         self.button_context_menu.add_separator()
         self.button_context_menu.add_command(label='Αφαίρεση Αρχείου')
 
-    def showContextMenu(self, event, button, index) -> None:
+    def __showContextMenu(self, event, button, index) -> None:
         self.button_context_menu.post(event.x_root, event.y_root)
-        self.button_context_menu.entryconfigure(0, command=lambda: self.openExcelFile(index))
-        self.button_context_menu.entryconfigure(1, command=lambda: self.openFileFolder(index))
-        self.button_context_menu.entryconfigure(3, command=lambda: self.deleteFileButton(button, index))
+        self.button_context_menu.entryconfigure(0, command=lambda: self.__openExcelFile(index))
+        self.button_context_menu.entryconfigure(1, command=lambda: self.__openFileFolder(index))
+        self.button_context_menu.entryconfigure(3, command=lambda: self.__deleteFileButton(button, index))
 
-    def buildStructure(self) -> None:
-        self.createHeaderFrame() # First create the header
-        self.createBodyFrame() # Then create the body
-        self.createFooterFrame() # Finally create the footer
-        self.createContextMenu() # Create the context menu for each button
+    def __buildStructure(self) -> None:
+        self.__createHeaderFrame() # First create the header
+        self.__createBodyFrame() # Then create the body
+        self.__createFooterFrame() # Finally create the footer
+
+        self.__createContextMenu() # Create the context menu for each button
 
         # Getting the stored databases
         stored_databases = self.parent_data['app-data']['stored-databases']
@@ -151,18 +141,18 @@ class DatabasePickerFrame:
         button_gap = round(0.015*self.parent_data['window-width'])
         for index in range(len(stored_databases)):
             row, column = index // 3, index % 3
-            new_button = self.createFileButton(self.file_picker_frame, stored_databases[index])
+            new_button = self.__createFileButton(self.file_picker_frame, stored_databases[index])
             new_button.grid(row=row, column=column, padx=button_gap+5, pady=button_gap+5)
-            new_button.bind('<MouseWheel>', self.onMousewheel)
-            new_button.bind('<Button-3>', lambda event, button=new_button, i=index: self.showContextMenu(event, button, i))
+            new_button.bind('<MouseWheel>', lambda e: onMousewheel(e, self.file_picker_area))
+            new_button.bind('<Button-3>', lambda event, button=new_button, i=index: self.__showContextMenu(event, button, i))
 
-    def rebuildStructure(self) -> None:
+    def __rebuildStructure(self) -> None:
         for child_widget in self.frame.winfo_children():
             child_widget.destroy()
 
-        self.buildStructure()
+        self.__buildStructure()
 
-    def createHeaderFrame(self) -> None:
+    def __createHeaderFrame(self) -> None:
         self.header = tk.Frame(self.frame, bg=self.parent_data['theme-color']) # Creating the header frame
 
         # Creating the Header Label
@@ -182,7 +172,7 @@ class DatabasePickerFrame:
         self.header_label.pack()
         self.header.pack()
 
-    def createBodyFrame(self) -> None:
+    def __createBodyFrame(self) -> None:
         self.body = tk.Frame(self.frame, bg=self.parent_data['theme-color']) # Creating the body frame
 
         # Creating the Body Label Message
@@ -203,11 +193,11 @@ class DatabasePickerFrame:
         )
 
         self.file_picker_area.bind('<Configure>', lambda e: self.file_picker_area.configure(scrollregion=self.file_picker_area.bbox("all")))
-        self.file_picker_area.bind('<MouseWheel>', self.onMousewheel)
+        self.file_picker_area.bind('<MouseWheel>', lambda e: onMousewheel(e, self.file_picker_area))
 
         self.file_picker_frame = ttk.Label(self.file_picker_area, background=self.parent_data['theme-color-dark'])
         self.file_picker_area.create_window((0, 0), window=self.file_picker_frame, anchor=tk.NW)
-        self.file_picker_frame.bind('<MouseWheel>', self.onMousewheel)
+        self.file_picker_frame.bind('<MouseWheel>', lambda e: onMousewheel(e, self.file_picker_area))
 
         # Creating a scrollbar for the file picker area
         self.file_picker_scrollbar = tk.Scrollbar(self.file_picker_area, orient=tk.VERTICAL, command=self.file_picker_area.yview)
@@ -219,7 +209,7 @@ class DatabasePickerFrame:
         self.file_picker_scrollbar.place(relx=1, rely=0, relheight=1, anchor=tk.NE)
         self.body.pack()
 
-    def createFooterFrame(self) -> None:
+    def __createFooterFrame(self) -> None:
         self.footer = tk.Frame(self.frame, bg=self.parent_data['theme-color']) # Creating the footer frame
 
         # Creating the 'Add File' button
@@ -231,7 +221,7 @@ class DatabasePickerFrame:
             image=self.add_file_image,
             compound=tk.LEFT,
             padx=round(0.7*self.footer_options['font'][1]),
-            command=self.addFile
+            command=self.__addFile
         )
 
         # Packing the footer and its widgets

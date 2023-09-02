@@ -1,3 +1,4 @@
+import tkinter as tk
 import sys
 import os
 
@@ -31,6 +32,18 @@ def textSpaced(text, times=1):
 def getFileName(file_path):
     if file_path[len(file_path)-1] == 's': return os.path.basename(file_path)[:-4]
     else: return os.path.basename(file_path)[:-5]
+
+""" The onMousewheel function controls the behavious of the mouse wheel scrolling """
+def onMousewheel(event: any, canvas: tk.Canvas) -> None:
+    # Get the current scroll position (as a fraction) relative to the maximum scroll
+    current_scroll_frac = canvas.yview()[0]
+
+    if event.delta > 0:  # Scrolling upwards
+        if current_scroll_frac <= 0.0: return  # Don't scroll further up if already at the top
+        canvas.yview_scroll(int(-1*(event.delta/120)), "units")
+    else:  # Scrolling downwards
+        if current_scroll_frac >= 1.0: return  # Don't scroll further down if already at the bottom
+        canvas.yview_scroll(int(-1*(event.delta/120)), "units")
 
 """ Defining all the colors used for the Application """
 BACKGROUND_COLOR_1 = "#2A508C"
