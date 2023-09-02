@@ -64,7 +64,7 @@ class DatabasePickerFrame:
     def __init__(self, data: dict[str, any]) -> None:
         """
         The constructor of the DatabasePickerFrame class. Here the actual frame and the main structure
-        are being build while some additional data is being initialized such as images and some options.
+        are being build while some additional data are being initialized such as images and some options.
 
         """
         # Setup the header, body, and footer options and initialize the images used

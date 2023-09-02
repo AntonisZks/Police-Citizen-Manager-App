@@ -30,7 +30,7 @@ def resourcePath(relative_path: str) -> str:
 
     return os.path.join(base_path, relative_path)
 
-def resizeImage(img: tk.PhotoImage, desired_size: int):
+def resizeImage(img: tk.PhotoImage, desired_size: int) -> tk.PhotoImage:
     """
     The resizeImage() function is used to resize an image according to a given size. This function is often used in situations
     where we want to add an image in the application.
@@ -49,7 +49,7 @@ def resizeImage(img: tk.PhotoImage, desired_size: int):
     resized_img = img.subsample(width_factor, height_factor)
     return resized_img
 
-def textSpaced(text, times=1):
+def textSpaced(text: str, times:int = 1) -> str:
     """
     The textSpaced() function is used to return a given string but with spaces. The function let the user select the
     number of spaces he/she wants the string to have.
@@ -68,7 +68,7 @@ def textSpaced(text, times=1):
         new_text += text[i]
     return new_text
 
-def getFileName(file_path):
+def getFileName(file_path: str) -> str:
     """
     The getFileName() function returns the name of the given file path.
 

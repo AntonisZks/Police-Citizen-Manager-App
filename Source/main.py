@@ -117,7 +117,7 @@ class App:
 
     def run(self) -> None:
         """
-        The run() method is called when the application need to run. It calls the mainloop() method
+        The run() method is called when the application needs to run. It calls the mainloop() method
         of the window object.
 
         """
