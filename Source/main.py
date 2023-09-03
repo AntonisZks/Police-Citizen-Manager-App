@@ -1,5 +1,5 @@
 """
-The main.py file contains the basic class that corresponds to the Application with its methods. It also contain the main code
+The 'main.py' file contains the basic class that corresponds to the Application with its methods. It also contain the main code
 the program starts from. In order to start the application we create an App object and then we run it calling the run() method.
 
 """
@@ -40,6 +40,7 @@ class App:
 
         """
         self.window = tk.Tk() # Initialize the main window
+        self.window.protocol("WM_DELETE_WINDOW", self.__onClosing)
 
         # Setting the options of the main window
         self.__setWindowIcon() # Window Icon
@@ -61,6 +62,21 @@ class App:
         # Set the active frame
         self.active_frame = None
         self.setActiveFrame(self.databasePickerFrame)
+
+    def __onClosing(self) -> None:
+        """
+        The __onClosing() method is called when the user decides to close the application. When this happens the program is making
+        sure that the active database of the application is being removed, so as to not leaving useless data behind. This function
+        is responsible for this work.
+        
+        """
+        self.app_data['active-database'] = "" # Modify the active database and make it empty
+
+        # Add the modified application data in the json file
+        with open(APP_DATA_PATH, 'w', encoding='utf-8') as json_file:
+            json.dump(self.app_data, json_file)
+
+        self.window.destroy() # And of course destroy the main window and terminate the application
 
     def createFrames(self) -> None:
         """

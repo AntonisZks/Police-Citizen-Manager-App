@@ -1,5 +1,5 @@
 """
-The databaseFilePickerFrame.py file contains the basic class corresponding to the DatabasePickerFrame and its methods.
+The 'databaseFilePickerFrame.py' file contains the basic class corresponding to the DatabasePickerFrame and its methods.
 When the application starts running, this is the first frame that is going to be appeared on the user's screen letting him/her
 select which database he/she wants to work with. It is important that whenever we say database we basically mean simple
 Excel Files (.xls, .xlsx). The first time the application will run on a machine, there will be no stored databases and the user
@@ -128,25 +128,45 @@ class DatabasePickerFrame:
             "font": ('Arial', round(0.018*max(self.parent_data['window-width'], self.parent_data['window-height'])))
         }
 
-    def gotoMainMenu(self) -> None:
-        """The gotoMainMenu() method changes the active frame to the Main Menu one and also stores the active database of the application"""
+    def __setActiveDatabase(self, database_path: str) -> None:
+        """
+        The __setActiveDatabase() method is used to set the active database of the application
+
+        Args:
+            database_path (str): The full path to the database (Excel File)
+        """
+        # Updating the application data in the program and save them in a json file
+        self.parent_data['app-data']['active-database'] = database_path
+        with open(APP_DATA_PATH, 'w', encoding='utf-8') as json_file:
+            json.dump(self.parent_data['app-data'], json_file)
+
+
+    def __gotoMainMenu(self) -> None:
+        """The __gotoMainMenu() method changes the active frame to the Main Menu one and also stores the active database of the application"""
         self.app.setActiveFrame(self.app.mainMenuFrame)
 
-    def __createExcelFileButton(self, parent: tk.Tk, path: str) -> tk.Button:
+    def __createExcelFileButton(self, parent: tk.Tk, database_path: str) -> tk.Button:
         """
         The __createExcelFileButton() creates a button corresponding to an Excel File.
 
         Args:
             parent (Tk): The parent widget of the frame. It is always the main window of the application
-            path (str): The path corresponding to the Excel File in the computer
+            database_path (str): The path corresponding to the Excel File in the computer
 
         Returns:
             Button: The final button ready to be used
 
         """
         button_width = round(0.022*self.parent_data['window-width'])
-        new_button = tk.Button(parent, text=getFileName(path), font=self.body_options['files-font'], width=button_width, command=self.gotoMainMenu)
-        return new_button
+        newExcelFileButton = tk.Button(
+            parent, 
+            text=getFileName(database_path), 
+            font=self.body_options['files-font'], 
+            width=button_width, 
+            command=lambda: f"{self.__setActiveDatabase(database_path)}{self.__gotoMainMenu()}"
+        )
+        
+        return newExcelFileButton
 
     def __addExcelFile(self) -> None:
         """
