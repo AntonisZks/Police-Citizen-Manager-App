@@ -79,8 +79,11 @@ def getFileName(file_path: str) -> str:
         str: The name of the file
     
     """
-    if file_path[len(file_path)-1] == 's': return os.path.basename(file_path)[:-4]
-    else: return os.path.basename(file_path)[:-5]
+    try:
+        if file_path[len(file_path)-1] == 's': return os.path.basename(file_path)[:-4]
+        else: return os.path.basename(file_path)[:-5]
+    except IndexError:
+        return
 
 def onMousewheel(event: any, canvas: tk.Canvas) -> None:
     """
