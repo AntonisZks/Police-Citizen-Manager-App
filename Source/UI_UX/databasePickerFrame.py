@@ -73,10 +73,6 @@ class DatabasePickerFrame(Frame):
         """
         # Initializing the basic frame
         super().__init__(app_data)
-        
-        # Setup the header, body, and footer options and initialize the images used
-        self._setupStructureOptions(self.application_data)
-        self._initializeImages()
 
     def _initializeImages(self) -> None:
         """

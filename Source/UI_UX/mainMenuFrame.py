@@ -77,10 +77,6 @@ class MainMenuFrame(Frame):
         # Initializing the basic frame
         super().__init__(app_data)
 
-        # Setup the header, body, and footer options and initialize the images used
-        self._setupStructureOptions(self.application_data)
-        self._initializeImages()
-
     def _initializeImages(self) -> None:
         """
         The _initializeImages() method initializes all the images used in the frame.

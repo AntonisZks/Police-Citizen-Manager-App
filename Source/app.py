@@ -10,6 +10,7 @@ from support import *
 from UI_UX.frame import Frame
 from UI_UX.databasePickerFrame import DatabasePickerFrame
 from UI_UX.mainMenuFrame import MainMenuFrame
+from UI_UX.searchFrame import SearchFrame
 
 # The class App stands for the main application
 class App:
@@ -62,7 +63,7 @@ class App:
 
         # Set the active frame
         self.active_frame = None
-        self.setActiveFrame(self.databasePickerFrame)
+        self.setActiveFrame(self.searchFrame)
 
     def __onClosing(self) -> None:
         """
@@ -88,6 +89,7 @@ class App:
         """
         self.databasePickerFrame = DatabasePickerFrame(self.options)
         self.mainMenuFrame = MainMenuFrame(self.options)
+        self.searchFrame = SearchFrame(self.options)
 
     def setActiveFrame(self, frame: Frame) -> None:
         """
