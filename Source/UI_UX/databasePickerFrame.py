@@ -12,11 +12,12 @@ in the middle of the screen, the user works with this database and we head over 
 import json
 import tkinter as tk
 from support import *
+from .frame import Frame
 from tkinter import ttk, filedialog, messagebox
         
 
 # The DatabasePickerFrame class stands for the starting frame of the Application
-class DatabasePickerFrame:
+class DatabasePickerFrame(Frame):
     """
     The DatabasePickerFrame class represents the starting frame of the application. The frame allows the user to
     choose which database he/she wants to work with. It has a basic UX Structure which is made up of three child frames.
@@ -66,32 +67,18 @@ class DatabasePickerFrame:
         The constructor of the DatabasePickerFrame class. Here the actual frame and the main structure
         are being build while some additional data are being initialized such as images and some options.
 
+        Args:
+            data (dict[str, any]): The data of the parent widget
+
         """
-        # Creating the actual frame
-        self.parent_widget = data['window'] # The parent widget is going to be the main window
-        self.app = data['object'] # Storing the application object
-        self.frame = tk.Frame(self.parent_widget, bg=data['theme-color'])
-        self.frame.pack()
+        # Initializing the basic frame
+        super().__init__(data)
         
         # Setup the header, body, and footer options and initialize the images used
-        self.__setupStructureOptions(data)
-        self.__initializeImages()
+        self._setupStructureOptions(data)
+        self._initializeImages()
 
-    def build(self) -> None:
-        """
-        The build() method builds the actual frame
-        
-        """
-        self.__buildStructure()
-
-    def destroy(self) -> None:
-        """
-        The destroy() method destroys the frame
-        
-        """
-        self.frame.destroy()
-
-    def __initializeImages(self) -> None:
+    def _initializeImages(self) -> None:
         """
         The __initializeImages() method initializes all the images used in the frame.
 
@@ -99,7 +86,7 @@ class DatabasePickerFrame:
         self.police_logo_image = tk.PhotoImage(file=self.header_options['image-path'])
         self.add_image = tk.PhotoImage(file=self.footer_options['add-button-image-path'])
 
-    def __setupStructureOptions(self, data: dict[str, any]) -> None:
+    def _setupStructureOptions(self, data: dict[str, any]) -> None:
         """
         The __setupStructureOptions() method initializes some options for all the three frames that form
         the whole structure of the frame. Some of these options are images, colors, fonts, texts etc.
@@ -282,16 +269,16 @@ class DatabasePickerFrame:
         self.button_context_menu.entryconfigure(1, command=lambda: self.__openExcelFileFolder(index))
         self.button_context_menu.entryconfigure(3, command=lambda: self.__deleteExcelFileButton(button, index))
 
-    def __buildStructure(self) -> None:
+    def _buildStructure(self) -> None:
         """
         The __buildStructure() method builds the general structure of the frame (Header, Body, Footer). It also gain
         all the stored databases so as to be sure if a message such as 'No Files Deteceted' is appropriate to be displayed.
         Finally it displayes all the Excel Files in the stored databases as buttons to the screen.
 
         """
-        self.__createHeaderFrame() # First create the header
-        self.__createBodyFrame() # Then create the body
-        self.__createFooterFrame() # Finally create the footer
+        self._createHeaderFrame() # First create the header
+        self._createBodyFrame() # Then create the body
+        self._createFooterFrame() # Finally create the footer
 
         # Getting the stored databases
         stored_databases = self.parent_data['app-data']['stored-databases']
@@ -324,10 +311,10 @@ class DatabasePickerFrame:
         """
         for child_widget in self.frame.winfo_children():
             child_widget.destroy()
-        self.__buildStructure()
-        self.__setupStructureOptions(self.parent_data)
+        self._buildStructure()
+        self._setupStructureOptions(self.parent_data)
 
-    def __createHeaderFrame(self) -> None:
+    def _createHeaderFrame(self) -> None:
         """
         The __createHeaderFrame() method is used by the __buildStructure() method and it builds the header frame of the main structure.
         It creates a main label with a title and an image of the 'Greek Police Logo' next to it.
@@ -352,7 +339,7 @@ class DatabasePickerFrame:
         self.header_label.pack()
         self.header.pack()
 
-    def __createBodyFrame(self) -> None:
+    def _createBodyFrame(self) -> None:
         """
         The __createBodyFrame() method is used by the __buildStructure() method and it builds the body frame of the main structure.
         It creates a message telling the user to pick a database to work with, the general canvas where all the stored databases are going
@@ -396,7 +383,7 @@ class DatabasePickerFrame:
         self.file_picker_scrollbar.place(relx=1, rely=0, relheight=1, anchor=tk.NE)
         self.body.pack()
 
-    def __createFooterFrame(self) -> None:
+    def _createFooterFrame(self) -> None:
         """
         The __createFooterFrame() method is used by the __buildStructure() method and it builds the footer frame of the main structure.
         It creates an 'Add File' button whick lets the user add a new database into the stored databases.

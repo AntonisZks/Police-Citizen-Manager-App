@@ -173,3 +173,7 @@ if __name__ == '__main__':
     # methods = [method for method in dir(myApp.databasePickerFrame) if callable(getattr(myApp.databasePickerFrame, method))]
     # for method in methods:
     #     print("Method:", method)
+
+    # methods = [method for method in dir(myApp.mainMenuFrame) if callable(getattr(myApp.mainMenuFrame, method))]
+    # for method in methods:
+    #     print("Method:", method)

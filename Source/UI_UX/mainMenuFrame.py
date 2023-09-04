@@ -7,6 +7,7 @@ for interacting with the selected database.
 
 import tkinter as tk
 from support import *
+from .frame import Frame
 
 
 def createNavigationButton(parent: tk.Tk, text: str, font: tuple, width: int, image: tk.PhotoImage, padx: int, pady: int) -> tk.Button:
@@ -30,7 +31,7 @@ def createNavigationButton(parent: tk.Tk, text: str, font: tuple, width: int, im
     return new_button
 
 
-class MainMenuFrame:
+class MainMenuFrame(Frame):
     """
     The MainMenuFrame class represents the main menu frame of the application where the user can interact with the selected database.
     It provides a basic navigation menu with the followinf options: Search, Insert, Update.
@@ -72,16 +73,14 @@ class MainMenuFrame:
             data (dict[str, any]): The data of the parent widget.
         
         """
-        # Creating the actual frame
-        self.parent_widget = data['window']  # The parent widget is the main window
-        self.frame = tk.Frame(self.parent_widget, bg=data['theme-color'])
-        self.frame.pack()
+        # Initializing the basic frame
+        super().__init__(data)
 
         # Setup the header, body, and footer options and initialize the images used
-        self.__setupStructureOptions(data)
-        self.__initializeImages()
+        self._setupStructureOptions(data)
+        self._initializeImages()
 
-    def __initializeImages(self) -> None:
+    def _initializeImages(self) -> None:
         """
         The __initializeImages() method initializes all the images used in the frame.
         
@@ -92,7 +91,7 @@ class MainMenuFrame:
         self.insert_logo_image = tk.PhotoImage(file=self.body_options['insert-image-path'])
         self.update_logo_image = tk.PhotoImage(file=self.body_options['update-image-path'])
 
-    def __setupStructureOptions(self, data: dict[str, any]) -> None:
+    def _setupStructureOptions(self, data: dict[str, any]) -> None:
         """
         The __setupStructureOptions() initializes options for all the frame's components (Header, Body).
 
@@ -133,24 +132,15 @@ class MainMenuFrame:
             "update-button-text": "  ΔΙΟΡΘΩΣΗ  "
         }
 
-    def build(self) -> None:
-        """
-        The build() method builds the actual frame.
-        
-        """
-        # Update the body message title so as to show the correct database the user is working on and build the structure
-        self.body_options['message-title'] = f"ΕΝΕΡΓΟ ΑΡΧΕΙΟ:" + " "*10 + f"{getFileName(self.parent_data['app-data']['active-database'])}"
-        self.__buildStructure()
-
-    def __buildStructure(self) -> None:
+    def _buildStructure(self) -> None:
         """
         The __buildStructure() method builds the general structure of the main menu frame (Header, Body).
         
         """
-        self.__createHeaderFrame()  # First create the header
-        self.__createBodyFrame()  # Then create the body
+        self._createHeaderFrame()  # First create the header
+        self._createBodyFrame()  # Then create the body
 
-    def __createHeaderFrame(self) -> None:
+    def _createHeaderFrame(self) -> None:
         """
         The __createHeaderFrame() method creates the Header Frame, which contains the main label and logo.
         
@@ -174,7 +164,7 @@ class MainMenuFrame:
         self.header_label.pack()
         self.header.pack()
 
-    def __createBodyFrame(self) -> None:
+    def _createBodyFrame(self) -> None:
         """
         The __createBodyFrame() method creates the Body Frame, which contains the message label and navigation buttons.
         
@@ -237,3 +227,10 @@ class MainMenuFrame:
             button.pack(pady=self.body_options['navigation-button-pady-outer'])
         self.nav_buttons_frame.pack()
         self.body.pack()
+
+    def _createFooterFrame(self) -> None:
+        """
+        The current frame does not have a footer, so the only code here calls _createFooterFrame() method the of the base class.
+        
+        """
+        return super()._createFooterFrame()
