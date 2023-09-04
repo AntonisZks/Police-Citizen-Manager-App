@@ -7,6 +7,7 @@ the program starts from. In order to start the application we create an App obje
 import tkinter as tk
 import json
 from support import *
+from UI_UX.frame import Frame
 from UI_UX.databasePickerFrame import DatabasePickerFrame
 from UI_UX.mainMenuFrame import MainMenuFrame
 
@@ -88,7 +89,7 @@ class App:
         self.databasePickerFrame = DatabasePickerFrame(self.options)
         self.mainMenuFrame = MainMenuFrame(self.options)
 
-    def setActiveFrame(self, frame: tk.Frame) -> None:
+    def setActiveFrame(self, frame: Frame) -> None:
         """
         The setActiveFrame() method sets the given frame as an active one to the application.
 
@@ -98,9 +99,10 @@ class App:
         """
         if self.active_frame is not None:
             self.active_frame.destroy()
-        
+
         self.active_frame = frame
         self.active_frame.build()
+        self.active_frame.frame.pack()
     
     def __createOptions(self) -> None:
         """

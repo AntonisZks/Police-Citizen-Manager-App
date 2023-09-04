@@ -29,7 +29,7 @@ class Frame(ABC):
 
     """
 
-    def __init__(self, data: dict[str, any]) -> None:
+    def __init__(self, app_data: dict[str, any]) -> None:
         """
         The constructor of the Frame class. Here the actual frame is being built while some additional data
         are being initialized such as application options.
@@ -43,10 +43,10 @@ class Frame(ABC):
             frame (Frame): The actual frame widget.
 
         """
-        self.parent_widget = data['window']  # The parent widget is going to be the main window
-        self.app = data['object']  # Storing the application object
-        self.frame = tk.Frame(self.parent_widget, bg=data['theme-color'])
-        self.frame.pack()
+        self.application_data = app_data
+        self.parent_widget = app_data['window']  # The parent widget is going to be the main window
+        self.app = app_data['object']  # Storing the application object
+        self.frame = tk.Frame(self.parent_widget, bg=app_data['theme-color'])
 
     def build(self) -> None:
         """
@@ -55,6 +55,7 @@ class Frame(ABC):
 
         """
         self._buildStructure()
+        self._setupStructureOptions(self.application_data)
 
     def destroy(self) -> None:
         """
@@ -62,7 +63,10 @@ class Frame(ABC):
         and the method just destroys it.
 
         """
-        self.frame.destroy()
+        for child_widget in self.frame.winfo_children():
+            child_widget.destroy()
+        
+        self.frame.pack_forget()
 
     @abstractmethod
     def _initializeImages(self) -> None:

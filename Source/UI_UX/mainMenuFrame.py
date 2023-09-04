@@ -5,6 +5,7 @@ for interacting with the selected database.
 
 """
 
+import json
 import tkinter as tk
 from support import *
 from .frame import Frame
@@ -64,7 +65,7 @@ class MainMenuFrame(Frame):
         __createHeaderFrame(): Creates the Header Frame.
         __createBodyFrame(): Creates the Body Frame.
     """
-    def __init__(self, data: dict[str, any]) -> None:
+    def __init__(self, app_data: dict[str, any]) -> None:
         """
         The constructor of the MainMenuFrame class. Here, the actual frame and the main structure
         are being built, while additional data such as images and options are being initialized.
@@ -74,15 +75,15 @@ class MainMenuFrame(Frame):
         
         """
         # Initializing the basic frame
-        super().__init__(data)
+        super().__init__(app_data)
 
         # Setup the header, body, and footer options and initialize the images used
-        self._setupStructureOptions(data)
+        self._setupStructureOptions(self.application_data)
         self._initializeImages()
 
     def _initializeImages(self) -> None:
         """
-        The __initializeImages() method initializes all the images used in the frame.
+        The _initializeImages() method initializes all the images used in the frame.
         
         """
         self.police_logo_image = tk.PhotoImage(file=self.header_options['image-path'])
@@ -93,48 +94,63 @@ class MainMenuFrame(Frame):
 
     def _setupStructureOptions(self, data: dict[str, any]) -> None:
         """
-        The __setupStructureOptions() initializes options for all the frame's components (Header, Body).
+        The _setupStructureOptions() initializes options for all the frame's components (Header, Body).
 
         Args:
             data (dict[str, any]): The data of the parent widget.
         
         """
-        self.parent_data = data
-
         # Setting up the Header Options
         self.header_options = {
             "title": "ΕΛΛΗΝΙΚΗ ΑΣΤΥΝΟΜΙΑ\nΑ.Τ. ΗΡΑΚΛΕΙΟΥ ΑΤΤΙΚΗΣ\nΠΡΟΓΡΑΜΜΑ ΑΡΧΕΙΟΘΕΤΗΣΗΣ\nΥΠΟΘΕΣΕΩΝ ΠΟΛΙΤΩΝ",
             "image-path": POLICE_LOGO_PNG_PATH,
-            "font": ('Arial', round(0.022*max(self.parent_data['window-width'], self.parent_data['window-height'])), 'bold')
+            "font": ('Arial', round(0.022*max(self.application_data['window-width'], self.application_data['window-height'])), 'bold')
         }
 
         # Setting up the Body Options
         self.body_options = {
-            "message-title": f"ΕΝΕΡΓΟ ΑΡΧΕΙΟ:" + " "*10 + f"{getFileName(self.parent_data['app-data']['active-database'])}",
-            "message-title-font": ('Arial', round(0.018*max(self.parent_data['window-width'], self.parent_data['window-height'])), 'bold'),
-            "buttons-font": ('Arial', round(0.011*max(self.parent_data['window-width'], self.parent_data['window-height']))),
+            "message-title": f"ΕΝΕΡΓΟ ΑΡΧΕΙΟ:" + " "*10 + f"{getFileName(self.application_data['app-data']['active-database'])}",
+            "message-title-font": ('Arial', round(0.018*max(self.application_data['window-width'], self.application_data['window-height'])), 'bold'),
+            "buttons-font": ('Arial', round(0.011*max(self.application_data['window-width'], self.application_data['window-height']))),
             "change-file-button-text": "ΑΛΛΑΓΗ",
-            "change-file-button-font": ('Arial', round(0.011*max(self.parent_data['window-width'], self.parent_data['window-height']))),
-            "change-file-button-padx-outer": round(0.02*self.parent_data['window-width']),
-            "change-file-button-padx-inner": round(0.01*self.parent_data['window-width']),
-            "change-file-button-pady-inner": round(0.005*self.parent_data['window-height']),
+            "change-file-button-font": ('Arial', round(0.011*max(self.application_data['window-width'], self.application_data['window-height']))),
+            "change-file-button-padx-outer": round(0.02*self.application_data['window-width']),
+            "change-file-button-padx-inner": round(0.01*self.application_data['window-width']),
+            "change-file-button-pady-inner": round(0.005*self.application_data['window-height']),
             "change-file-button-image-path": CHANGE_PNG_PATH,
             "search-image-path": SEARCH_PNG_PATH,
             "insert-image-path": INSERT_PNG_PATH,
             "update-image-path": UPDATE_PNG_PATH,
-            "navigation-button-width": round(0.4*self.parent_data['window-width']),
-            "navigation-button-font": ('Arial', round(0.025*max(self.parent_data['window-width'], self.parent_data['window-height']))),
-            "navigation-button-padx-inner": round(0.03*self.parent_data['window-width']),
-            "navigation-button-pady-inner": round(0.012*self.parent_data['window-height']),
-            "navigation-button-pady-outer": round(0.05*self.parent_data['window-height']),
+            "navigation-button-width": round(0.4*self.application_data['window-width']),
+            "navigation-button-font": ('Arial', round(0.025*max(self.application_data['window-width'], self.application_data['window-height']))),
+            "navigation-button-padx-inner": round(0.03*self.application_data['window-width']),
+            "navigation-button-pady-inner": round(0.012*self.application_data['window-height']),
+            "navigation-button-pady-outer": round(0.05*self.application_data['window-height']),
             "search-button-text": "ΑΝΑΖΗΤΗΣΗ",
             "insert-button-text": "ΚΑΤΑΧΩΡΗΣΗ",
             "update-button-text": "  ΔΙΟΡΘΩΣΗ  "
         }
 
+    def __deleteActiveDatabase(self) -> None:
+        """
+        The __deleteActiveDatabase() method is used to delete the active database of the application
+
+        """
+        # Updating the application data in the program and save them in a json file
+        self.application_data['app-data']['active-database'] = ""
+        with open(APP_DATA_PATH, 'w', encoding='utf-8') as json_file:
+            json.dump(self.application_data['app-data'], json_file)
+
+    def __gotoDatabasePicker(self) -> None:
+        """
+        The __gotoDatabasePicker() method changes the active frame to the Database Picker one.
+        
+        """
+        self.app.setActiveFrame(self.app.databasePickerFrame)
+
     def _buildStructure(self) -> None:
         """
-        The __buildStructure() method builds the general structure of the main menu frame (Header, Body).
+        The _buildStructure() method builds the general structure of the main menu frame (Header, Body).
         
         """
         self._createHeaderFrame()  # First create the header
@@ -142,22 +158,22 @@ class MainMenuFrame(Frame):
 
     def _createHeaderFrame(self) -> None:
         """
-        The __createHeaderFrame() method creates the Header Frame, which contains the main label and logo.
+        The _createHeaderFrame() method creates the Header Frame, which contains the main label and logo.
         
         """
-        self.header = tk.Frame(self.frame, bg=self.parent_data['theme-color'])  # Creating the header frame
+        self.header = tk.Frame(self.frame, bg=self.application_data['theme-color'])  # Creating the header frame
 
         # Creating the Header Label
-        self.header_image = resizeImage(self.police_logo_image, round(0.13*self.parent_data['window-width']))
+        self.header_image = resizeImage(self.police_logo_image, round(0.13*self.application_data['window-width']))
         self.header_label = tk.Label(
             self.header,
             text=self.header_options['title'],
             font=self.header_options['font'],
-            bg=self.parent_data['theme-color'],
-            fg=self.parent_data['label-fg-color'],
+            bg=self.application_data['theme-color'],
+            fg=self.application_data['label-fg-color'],
             image=self.header_image, compound=tk.LEFT,
-            padx=round(0.04*self.parent_data['window-width']),
-            pady=round(0.04*(self.parent_data['window-height']))
+            padx=round(0.04*self.application_data['window-width']),
+            pady=round(0.04*(self.application_data['window-height']))
         )
 
         # Packing the header and its widgets
@@ -166,20 +182,22 @@ class MainMenuFrame(Frame):
 
     def _createBodyFrame(self) -> None:
         """
-        The __createBodyFrame() method creates the Body Frame, which contains the message label and navigation buttons.
+        The _createBodyFrame() method creates the Body Frame, which contains the message label and navigation buttons.
         
         """
-        self.body = tk.Frame(self.frame, bg=self.parent_data['theme-color'])  # Creating the body frame
+        self.body = tk.Frame(self.frame, bg=self.application_data['theme-color'])  # Creating the body frame
 
         # Creating a parent frame that will hold the label and 'Change File' button
-        self.body_title_frame = tk.Frame(self.frame, bg=self.parent_data['theme-color'])
+        self.body_title_frame = tk.Frame(self.frame, bg=self.application_data['theme-color'])
 
         # Creating the body label message
+        self.body_options['message-title'] = f"ΕΝΕΡΓΟ ΑΡΧΕΙΟ:" + " "*10 + f"{getFileName(self.application_data['app-data']['active-database'])}"
         self.body_label_message = tk.Label(
-            self.body_title_frame, text=self.body_options['message-title'],
+            self.body_title_frame, 
+            text=self.body_options['message-title'],
             font=self.body_options['message-title-font'],
-            bg=self.parent_data['theme-color'],
-            fg=self.parent_data['label-fg-color']
+            bg=self.application_data['theme-color'],
+            fg=self.application_data['label-fg-color']
         )
 
         # Creating the 'Change File' button
@@ -191,11 +209,12 @@ class MainMenuFrame(Frame):
             image=self.change_file_image,
             compound=tk.LEFT,
             padx=self.body_options['change-file-button-padx-inner'],
-            pady=self.body_options['change-file-button-pady-inner']
+            pady=self.body_options['change-file-button-pady-inner'],
+            command=lambda: f"{self.__deleteActiveDatabase()}{self.__gotoDatabasePicker()}"
         )
 
         # Creating the main navigation buttons (Search, Insert, Update)
-        self.nav_buttons_frame = tk.Frame(self.frame, bg=self.parent_data['theme-color'])
+        self.nav_buttons_frame = tk.Frame(self.frame, bg=self.application_data['theme-color'])
 
         # Create the images used in the buttons
         self.search_image = resizeImage(self.search_logo_image, round(2*self.body_options['navigation-button-font'][1]))
