@@ -1,5 +1,5 @@
 """
-The 'main.py' file contains the basic class that corresponds to the Application with its methods. It also contain the main code
+The 'app.py' file contains the basic class that corresponds to the Application with its methods. It also contain the main code
 the program starts from. In order to start the application we create an App object and then we run it calling the run() method.
 
 """
@@ -7,8 +7,8 @@ the program starts from. In order to start the application we create an App obje
 import tkinter as tk
 import json
 from support import *
-from WindowFrames.databasePickerFrame import DatabasePickerFrame
-from WindowFrames.mainMenuFrame import MainMenuFrame
+from UI_UX.databasePickerFrame import DatabasePickerFrame
+from UI_UX.mainMenuFrame import MainMenuFrame
 
 # The class App stands for the main application
 class App:

@@ -9,7 +9,7 @@ import tkinter as tk
 from support import *
 
 
-def createNavigationButton(parent: tk.Tk, text: str, font: tuple, width: int, image: tk.PhotoImage, padx: int, pady: int) -> None:
+def createNavigationButton(parent: tk.Tk, text: str, font: tuple, width: int, image: tk.PhotoImage, padx: int, pady: int) -> tk.Button:
     """
     The createNavigationButton() function creates a navigation button with text and an image according to its given properties.
 
@@ -24,6 +24,7 @@ def createNavigationButton(parent: tk.Tk, text: str, font: tuple, width: int, im
 
     Returns:
         Button: The created navigation button.
+    
     """
     new_button = tk.Button(parent, text=text, font=font, width=width, image=image, compound=tk.LEFT, padx=padx, pady=pady)
     return new_button
@@ -69,6 +70,7 @@ class MainMenuFrame:
 
         Args:
             data (dict[str, any]): The data of the parent widget.
+        
         """
         # Creating the actual frame
         self.parent_widget = data['window']  # The parent widget is the main window
@@ -82,6 +84,7 @@ class MainMenuFrame:
     def __initializeImages(self) -> None:
         """
         The __initializeImages() method initializes all the images used in the frame.
+        
         """
         self.police_logo_image = tk.PhotoImage(file=self.header_options['image-path'])
         self.change_logo_image = tk.PhotoImage(file=self.body_options['change-file-button-image-path'])
@@ -95,6 +98,7 @@ class MainMenuFrame:
 
         Args:
             data (dict[str, any]): The data of the parent widget.
+        
         """
         self.parent_data = data
 
@@ -130,18 +134,27 @@ class MainMenuFrame:
         }
 
     def build(self) -> None:
-        """The build() method builds the actual frame."""
+        """
+        The build() method builds the actual frame.
+        
+        """
         # Update the body message title so as to show the correct database the user is working on and build the structure
         self.body_options['message-title'] = f"ΕΝΕΡΓΟ ΑΡΧΕΙΟ:" + " "*10 + f"{getFileName(self.parent_data['app-data']['active-database'])}"
         self.__buildStructure()
 
     def __buildStructure(self) -> None:
-        """The __buildStructure() method builds the general structure of the main menu frame (Header, Body)."""
+        """
+        The __buildStructure() method builds the general structure of the main menu frame (Header, Body).
+        
+        """
         self.__createHeaderFrame()  # First create the header
         self.__createBodyFrame()  # Then create the body
 
     def __createHeaderFrame(self) -> None:
-        """The __createHeaderFrame() method creates the Header Frame, which contains the main label and logo."""
+        """
+        The __createHeaderFrame() method creates the Header Frame, which contains the main label and logo.
+        
+        """
         self.header = tk.Frame(self.frame, bg=self.parent_data['theme-color'])  # Creating the header frame
 
         # Creating the Header Label
@@ -162,7 +175,10 @@ class MainMenuFrame:
         self.header.pack()
 
     def __createBodyFrame(self) -> None:
-        """The __createBodyFrame() method creates the Body Frame, which contains the message label and navigation buttons."""
+        """
+        The __createBodyFrame() method creates the Body Frame, which contains the message label and navigation buttons.
+        
+        """
         self.body = tk.Frame(self.frame, bg=self.parent_data['theme-color'])  # Creating the body frame
 
         # Creating a parent frame that will hold the label and 'Change File' button
@@ -185,8 +201,7 @@ class MainMenuFrame:
             image=self.change_file_image,
             compound=tk.LEFT,
             padx=self.body_options['change-file-button-padx-inner'],
-            pady=self.body_options['change-file-button-pady-inner'],
-
+            pady=self.body_options['change-file-button-pady-inner']
         )
 
         # Creating the main navigation buttons (Search, Insert, Update)

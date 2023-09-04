@@ -19,7 +19,7 @@ from tkinter import ttk, filedialog, messagebox
 class DatabasePickerFrame:
     """
     The DatabasePickerFrame class represents the starting frame of the application. The frame allows the user to
-    choose which database he/she wants to work with. It has a basic UI Structure which is made up of three child frames.
+    choose which database he/she wants to work with. It has a basic UX Structure which is made up of three child frames.
     The Header Frame, the Body Frame, and the Footer Frame. All this frames are made individually.
 
     Attributes:
@@ -78,11 +78,17 @@ class DatabasePickerFrame:
         self.__initializeImages()
 
     def build(self) -> None:
-        """The build() method builds the actual frame"""
+        """
+        The build() method builds the actual frame
+        
+        """
         self.__buildStructure()
 
     def destroy(self) -> None:
-        """The destroy() method destroys the frame"""
+        """
+        The destroy() method destroys the frame
+        
+        """
         self.frame.destroy()
 
     def __initializeImages(self) -> None:
@@ -142,7 +148,10 @@ class DatabasePickerFrame:
 
 
     def __gotoMainMenu(self) -> None:
-        """The __gotoMainMenu() method changes the active frame to the Main Menu one and also stores the active database of the application"""
+        """
+        The __gotoMainMenu() method changes the active frame to the Main Menu one and also stores the active database of the application
+        
+        """
         self.app.setActiveFrame(self.app.mainMenuFrame)
 
     def __createExcelFileButton(self, parent: tk.Tk, database_path: str) -> tk.Button:
