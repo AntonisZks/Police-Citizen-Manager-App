@@ -1,82 +1,74 @@
 """
-The 'databaseFilePickerFrame.py' file contains the basic class corresponding to the DatabasePickerFrame and its methods.
-When the application starts running, this is the first frame that is going to be appeared on the user's screen letting him/her
-select which database he/she wants to work with. It is important that whenever we say database we basically mean simple
-Excel Files (.xls, .xlsx). The first time the application will run on a machine, there will be no stored databases and the user
-must add one using the 'Add File' button in the bottom of the frame. The selected database will appear on the screen and from
-now on it will be saved in the system until the user decides to remove it. By clicking a database that is represented by a button
-in the middle of the screen, the user works with this database and we head over to the MainMenuFrame.
-
+The 'databasePickerFrame.py' module contains the DatabasePickerFrame class and its methods.
+This frame is the first one displayed when the application starts, allowing the user to select a database (Excel file) to work with.
 """
 
 import json
+import os
 import tkinter as tk
+from tkinter import ttk, filedialog, messagebox
 from support import *
 from .frame import Frame
-from tkinter import ttk, filedialog, messagebox
-        
 
-# The DatabasePickerFrame class stands for the starting frame of the Application
 class DatabasePickerFrame(Frame):
     """
-    The DatabasePickerFrame class represents the starting frame of the application. The frame allows the user to
-    choose which database he/she wants to work with. It has a basic UX Structure which is made up of three child frames.
-    The Header Frame, the Body Frame, and the Footer Frame. All this frames are made individually.
+    The DatabasePickerFrame class represents the starting frame of the application, allowing the user to choose a database.
+    It includes a header, a body for displaying databases, and a footer with an 'Add File' button.
 
     Attributes:
-        parent_data (dict): The data of the parent widget. In this case the parent widget is the main window
-        header_options (dict): Some usefull options for the Header Frame
-        body_options (dict): Some usefull options for the Body Frame
-        footer_options (dict): Some usefull options for the Footer Frame
-        police_logo_image (PhotoImage): An image that is going to be displayed on the main header label
-        add_image (PhotoImage): An image that is going to be displayed on the footer 'Add File' Button
-        parent_widget (Tk): the parent widget of the frame. It is always the main window
-        frame (Frame): The actual frame
-        header (Frame): The header frame
-        header_image (PhotoImage): The image used in the header section as part of the main label
-        header_label (Label): The main label that is goin to be displayed on the header
-        body (Frame): The body frame
-        body_label_message (Label): The message that tells the user to pick a database
-        file_picker_area (Canvas): The area where all the stored databases are going to be displayed as buttons
-        file_picker_frame (Label): A supporting tool to put all the Excel files buttons on the file_picker_area
-        file_picker_scrollbar (Scrollbar): A scrollbar next to the file_picker_area that lets the user scroll through the stored databases
-        footer (Frame): The footer frame
-        add_file_image (PhotoImage): The styling image of the 'Add File' button in the footer section
-        add_file_button (Button): The button that adds a new file in the stored databases
-        button_context_menu (Menu): A context menu that appears where the user right clicks on an Excel File button
+        parent_data (dict): The data of the parent widget (main window).
+        header_options (dict): Options for the Header Frame.
+        body_options (dict): Options for the Body Frame.
+        footer_options (dict): Options for the Footer Frame.
+        police_logo_image (PhotoImage): Image displayed on the header.
+        add_image (PhotoImage): Image for the 'Add File' button.
+        parent_widget (Tk): The main window.
+        frame (Frame): The actual frame.
+        header (Frame): The header frame.
+        header_image (PhotoImage): Image used in the header label.
+        header_label (Label): The main label in the header.
+        body (Frame): The body frame.
+        body_label_message (Label): Message prompting the user to select a database.
+        file_picker_area (Canvas): Area for displaying stored databases as buttons.
+        file_picker_frame (Label): Supporting tool to arrange database buttons.
+        file_picker_scrollbar (Scrollbar): Scrollbar for the database list.
+        footer (Frame): The footer frame.
+        add_file_image (PhotoImage): Image for the 'Add File' button.
+        add_file_button (Button): Button to add a new database.
+        button_context_menu (Menu): Context menu for database buttons.
 
     Methods:
-        __addExcelFile(): Adds a new excel file in the stored databases
-        __buildStructure(): Builds the general structure of the frame (Header, Body, Footer)
-        __createBodyFrame(): Creates the Body Frame
-        __createExcelFileButton(parent, path): Creates a button that corresponds to an Excel File
-        __createExcelFileButtonContextMenu(): Creates the context menu of each excel file button
-        __createFooterFrame(): Creates the Footer Frame
-        __createHeaderFrame(): Creates the Header Frame
-        __deleteExcelFileButton(button, index): Removes a file from the stored databases
-        __initializeImages(): Initializes some images used in the frame
-        __openExcelFile(index): Opens an Excel File
-        __openExcelFileFolder(index): Opens the folder containing the Excel File
-        __rebuildStructure(): Rebuilds the general structure of the frame
-        __setupStructureOptions(data): Sets up the options of the general structure (Header, Body, Footer)
-        __showExcelFileButtonContextMenu(event, button, index): Outputs the context menu of each Excel File button
-        
+        __addExcelFile(): Adds a new excel file to the stored databases.
+        __buildStructure(): Builds the frame's structure.
+        __createBodyFrame(): Creates the Body Frame.
+        __createExcelFileButton(parent, path): Creates a button for an Excel File.
+        __createExcelFileButtonContextMenu(): Creates the context menu for database buttons.
+        __createFooterFrame(): Creates the Footer Frame.
+        __createHeaderFrame(): Creates the Header Frame.
+        __deleteExcelFileButton(button, index): Deletes a file from the stored databases.
+        __initializeImages(): Initializes images used in the frame.
+        __openExcelFile(index): Opens an Excel File.
+        __openExcelFileFolder(index): Opens the folder containing an Excel File.
+        __rebuildStructure(): Rebuilds the frame's structure.
+        __setupStructureOptions(data): Sets up structure options (Header, Body, Footer).
+        __setActiveDatabase(database_path): Sets the active database for the application.
+        __gotoMainMenu(): Switches to the Main Menu Frame.
+        __showExcelFileButtonContextMenu(event, button, index): Displays the context menu for a database button.
     """
+
     def __init__(self, app_data: dict[str, any]) -> None:
         """
-        The constructor of the DatabasePickerFrame class. Here the actual frame and the main structure
-        are being build while some additional data are being initialized such as images and some options.
+        Constructor for the DatabasePickerFrame class. Initializes the frame and its structure.
 
         Args:
-            data (dict[str, any]): The data of the parent widget
+            app_data (dict[str, any]): Data of the parent widget (main window).
 
         """
-        # Initializing the basic frame
         super().__init__(app_data)
 
     def _initializeImages(self) -> None:
         """
-        The _initializeImages() method initializes all the images used in the frame.
+        Initializes images used in the frame.
 
         """
         self.police_logo_image = tk.PhotoImage(file=self.header_options['image-path'])
@@ -84,36 +76,35 @@ class DatabasePickerFrame(Frame):
 
     def _setupStructureOptions(self, data: dict[str, any]) -> None:
         """
-        The _setupStructureOptions() method initializes some options for all the three frames that form
-        the whole structure of the frame. Some of these options are images, colors, fonts, texts etc.
+        Initializes options for all three frames (Header, Body, Footer).
 
         Args:
-            data (dict[str, any]): The data of the parent widget
-        
-        """
-        self.__createExcelFileButtonContextMenu() # Create the context menu for each button
+            data (dict[str, any]): Data of the parent widget.
 
-        # Setting up the Header Options
+        """
+        self.__createExcelFileButtonContextMenu()
+
+        # Header Options
         self.header_options = {
             "title": "ΕΛΛΗΝΙΚΗ ΑΣΤΥΝΟΜΙΑ\nΑ.Τ. ΗΡΑΚΛΕΙΟΥ ΑΤΤΙΚΗΣ\nΠΡΟΓΡΑΜΜΑ ΑΡΧΕΙΟΘΕΤΗΣΗΣ\nΥΠΟΘΕΣΕΩΝ ΠΟΛΙΤΩΝ",
             "image-path": POLICE_LOGO_PNG_PATH,
-            "font": ('Arial', round(0.022*max(self.application_data['window-width'], self.application_data['window-height'])), 'bold')
+            "font": ('Arial', round(0.022 * max(self.application_data['window-width'], self.application_data['window-height'])), 'bold')
         }
 
-        # Setting up the Body Options
+        # Body Options
         self.body_options = {
             "message-title": textSpaced("ΓΙΑ  ΣΥΝΕΧΕΙΑ  ΕΠΙΛΕΞΤΕ  ΑΡΧΕΙΟ:"),
             "no-files-message": "ΔΕΝ ΕΧΕΙ ΠΡΟΕΠΙΛΕΓΕΙ\nΚΑΝΕΝΑ ΑΡΧΕΙΟ",
-            "message-title-font": ('Arial', round(0.018*max(self.application_data['window-width'], self.application_data['window-height'])), 'bold'),
-            "files-font": ('Arial', round(0.011*max(self.application_data['window-width'], self.application_data['window-height']))),
-            "no-files-message-font": ('Arial', round(0.02*max(self.application_data['window-width'], self.application_data['window-height'])))
+            "message-title-font": ('Arial', round(0.018 * max(self.application_data['window-width'], self.application_data['window-height'])), 'bold'),
+            "files-font": ('Arial', round(0.011 * max(self.application_data['window-width'], self.application_data['window-height']))),
+            "no-files-message-font": ('Arial', round(0.02 * max(self.application_data['window-width'], self.application_data['window-height'])))
         }
 
-        # Setting up the Footer Options
+        # Footer Options
         self.footer_options = {
             "add-button-text": "ΠΡΟΣΘΗΚΗ ΑΡΧΕΙΟΥ",
             "add-button-image-path": ADD_PNG_PATH,
-            "font": ('Arial', round(0.018*max(self.application_data['window-width'], self.application_data['window-height'])))
+            "font": ('Arial', round(0.018 * max(self.application_data['window-width'], self.application_data['window-height'])))
         }
 
     def __setActiveDatabase(self, database_path: str) -> None:

@@ -63,7 +63,7 @@ class App:
 
         # Set the active frame
         self.active_frame = None
-        self.setActiveFrame(self.searchFrame)
+        self.setActiveFrame(self.databasePickerFrame)
 
     def __onClosing(self) -> None:
         """
