@@ -5,10 +5,25 @@ for folders by folder ID or surname using this frame.
 """
 
 import tkinter as tk
+import pandas as pd
 from tkinter import ttk
 from .frame import Frame
 from .searchBar import SearchBar
+from .record import Record
 from support import *
+
+def makeRecordButtontext(i, record):
+    # Creating the text of the button
+    button_text = f"{i+1})    " if (i+1) < 10 else f"{i+1})  "
+    if record.father_name == "": button_text += f"{record.surname} {record.name}"
+    else:
+        ending = record.father_name[-2:]
+        if ending == "ΗΣ": button_text += f"{record.surname} {record.name}   του {record.father_name[:-1]}"
+        elif ending == "ΑΣ": button_text += f"{record.surname} {record.name}   του {record.father_name[:-1]}"
+        elif ending == "ΟΣ": button_text += f"{record.surname} {record.name}   του {record.father_name[:-1]}Υ"
+        else: button_text += f"{record.surname} {record.name}   του {record.father_name}"
+
+    return button_text
 
 class SearchFrame(Frame):
     """
@@ -47,6 +62,8 @@ class SearchFrame(Frame):
         # Initializing the basic frame
         super().__init__(app_data)
 
+        self.record_area_scrollbar = None
+
     def _initializeImages(self) -> None:
         """
         Initialize images used in the frame.
@@ -79,7 +96,8 @@ class SearchFrame(Frame):
             "records-area-width": round(0.65*self.application_data['window-width']),
             "records-area-height": round(0.65*self.application_data['window-height']),
             "records-area-no-records-message": "ΚΑΝΕΝΑ ΑΠΟΤΕΛΕΣΜΑ",
-            "records-area-font": ('Arial', round(0.03*self.application_data['window-width']))
+            "records-area-font": ('Arial', round(0.03*self.application_data['window-width'])),
+            "record-button-font": ('Arial', round(0.014*self.application_data['window-width']))
         }
 
     def _buildStructure(self) -> None:
@@ -88,6 +106,70 @@ class SearchFrame(Frame):
         """
         self._createHeaderFrame()  # First create the header
         self._createBodyFrame()  # Then create the body
+
+    def __createNoRecordsMessage(self):
+        self.body_no_records_message = tk.Label(
+            self.records_frame, 
+            text=self.body_options['records-area-no-records-message'], 
+            font=self.body_options['records-area-font'],
+            bg=self.application_data['theme-color-dark'],
+            fg=self.application_data['theme-color-very-dark']
+        )
+        self.body_no_records_message.pack(pady=round(0.3*self.application_data['window-height']))
+
+    def __createRecordAreaScrollBar(self):
+        self.record_area_scrollbar = tk.Scrollbar(self.records_area, orient=tk.VERTICAL, command=self.records_area.yview)
+        self.record_area_scrollbar.place(relx=1, rely=0, relheight=1, anchor=tk.NE)
+        self.records_area.config(yscrollcommand=self.record_area_scrollbar.set)
+
+    def __searchByFolderID(self):
+        # Getting the current value of the folderID search bar
+        item = self.folderID_search_bar.getItem()
+
+        # Getting all the stored data in the current active database
+        records_df = pd.read_excel(self.application_data['app-data']['active-database'])
+        
+        # Keeping those data that their folderID is similar to the folderID search bar value
+        filtered_df = records_df[records_df["Α.Φ."] > int(item)]
+
+        # Cleaning any previous results amd destroying the 'No Records' message and the Scrollbar
+        for child_widget in self.records_frame.winfo_children():
+            child_widget.destroy()
+        if self.record_area_scrollbar is not None:
+            self.record_area_scrollbar.destroy()
+
+        records = [] # Creating a list that will keep all the returned records
+        for _, record in filtered_df.iterrows():
+            records.append(Record(*record.to_list()))
+        
+        # Checking if there is any record as a result
+        if len(records) == 0:
+            self.__createNoRecordsMessage()
+            return
+        
+        # Creating the side scrollbar
+        self.__createRecordAreaScrollBar()
+
+        # Creating the record buttons
+        for i, record in enumerate(records):
+            new_record_button = tk.Checkbutton(
+                self.records_frame, 
+                text=makeRecordButtontext(i, record),
+                font=self.body_options['record-button-font'],
+                anchor=tk.W
+            )
+            new_record_button.config(indicatoron=False, selectcolor=self.application_data['theme-color-light'])
+            new_record_button.pack(side="top", fill='x')
+            new_record_button.bind('<MouseWheel>', lambda e: onMousewheel(e, self.records_area))
+            new_record_button.pack()
+
+        # Updating the scrollregion of the record area
+        self.records_area.update_idletasks()
+        self.records_area.configure(scrollregion=self.records_area.bbox("all"))
+        
+
+    def __searchBySurname(self):
+        print("Searching by surname...")
 
     def _createHeaderFrame(self) -> None:
         """
@@ -130,7 +212,8 @@ class SearchFrame(Frame):
             self.folderID_search_bar_frame, self.application_data,
             self.body_options["search-bar-border-width"](),  # IMPORTANT: The border width key has a function as a value, that's why we call it
             self.body_options["folderID-search-bar-place-holder"],
-            self.body_options["search-bar-font"]
+            self.body_options["search-bar-font"],
+            self.__searchByFolderID
         )
         self.folderID_search_bar.build()
         self.folderID_search_bar.put()
@@ -143,7 +226,8 @@ class SearchFrame(Frame):
             self.application_data,
             self.body_options["search-bar-border-width"](),  # IMPORTANT: The border width key has a function as a value, that's why we call it
             self.body_options["surname-search-bar-place-holder"],
-            self.body_options["search-bar-font"]
+            self.body_options["search-bar-font"],
+            self.__searchBySurname
         )
         self.surname_search_bar.build()
         self.surname_search_bar.put()
@@ -163,16 +247,11 @@ class SearchFrame(Frame):
         self.records_area.grid(row=0, column=0, padx=round(0.05*self.application_data['window-width']), pady=round(0.018*self.application_data['window-height']))
         self.records_frame = ttk.Label(self.records_area, background=self.application_data['theme-color-dark'])
         self.records_area.create_window((0, 0), window=self.records_frame, anchor=tk.NW, width=self.body_options['records-area-width'])
+        self.records_area.bind('<MouseWheel>', lambda e: onMousewheel(e, self.records_area))
+        
 
         # Creating a 'No Records' message
-        self.body_no_records_message = tk.Label(
-            self.records_frame, 
-            text=self.body_options['records-area-no-records-message'], 
-            font=self.body_options['records-area-font'],
-            bg=self.application_data['theme-color-dark'],
-            fg=self.application_data['theme-color-very-dark']
-        )
-        self.body_no_records_message.pack(pady=round(0.3*self.application_data['window-height']))
+        self.__createNoRecordsMessage()
 
     def _createFooterFrame(self) -> None:
         return super()._createFooterFrame()

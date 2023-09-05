@@ -85,30 +85,31 @@ def getFileName(file_path: str) -> str:
     except IndexError:
         return
 
-def onMousewheel(event: any, canvas: tk.Canvas) -> None:
+def onMousewheel(event: any, area: any) -> None:
     """
     The onMousewheel() function controls the behavious of the mouse wheel scrolling. It's often been used to situations where
     there is a scrollable item such as canvas etc in the program and we want to let the user scroll.
 
     Args:
         event (any): The event is usually the position of the mouse wheel in scrollable item.
-        canvas (Canvas): The scrollable item where the user needs to scroll
+        area (any): The scrollable item where the user needs to scroll
     
     """
     # Get the current scroll position (as a fraction) relative to the maximum scroll
-    current_scroll_frac = canvas.yview()[0]
+    current_scroll_frac = area.yview()[0]
 
     if event.delta > 0:  # Scrolling upwards
         if current_scroll_frac <= 0.0: return  # Don't scroll further up if already at the top
-        canvas.yview_scroll(int(-1*(event.delta/120)), "units")
+        area.yview_scroll(int(-1*(event.delta/120)), "units")
     else:  # Scrolling downwards
         if current_scroll_frac >= 1.0: return  # Don't scroll further down if already at the bottom
-        canvas.yview_scroll(int(-1*(event.delta/120)), "units")
+        area.yview_scroll(int(-1*(event.delta/120)), "units")
 
 # Defining all the colors used for the Application
 BACKGROUND_COLOR_1 = "#2A508C"
 BACKGROUND_COLOR_2 = "#1C3E73"
 BACKGROUND_COLOR_3 = "#0D2750"
+BACKGROUND_COLOR_4 = "#3399FF"
 
 # Defining all the images used for the Application
 POLICE_LOGO_PNG_PATH = resourcePath("..\\Assets\\Images\\greek_police_logo.png")

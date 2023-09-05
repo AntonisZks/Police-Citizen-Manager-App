@@ -72,11 +72,11 @@ class App:
         is responsible for this work.
         
         """
-        self.app_data['active-database'] = "" # Modify the active database and make it empty
+        # self.app_data['active-database'] = "" # Modify the active database and make it empty
 
-        # Add the modified application data in the json file
-        with open(APP_DATA_PATH, 'w', encoding='utf-8') as json_file:
-            json.dump(self.app_data, json_file)
+        # # Add the modified application data in the json file
+        # with open(APP_DATA_PATH, 'w', encoding='utf-8') as json_file:
+        #     json.dump(self.app_data, json_file)
 
         self.window.destroy() # And of course destroy the main window and terminate the application
 
@@ -121,6 +121,7 @@ class App:
             "theme-color": BACKGROUND_COLOR_1,
             "theme-color-dark": BACKGROUND_COLOR_2,
             "theme-color-very-dark": BACKGROUND_COLOR_3,
+            "theme-color-light": BACKGROUND_COLOR_4,
             "label-fg-color": "white"
         }
 
