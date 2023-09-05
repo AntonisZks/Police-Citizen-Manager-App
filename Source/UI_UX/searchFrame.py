@@ -5,6 +5,7 @@ for folders by folder ID or surname using this frame.
 """
 
 import tkinter as tk
+from tkinter import ttk
 from .frame import Frame
 from .searchBar import SearchBar
 from support import *
@@ -74,7 +75,11 @@ class SearchFrame(Frame):
             "search-bar-padx-outer": round(0.08 * self.application_data['window-width']),
             "search-bar-border-width": lambda: round(0.34 * self.body_options['search-bar-font'][1]),
             "folderID-search-bar-place-holder": "Αριθμός Φακέλου",
-            "surname-search-bar-place-holder": "Επώνυμο"
+            "surname-search-bar-place-holder": "Επώνυμο",
+            "records-area-width": round(0.65*self.application_data['window-width']),
+            "records-area-height": round(0.65*self.application_data['window-height']),
+            "records-area-no-records-message": "ΚΑΝΕΝΑ ΑΠΟΤΕΛΕΣΜΑ",
+            "records-area-font": ('Arial', round(0.03*self.application_data['window-width']))
         }
 
     def _buildStructure(self) -> None:
@@ -112,12 +117,15 @@ class SearchFrame(Frame):
         Create the Body Frame, which contains the search bars.
         """
         self.body = tk.Frame(self.frame, bg=self.application_data['theme-color'])  # Creating the body frame
+        self.body.pack()
 
         # Creating a general frame that will hold the Search Bars
         self.searchbars_frame = tk.Frame(self.body, bg=self.application_data['theme-color'])
+        self.searchbars_frame.pack()
 
         # Creating the folderID Search Bar
         self.folderID_search_bar_frame = tk.Frame(self.searchbars_frame, bg=self.application_data['theme-color'])
+        self.folderID_search_bar_frame.grid(row=0, column=0, padx=self.body_options["search-bar-padx-outer"])
         self.folderID_search_bar = SearchBar(
             self.folderID_search_bar_frame, self.application_data,
             self.body_options["search-bar-border-width"](),  # IMPORTANT: The border width key has a function as a value, that's why we call it
@@ -125,9 +133,11 @@ class SearchFrame(Frame):
             self.body_options["search-bar-font"]
         )
         self.folderID_search_bar.build()
+        self.folderID_search_bar.put()
 
         # Creating the surname Search Bar
         self.surname_search_bar_frame = tk.Frame(self.searchbars_frame, bg=self.application_data['theme-color'])
+        self.surname_search_bar_frame.grid(row=0, column=1, padx=self.body_options["search-bar-padx-outer"])
         self.surname_search_bar = SearchBar(
             self.surname_search_bar_frame,
             self.application_data,
@@ -136,14 +146,33 @@ class SearchFrame(Frame):
             self.body_options["search-bar-font"]
         )
         self.surname_search_bar.build()
-
-        # Packing the body and its widgets
-        self.folderID_search_bar.put()
         self.surname_search_bar.put()
-        self.folderID_search_bar_frame.grid(row=0, column=0, padx=self.body_options["search-bar-padx-outer"])
-        self.surname_search_bar_frame.grid(row=0, column=1, padx=self.body_options["search-bar-padx-outer"])
-        self.searchbars_frame.pack()
-        self.body.pack()
+
+        # Creating a main frame that will hold the records area left and the person data area right
+        self.results_frame = tk.Frame(self.body, bg=self.application_data['theme-color'])
+        self.results_frame.pack()
+
+        # Creating records area that corresponds to the results of the search bar
+        self.records_area = tk.Canvas(
+            self.results_frame, 
+            width=self.body_options['records-area-width'], 
+            height=self.body_options['records-area-height'],
+            background=self.application_data['theme-color-dark'],
+            highlightbackground=self.application_data['theme-color-dark']
+        )
+        self.records_area.grid(row=0, column=0, padx=round(0.05*self.application_data['window-width']), pady=round(0.018*self.application_data['window-height']))
+        self.records_frame = ttk.Label(self.records_area, background=self.application_data['theme-color-dark'])
+        self.records_area.create_window((0, 0), window=self.records_frame, anchor=tk.NW, width=self.body_options['records-area-width'])
+
+        # Creating a 'No Records' message
+        self.body_no_records_message = tk.Label(
+            self.records_frame, 
+            text=self.body_options['records-area-no-records-message'], 
+            font=self.body_options['records-area-font'],
+            bg=self.application_data['theme-color-dark'],
+            fg=self.application_data['theme-color-very-dark']
+        )
+        self.body_no_records_message.pack(pady=round(0.3*self.application_data['window-height']))
 
     def _createFooterFrame(self) -> None:
         return super()._createFooterFrame()
