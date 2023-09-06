@@ -125,18 +125,7 @@ class SearchFrame(Frame):
         self.record_area_scrollbar.place(relx=1, rely=0, relheight=1, anchor=tk.NE)
         self.records_area.config(yscrollcommand=self.record_area_scrollbar.set)
 
-    def __searchByFolderID(self):
-        # Getting the current value of the folderID search bar
-        item = self.folderID_search_bar.getItem()
-        if item == "" or item == self.folderID_search_bar.place_holder:
-            return
-
-        # Getting all the stored data in the current active database
-        records_df = pd.read_excel(self.application_data['app-data']['active-database'])
-        
-        # Keeping those data that their folderID is similar to the folderID search bar value
-        filtered_df = records_df[records_df["Α.Φ."] > int(item)]
-
+    def __createRecordButtons(self, records_df):
         # Cleaning any previous results amd destroying the 'No Records' message and the Scrollbar
         for child_widget in self.records_frame.winfo_children():
             child_widget.destroy()
@@ -144,7 +133,7 @@ class SearchFrame(Frame):
             self.record_area_scrollbar.destroy()
 
         records = [] # Creating a list that will keep all the returned records
-        for _, record in filtered_df.iterrows():
+        for _, record in records_df.iterrows():
             records.append(Record(*record.to_list()))
         
         # Checking if there is any record as a result
@@ -171,10 +160,34 @@ class SearchFrame(Frame):
         # Updating the scrollregion of the record area
         self.records_area.update_idletasks()
         self.records_area.configure(scrollregion=self.records_area.bbox("all"))
-        
 
+    def __searchByFolderID(self):
+        # Getting the current value of the folderID search bar
+        item = self.folderID_search_bar.getItem()
+        if item == "" or item == self.folderID_search_bar.place_holder:
+            return
+
+        # Getting all the stored data in the current active database
+        records_df = pd.read_excel(self.application_data['app-data']['active-database'])
+        
+        # Keeping those data that their folderID is similar to the folderID search bar value
+        filtered_df = records_df[records_df["Α.Φ."] == int(item)]
+
+        self.__createRecordButtons(filtered_df)
+        
     def __searchBySurname(self):
-        print("Searching by surname...")
+        # Getting the current value of the Surname search bar
+        item = self.surname_search_bar.getItem()
+        if item == "" or item == self.surname_search_bar.place_holder:
+            return
+
+        # Getting all the stored data in the current active database
+        records_df = pd.read_excel(self.application_data['app-data']['active-database'])
+        
+        # Keeping those data that their folderID is similar to the folderID search bar value
+        filtered_df = records_df[records_df["ΕΠΩΝΥΜΟ"].str.startswith(item.upper())]
+
+        self.__createRecordButtons(filtered_df)
 
     def _createHeaderFrame(self) -> None:
         """
