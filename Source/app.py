@@ -63,7 +63,7 @@ class App:
 
         # Set the active frame
         self.active_frame = None
-        self.setActiveFrame(self.searchFrame)
+        self.setActiveFrame(self.databasePickerFrame)
 
     def __onClosing(self) -> None:
         """
@@ -72,11 +72,11 @@ class App:
         is responsible for this work.
         
         """
-        # self.app_data['active-database'] = "" # Modify the active database and make it empty
+        self.app_data['active-database'] = "" # Modify the active database and make it empty
 
-        # # Add the modified application data in the json file
-        # with open(APP_DATA_PATH, 'w', encoding='utf-8') as json_file:
-        #     json.dump(self.app_data, json_file)
+        # Add the modified application data in the json file
+        with open(APP_DATA_PATH, 'w', encoding='utf-8') as json_file:
+            json.dump(self.app_data, json_file)
 
         self.window.destroy() # And of course destroy the main window and terminate the application
 

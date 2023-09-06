@@ -21,6 +21,9 @@ def makeRecordButtontext(i, record):
         if ending == "ΗΣ": button_text += f"{record.surname} {record.name}   του {record.father_name[:-1]}"
         elif ending == "ΑΣ": button_text += f"{record.surname} {record.name}   του {record.father_name[:-1]}"
         elif ending == "ΟΣ": button_text += f"{record.surname} {record.name}   του {record.father_name[:-1]}Υ"
+        elif ending in ("ης", "ησ"): button_text += f"{record.surname} {record.name}   του {record.father_name[:-1]}"
+        elif ending in ("ας", "ασ"): button_text += f"{record.surname} {record.name}   του {record.father_name[:-1]}"
+        elif ending in ("ος", "οσ"): button_text += f"{record.surname} {record.name}   του {record.father_name[:-1]}υ"
         else: button_text += f"{record.surname} {record.name}   του {record.father_name}"
 
     return button_text
@@ -125,6 +128,8 @@ class SearchFrame(Frame):
     def __searchByFolderID(self):
         # Getting the current value of the folderID search bar
         item = self.folderID_search_bar.getItem()
+        if item == "" or item == self.folderID_search_bar.place_holder:
+            return
 
         # Getting all the stored data in the current active database
         records_df = pd.read_excel(self.application_data['app-data']['active-database'])

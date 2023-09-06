@@ -10,7 +10,7 @@ from support import *
 from .frame import Frame
 
 
-def createNavigationButton(parent: tk.Tk, text: str, font: tuple, width: int, image: tk.PhotoImage, padx: int, pady: int) -> tk.Button:
+def createNavigationButton(parent: tk.Tk, text: str, font: tuple, width: int, image: tk.PhotoImage, padx: int, pady: int, command: callable) -> tk.Button:
     """
     Create a navigation button with text and an image according to its given properties.
 
@@ -22,11 +22,12 @@ def createNavigationButton(parent: tk.Tk, text: str, font: tuple, width: int, im
         image (PhotoImage): The image to display on the button.
         padx (int): The horizontal padding of the button.
         pady (int): The vertical padding of the button.
+        command (callable): The function to be called when the button is clicked.
 
     Returns:
         Button: The created navigation button.
     """
-    new_button = tk.Button(parent, text=text, font=font, width=width, image=image, compound=tk.LEFT, padx=padx, pady=pady)
+    new_button = tk.Button(parent, text=text, font=font, width=width, image=image, compound=tk.LEFT, padx=padx, pady=pady, command=command)
     return new_button
 
 
@@ -62,6 +63,9 @@ class MainMenuFrame(Frame):
         _buildStructure(): Builds the general structure of the frame (Header, Body).
         _createHeaderFrame(): Creates the Header Frame.
         _createBodyFrame(): Creates the Body Frame.
+        __gotoDatabasePicker(): Leads the user to the database picker frame
+        __gotoSearch(): Leads the user to the search frame
+
     """
 
     def __init__(self, app_data: dict[str, any]) -> None:
@@ -139,8 +143,16 @@ class MainMenuFrame(Frame):
     def __gotoDatabasePicker(self) -> None:
         """
         Change the active frame to the Database Picker one.
+        
         """
         self.app.setActiveFrame(self.app.databasePickerFrame)
+
+    def __gotoSearch(self) -> None:
+        """
+        Change the active frame to the Search Frame one.
+
+        """
+        self.app.setActiveFrame(self.app.searchFrame)
 
     def _buildStructure(self) -> None:
         """
@@ -218,10 +230,11 @@ class MainMenuFrame(Frame):
 
         images = [self.search_image, self.insert_image, self.update_image]
         images_texts = ["search", "insert", "update"]
+        commands = [self.__gotoSearch, self.__gotoSearch, self.__gotoSearch]
         buttons = []
 
         # Creating each button with a 'fancy' way
-        for image in zip(images, images_texts):
+        for i, image in enumerate(zip(images, images_texts)):
             new_button = createNavigationButton(
                 self.nav_buttons_frame,
                 self.body_options[f'{image[1]}-button-text'],
@@ -230,6 +243,7 @@ class MainMenuFrame(Frame):
                 image[0],
                 self.body_options['navigation-button-padx-inner'],
                 self.body_options['navigation-button-pady-inner'],
+                commands[i]
             )
             buttons.append(new_button)
 
