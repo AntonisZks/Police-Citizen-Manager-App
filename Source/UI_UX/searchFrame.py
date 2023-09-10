@@ -7,28 +7,14 @@ for folders by folder ID or surname using this frame.
 import tkinter as tk
 import pandas as pd
 from tkinter import ttk
-from .frame import Frame
+from .frame import IFrame
 from .searchBar import SearchBar
 from .record import Record
 from support import *
+from .recordsManager import RecordsManager
+from .recordsVisualiser import RecordsVisualiser
 
-def makeRecordButtontext(i, record):
-    # Creating the text of the button
-    button_text = f"{i+1})    " if (i+1) < 10 else f"{i+1})  "
-    if record.father_name == "": button_text += f"{record.surname} {record.name}"
-    else:
-        ending = record.father_name[-2:]
-        if ending == "ΗΣ": button_text += f"{record.surname} {record.name}   του {record.father_name[:-1]}"
-        elif ending == "ΑΣ": button_text += f"{record.surname} {record.name}   του {record.father_name[:-1]}"
-        elif ending == "ΟΣ": button_text += f"{record.surname} {record.name}   του {record.father_name[:-1]}Υ"
-        elif ending in ("ης", "ησ"): button_text += f"{record.surname} {record.name}   του {record.father_name[:-1]}"
-        elif ending in ("ας", "ασ"): button_text += f"{record.surname} {record.name}   του {record.father_name[:-1]}"
-        elif ending in ("ος", "οσ"): button_text += f"{record.surname} {record.name}   του {record.father_name[:-1]}υ"
-        else: button_text += f"{record.surname} {record.name}   του {record.father_name}"
-
-    return button_text
-
-class SearchFrame(Frame):
+class SearchFrame(IFrame):
     """
     The SearchFrame class represents the search frame of the application where the user can search for folders by folder ID or surname.
 
@@ -99,6 +85,7 @@ class SearchFrame(Frame):
             "records-area-width": round(0.65*self.application_data['window-width']),
             "records-area-height": round(0.65*self.application_data['window-height']),
             "records-area-no-records-message": "ΚΑΝΕΝΑ ΑΠΟΤΕΛΕΣΜΑ",
+            "records-area-no-records-selected-message": "ΔΕΝ ΕΧΕΙ ΕΠΙΛΕΓΕΙ\nΚΑΝΕΝΑΣ ΦΑΚΕΛΟΣ",
             "records-area-font": ('Arial', round(0.03*self.application_data['window-width'])),
             "record-button-font": ('Arial', round(0.014*self.application_data['window-width']))
         }
@@ -110,57 +97,6 @@ class SearchFrame(Frame):
         self._createHeaderFrame()  # First create the header
         self._createBodyFrame()  # Then create the body
 
-    def __createNoRecordsMessage(self):
-        self.body_no_records_message = tk.Label(
-            self.records_frame, 
-            text=self.body_options['records-area-no-records-message'], 
-            font=self.body_options['records-area-font'],
-            bg=self.application_data['theme-color-dark'],
-            fg=self.application_data['theme-color-very-dark']
-        )
-        self.body_no_records_message.pack(pady=round(0.3*self.application_data['window-height']))
-
-    def __createRecordAreaScrollBar(self):
-        self.record_area_scrollbar = tk.Scrollbar(self.records_area, orient=tk.VERTICAL, command=self.records_area.yview)
-        self.record_area_scrollbar.place(relx=1, rely=0, relheight=1, anchor=tk.NE)
-        self.records_area.config(yscrollcommand=self.record_area_scrollbar.set)
-
-    def __createRecordButtons(self, records_df):
-        # Cleaning any previous results amd destroying the 'No Records' message and the Scrollbar
-        for child_widget in self.records_frame.winfo_children():
-            child_widget.destroy()
-        if self.record_area_scrollbar is not None:
-            self.record_area_scrollbar.destroy()
-
-        records = [] # Creating a list that will keep all the returned records
-        for _, record in records_df.iterrows():
-            records.append(Record(*record.to_list()))
-        
-        # Checking if there is any record as a result
-        if len(records) == 0:
-            self.__createNoRecordsMessage()
-            return
-        
-        # Creating the side scrollbar
-        self.__createRecordAreaScrollBar()
-
-        # Creating the record buttons
-        for i, record in enumerate(records):
-            new_record_button = tk.Checkbutton(
-                self.records_frame, 
-                text=makeRecordButtontext(i, record),
-                font=self.body_options['record-button-font'],
-                anchor=tk.W
-            )
-            new_record_button.config(indicatoron=False, selectcolor=self.application_data['theme-color-light'])
-            new_record_button.pack(side="top", fill='x')
-            new_record_button.bind('<MouseWheel>', lambda e: onMousewheel(e, self.records_area))
-            new_record_button.pack()
-
-        # Updating the scrollregion of the record area
-        self.records_area.update_idletasks()
-        self.records_area.configure(scrollregion=self.records_area.bbox("all"))
-
     def __searchByFolderID(self):
         # Getting the current value of the folderID search bar
         item = self.folderID_search_bar.getItem()
@@ -169,11 +105,12 @@ class SearchFrame(Frame):
 
         # Getting all the stored data in the current active database
         records_df = pd.read_excel(self.application_data['app-data']['active-database'])
-        
+        records_df = records_df.fillna('') # this command makes sure that the NaN values in the excel are filled with ''
+
         # Keeping those data that their folderID is similar to the folderID search bar value
         filtered_df = records_df[records_df["Α.Φ."] == int(item)]
-
-        self.__createRecordButtons(filtered_df)
+        
+        self.record_manager.createRecordButtons(filtered_df, self.body_options['record-button-font'])
         
     def __searchBySurname(self):
         # Getting the current value of the Surname search bar
@@ -183,11 +120,12 @@ class SearchFrame(Frame):
 
         # Getting all the stored data in the current active database
         records_df = pd.read_excel(self.application_data['app-data']['active-database'])
+        records_df = records_df.fillna('') # this command makes sure that the NaN values in the excel are filled with ''
         
         # Keeping those data that their folderID is similar to the folderID search bar value
         filtered_df = records_df[records_df["ΕΠΩΝΥΜΟ"].str.startswith(item.upper())]
 
-        self.__createRecordButtons(filtered_df)
+        self.record_manager.createRecordButtons(filtered_df, self.body_options['record-button-font'])
 
     def _createHeaderFrame(self) -> None:
         """
@@ -254,22 +192,51 @@ class SearchFrame(Frame):
         self.results_frame = tk.Frame(self.body, bg=self.application_data['theme-color'])
         self.results_frame.pack()
 
-        # Creating records area that corresponds to the results of the search bar
-        self.records_area = tk.Canvas(
-            self.results_frame, 
-            width=self.body_options['records-area-width'], 
-            height=self.body_options['records-area-height'],
-            background=self.application_data['theme-color-dark'],
-            highlightbackground=self.application_data['theme-color-dark']
+        # Creating the record manager object that manages and displays the result records from the search
+        self.record_manager = RecordsManager(
+            self.results_frame,
+            self.application_data, 
+            self.body_options['records-area-width'],
+            self.body_options['records-area-height'],
+            self.application_data['theme-color-dark'],
+            {
+                "text": self.body_options['records-area-no-records-message'],
+                "font": self.body_options['records-area-font'],
+                "bg": self.application_data['theme-color-dark'],
+                "fg": self.application_data['theme-color-very-dark']
+            }
         )
-        self.records_area.grid(row=0, column=0, padx=round(0.05*self.application_data['window-width']), pady=round(0.018*self.application_data['window-height']))
-        self.records_frame = ttk.Label(self.records_area, background=self.application_data['theme-color-dark'])
-        self.records_area.create_window((0, 0), window=self.records_frame, anchor=tk.NW, width=self.body_options['records-area-width'])
-        self.records_area.bind('<MouseWheel>', lambda e: onMousewheel(e, self.records_area))
-        
+        self.record_manager.createNoRecordsMessage()
+        self.record_manager.show(
+            0, 0, 
+            round(0.05*self.application_data['window-width']), 
+            round(0.018*self.application_data['window-height'])
+        )
 
-        # Creating a 'No Records' message
-        self.__createNoRecordsMessage()
+        # Creating the record visualiser object that displays the data of each record
+        self.record_visualiser = RecordsVisualiser(
+            self.results_frame,
+            self.application_data,
+            self.body_options['records-area-width'],
+            self.body_options['records-area-height'],
+            self.application_data['theme-color-dark'],
+            {
+                "text": self.body_options['records-area-no-records-selected-message'],
+                "font": self.body_options['records-area-font'],
+                "bg": self.application_data['theme-color-dark'],
+                "fg": self.application_data['theme-color-very-dark']
+            }
+        )
+        self.record_visualiser.addTemporaryTab()
+        self.record_visualiser.show(
+            0, 1,
+            round(0.05*self.application_data['window-width']), 
+            round(0.018*self.application_data['window-height'])
+        )
+
+        # Connecting the records Manager and Visualiser
+        self.record_manager.visualiser = self.record_visualiser
+        self.record_visualiser.manager = self.record_manager
 
     def _createFooterFrame(self) -> None:
         return super()._createFooterFrame()

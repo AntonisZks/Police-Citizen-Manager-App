@@ -7,7 +7,7 @@ the program starts from. In order to start the application we create an App obje
 import tkinter as tk
 import json
 from support import *
-from UI_UX.frame import Frame
+from UI_UX.frame import IFrame
 from UI_UX.databasePickerFrame import DatabasePickerFrame
 from UI_UX.mainMenuFrame import MainMenuFrame
 from UI_UX.searchFrame import SearchFrame
@@ -91,7 +91,7 @@ class App:
         self.mainMenuFrame = MainMenuFrame(self.options)
         self.searchFrame = SearchFrame(self.options)
 
-    def setActiveFrame(self, frame: Frame) -> None:
+    def setActiveFrame(self, frame: IFrame) -> None:
         """
         The setActiveFrame() method sets the given frame as an active one to the application.
 
@@ -122,7 +122,9 @@ class App:
             "theme-color-dark": BACKGROUND_COLOR_2,
             "theme-color-very-dark": BACKGROUND_COLOR_3,
             "theme-color-light": BACKGROUND_COLOR_4,
-            "label-fg-color": "white"
+            "label-fg-color": "white",
+            "screen-width": self.screen_width,
+            "screen-height": self.screen_height
         }
 
     def __setWindowIcon(self) -> None:
@@ -141,19 +143,20 @@ class App:
         
         """
         # Getting the screen width and height
-        screen_width, screen_height = self.window.winfo_screenwidth(), self.window.winfo_screenheight()
-        
+        self.screen_width = self.window.winfo_screenwidth()
+        self.screen_height = self.window.winfo_screenheight()
+
         # Calculating the width and height of the main window
-        if screen_width > screen_height:
-            self.window_height = round(0.9*screen_height)
+        if self.screen_width > self.screen_height:
+            self.window_height = round(0.9*self.screen_height)
             self.window_width = round(0.8*self.window_height)
         else:
-            self.window_width = round(0.9*screen_width)
+            self.window_width = round(0.9*self.screen_width)
             self.window_height = round(1.2*self.window_width)
 
         # Calculating the x and y coordinates so as to spawn the window at the center of the screen
-        spawn_x = (screen_width - self.window_width) // 2
-        spawn_y = (screen_height - self.window_height) // 2 - 40
+        spawn_x = (self.screen_width - self.window_width) // 2
+        spawn_y = (self.screen_height - self.window_height) // 2 - 40
 
         self.window.geometry(f"{self.window_width}x{self.window_height}+{spawn_x}+{spawn_y}")
 

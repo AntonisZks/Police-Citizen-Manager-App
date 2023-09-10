@@ -7,7 +7,7 @@ import tkinter as tk
 from abc import ABC, abstractmethod
 
 
-class Frame(ABC):
+class IFrame(ABC):
     """
     The abstract base class for frames used in the application.
 

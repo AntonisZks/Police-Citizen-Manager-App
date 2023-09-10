@@ -7,7 +7,7 @@ for interacting with the selected database.
 import json
 import tkinter as tk
 from support import *
-from .frame import Frame
+from .frame import IFrame
 
 
 def createNavigationButton(parent: tk.Tk, text: str, font: tuple, width: int, image: tk.PhotoImage, padx: int, pady: int, command: callable) -> tk.Button:
@@ -31,7 +31,7 @@ def createNavigationButton(parent: tk.Tk, text: str, font: tuple, width: int, im
     return new_button
 
 
-class MainMenuFrame(Frame):
+class MainMenuFrame(IFrame):
     """
     The MainMenuFrame class represents the main menu frame of the application where the user can interact with the selected database.
     It provides a basic navigation menu with the following options: Search, Insert, Update.

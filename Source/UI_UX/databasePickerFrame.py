@@ -8,9 +8,9 @@ import os
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 from support import *
-from .frame import Frame
+from .frame import IFrame
 
-class DatabasePickerFrame(Frame):
+class DatabasePickerFrame(IFrame):
     """
     The DatabasePickerFrame class represents the starting frame of the application, allowing the user to choose a database.
     It includes a header, a body for displaying databases, and a footer with an 'Add File' button.
