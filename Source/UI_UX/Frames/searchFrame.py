@@ -5,11 +5,11 @@ for folders by folder ID or surname using this frame.
 """
 
 import pandas as pd
-from Source.UI_UX.frame import IFrame
-from Source.UI_UX.searchBar import SearchBar
-from Source.support import *
-from Source.UI_UX.recordsManager import RecordsManager
-from Source.UI_UX.recordsVisualiser import RecordsVisualiser
+from Source.UI_UX.Frames.frame import IFrame
+from Source.UI_UX.Other.searchBar import SearchBar
+from Source.Extras.support import *
+from Source.UI_UX.RecordsStuff.recordsManager import RecordsManager
+from Source.UI_UX.RecordsStuff.recordsVisualiser import RecordsVisualiser
 
 
 class SearchFrame(IFrame):

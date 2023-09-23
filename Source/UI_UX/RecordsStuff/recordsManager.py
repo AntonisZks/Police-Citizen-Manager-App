@@ -1,6 +1,6 @@
 from tkinter import ttk
-from Source.support import *
-from Source.UI_UX.record import Record
+from Source.Extras.support import *
+from Source.UI_UX.RecordsStuff.record import Record
 
 
 def makeRecordButtonText(index: int, record: Record):

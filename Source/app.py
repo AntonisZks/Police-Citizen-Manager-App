@@ -5,11 +5,11 @@ the program starts from. In order to start the application we create an App obje
 """
 
 import json
-from support import *
-from UI_UX.frame import IFrame
-from UI_UX.databasePickerFrame import DatabasePickerFrame
-from UI_UX.mainMenuFrame import MainMenuFrame
-from UI_UX.searchFrame import SearchFrame
+from Source.Extras.support import *
+from Source.UI_UX.Frames.frame import IFrame
+from Source.UI_UX.Frames.databasePickerFrame import DatabasePickerFrame
+from Source.UI_UX.Frames.mainMenuFrame import MainMenuFrame
+from Source.UI_UX.Frames.searchFrame import SearchFrame
 
 
 # The class App stands for the main application

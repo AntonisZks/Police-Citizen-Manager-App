@@ -5,8 +5,8 @@ for interacting with the selected database.
 """
 
 import json
-from Source.support import *
-from Source.UI_UX.frame import IFrame
+from Source.Extras.support import *
+from Source.UI_UX.Frames.frame import IFrame
 
 
 def createNavigationButton(parent: tk.Widget, text: str, font: tuple, width: int, image: tk.PhotoImage, pad_x: int, pad_y: int,

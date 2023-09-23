@@ -27,7 +27,7 @@ def resourcePath(relative_path: str) -> str:
     try:
         base_path = sys._MEIPASS2
     except Exception:
-        base_path = os.path.abspath(".")
+        base_path = os.path.abspath("..")
 
     return os.path.join(base_path, relative_path)
 
@@ -122,12 +122,12 @@ BACKGROUND_COLOR_3 = "#0D2750"
 BACKGROUND_COLOR_4 = "#3399FF"
 
 # Defining all the images used for the Application
-POLICE_LOGO_PNG_PATH = resourcePath("..\\Assets\\Images\\greek_police_logo.png")
-ADD_PNG_PATH = resourcePath("..\\Assets\\Images\\add.png")
-CHANGE_PNG_PATH = resourcePath("..\\Assets\\Images\\change.png")
-SEARCH_PNG_PATH = resourcePath("..\\Assets\\Images\\search.png")
-INSERT_PNG_PATH = resourcePath("..\\Assets\\Images\\insert.png")
-UPDATE_PNG_PATH = resourcePath("..\\Assets\\Images\\update.png")
+POLICE_LOGO_PNG_PATH = resourcePath("../../Assets/Images/greek_police_logo.png")
+ADD_PNG_PATH = resourcePath("../../Assets/Images/add.png")
+CHANGE_PNG_PATH = resourcePath("../../Assets/Images/change.png")
+SEARCH_PNG_PATH = resourcePath("../../Assets/Images/search.png")
+INSERT_PNG_PATH = resourcePath("../../Assets/Images/insert.png")
+UPDATE_PNG_PATH = resourcePath("../../Assets/Images/update.png")
 
 # Defining the App Data path
-APP_DATA_PATH = resourcePath('..\\Data\\appData.json')
+APP_DATA_PATH = resourcePath('../../Data/appData.json')

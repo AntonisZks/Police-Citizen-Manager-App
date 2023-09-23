@@ -5,8 +5,8 @@ This frame is the first one displayed when the application starts, allowing the 
 
 import json
 from tkinter import ttk, filedialog, messagebox
-from Source.UI_UX.frame import IFrame
-from Source.support import *
+from Source.UI_UX.Frames.frame import IFrame
+from Source.Extras.support import *
 
 
 class DatabasePickerFrame(IFrame):

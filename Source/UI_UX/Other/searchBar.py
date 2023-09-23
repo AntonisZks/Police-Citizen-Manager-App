@@ -1,5 +1,5 @@
 import tkinter as tk
-from Source.support import *
+from Source.Extras.support import *
 
 
 class SearchBar:
