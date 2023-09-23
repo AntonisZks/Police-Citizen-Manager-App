@@ -137,9 +137,9 @@ class App:
 
     def __setWindowGeometry(self) -> None:
         """
-        The __setWindowGeometry() method sets the geometry of the window. It obtains the current screen dimensions
+        The __setWindowGeometry() method sets the geometry of the window. It obtains the current screen dimensions,
         and then it calculates the width and the height of the window. It also calculates the spawn position of the window
-        which by default is the center of the screen. Finally it sets all the above to the main window.
+        which by default is the center of the screen. Finally, it sets all the above to the main window.
         
         """
         # Getting the screen width and height
@@ -154,7 +154,7 @@ class App:
             self.window_width = round(0.9*self.screen_width)
             self.window_height = round(1.2*self.window_width)
 
-        # Calculating the x and y coordinates so as to spawn the window at the center of the screen
+        # Calculating the x and y coordinates to spawn the window at the center of the screen
         spawn_x = (self.screen_width - self.window_width) // 2
         spawn_y = (self.screen_height - self.window_height) // 2 - 40
 

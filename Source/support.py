@@ -1,5 +1,5 @@
 """
-The support.py file contains some usefull constants and functions that is used by the program. Some of the constants are
+The support.py file contains some usefull constants and functions that is used by the program. Some constants are
 colors used in the application and some paths corresponding to usefull files, for example images, json files etc.
 
 """
@@ -7,6 +7,7 @@ colors used in the application and some paths corresponding to usefull files, fo
 import tkinter as tk
 import sys
 import os
+from typing import Any
 
 
 def resourcePath(relative_path: str) -> str:
@@ -30,6 +31,7 @@ def resourcePath(relative_path: str) -> str:
 
     return os.path.join(base_path, relative_path)
 
+
 def resizeImage(img: tk.PhotoImage, desired_size: int) -> tk.PhotoImage:
     """
     The resizeImage() function is used to resize an image according to a given size. This function is often used in situations
@@ -49,7 +51,8 @@ def resizeImage(img: tk.PhotoImage, desired_size: int) -> tk.PhotoImage:
     resized_img = img.subsample(width_factor, height_factor)
     return resized_img
 
-def textSpaced(text: str, times:int = 1) -> str:
+
+def textSpaced(text: str, times: int = 1) -> str:
     """
     The textSpaced() function is used to return a given string but with spaces. The function let the user select the
     number of spaces he/she wants the string to have.
@@ -64,11 +67,12 @@ def textSpaced(text: str, times:int = 1) -> str:
     """
     new_text = text[0]
     for i in range(1, len(text)):
-        new_text += " "*times
+        new_text += " " * times
         new_text += text[i]
     return new_text
 
-def getFileName(file_path: str) -> str:
+
+def getFileName(file_path: str) -> Any:
     """
     The getFileName() function returns the name of the given file path.
 
@@ -80,10 +84,13 @@ def getFileName(file_path: str) -> str:
     
     """
     try:
-        if file_path[len(file_path)-1] == 's': return os.path.basename(file_path)[:-4]
-        else: return os.path.basename(file_path)[:-5]
+        if file_path[len(file_path) - 1] == 's':
+            return os.path.basename(file_path)[:-4]
+        else:
+            return os.path.basename(file_path)[:-5]
     except IndexError:
         return
+
 
 def onMousewheel(event: any, area: any) -> None:
     """
@@ -99,11 +106,14 @@ def onMousewheel(event: any, area: any) -> None:
     current_scroll_frac = area.yview()[0]
 
     if event.delta > 0:  # Scrolling upwards
-        if current_scroll_frac <= 0.0: return  # Don't scroll further up if already at the top
-        area.yview_scroll(int(-1*(event.delta/120)), "units")
+        if current_scroll_frac <= 0.0:
+            return  # Don't scroll further up if already at the top
+        area.yview_scroll(int(-1 * (event.delta / 120)), "units")
     else:  # Scrolling downwards
-        if current_scroll_frac >= 1.0: return  # Don't scroll further down if already at the bottom
-        area.yview_scroll(int(-1*(event.delta/120)), "units")
+        if current_scroll_frac >= 1.0:
+            return  # Don't scroll further down if already at the bottom
+        area.yview_scroll(int(-1 * (event.delta / 120)), "units")
+
 
 # Defining all the colors used for the Application
 BACKGROUND_COLOR_1 = "#2A508C"
