@@ -7,7 +7,7 @@ import tkinter as tk
 from abc import ABC, abstractmethod
 
 
-class IFrame(ABC):
+class IFrame(ABC, tk.Frame):
     """
     The abstract base class for frames used in the application.
 
@@ -43,10 +43,10 @@ class IFrame(ABC):
             frame (Frame): The actual frame widget.
 
         """
+        super().__init__(app_data['window'], bg=app_data['theme-color'])
         self.application_data = app_data
         self.parent_widget = app_data['window']  # The parent widget is going to be the main window
         self.app = app_data['object']  # Storing the application object
-        self.frame = tk.Frame(self.parent_widget, bg=app_data['theme-color'])
 
         # Set up the header, body, and footer options and initialize the images used
         self._setupStructureOptions(self.application_data)
@@ -68,10 +68,10 @@ class IFrame(ABC):
         its children widgets.
 
         """
-        for child_widget in self.frame.winfo_children():
+        for child_widget in self.winfo_children():
             child_widget.destroy()
         
-        self.frame.pack_forget()
+        self.pack_forget()
 
     @abstractmethod
     def _initializeImages(self) -> None:

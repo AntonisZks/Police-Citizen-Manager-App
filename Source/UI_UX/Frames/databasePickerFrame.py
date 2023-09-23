@@ -234,7 +234,7 @@ class DatabasePickerFrame(IFrame):
         
         """
         # Create a context menu for each file button when the user right clicks on it
-        self.button_context_menu = tk.Menu(self.frame, tearoff=False)
+        self.button_context_menu = tk.Menu(self, tearoff=False)
         self.button_context_menu.add_command(label="Άνοιγμα Excel")
         self.button_context_menu.add_command(label="Άνοιγμα Θέσης Αρχείου")
         self.button_context_menu.add_separator()
@@ -307,7 +307,7 @@ class DatabasePickerFrame(IFrame):
         It creates a main label with a title and an image of the 'Greek Police Logo' next to it.
 
         """
-        self.header = tk.Frame(self.frame, bg=self.application_data['theme-color'])  # Creating the header frame
+        self.header = tk.Frame(self, bg=self.application_data['theme-color'])  # Creating the header frame
 
         # Creating the Header Label
         self.header_image = resizeImage(self.police_logo_image, round(0.13 * self.application_data['window-width']))
@@ -334,7 +334,7 @@ class DatabasePickerFrame(IFrame):
         to provide a better way of scrolling with the mouse wheel.
 
         """
-        self.body = tk.Frame(self.frame, bg=self.application_data['theme-color'])  # Creating the body frame
+        self.body = tk.Frame(self, bg=self.application_data['theme-color'])  # Creating the body frame
 
         # Creating the Body Label Message
         self.body_label_message = tk.Label(
@@ -377,7 +377,7 @@ class DatabasePickerFrame(IFrame):
         It creates an 'Add File' button which lets the user add a new database into the stored databases.
 
         """
-        self.footer = tk.Frame(self.frame, bg=self.application_data['theme-color'])  # Creating the footer frame
+        self.footer = tk.Frame(self, bg=self.application_data['theme-color'])  # Creating the footer frame
 
         # Creating the 'Add File' button
         self.add_file_image = resizeImage(self.add_image, round(1.3 * self.footer_options['font'][1]))

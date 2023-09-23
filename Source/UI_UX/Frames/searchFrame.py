@@ -129,7 +129,7 @@ class SearchFrame(IFrame):
         """
         Create the Header Frame, which contains the main label and logo.
         """
-        self.header = tk.Frame(self.frame, bg=self.application_data['theme-color'])  # Creating the header frame
+        self.header = tk.Frame(self, bg=self.application_data['theme-color'])  # Creating the header frame
 
         # Creating the Header Label
         self.header_image = resizeImage(self.police_logo_image, round(0.13 * self.application_data['window-width']))
@@ -152,7 +152,7 @@ class SearchFrame(IFrame):
         """
         Create the Body Frame, which contains the search bars.
         """
-        self.body = tk.Frame(self.frame, bg=self.application_data['theme-color'])  # Creating the body frame
+        self.body = tk.Frame(self, bg=self.application_data['theme-color'])  # Creating the body frame
         self.body.pack()
 
         # Creating a general frame that will hold the Search Bars

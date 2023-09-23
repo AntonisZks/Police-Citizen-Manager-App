@@ -163,7 +163,7 @@ class MainMenuFrame(IFrame):
         """
         Create the Header Frame, which contains the main label and logo.
         """
-        self.header = tk.Frame(self.frame, bg=self.application_data['theme-color'])  # Creating the header frame
+        self.header = tk.Frame(self, bg=self.application_data['theme-color'])  # Creating the header frame
 
         # Creating the Header Label
         self.header_image = resizeImage(self.police_logo_image, round(0.13 * self.application_data['window-width']))
@@ -186,10 +186,10 @@ class MainMenuFrame(IFrame):
         """
         Create the Body Frame, which contains the message label and navigation buttons.
         """
-        self.body = tk.Frame(self.frame, bg=self.application_data['theme-color'])  # Creating the body frame
+        self.body = tk.Frame(self, bg=self.application_data['theme-color'])  # Creating the body frame
 
         # Creating a parent frame that will hold the label and 'Change File' button
-        self.body_title_frame = tk.Frame(self.frame, bg=self.application_data['theme-color'])
+        self.body_title_frame = tk.Frame(self, bg=self.application_data['theme-color'])
 
         # Creating the body label message
         self.body_options['message-title'] = f"ΕΝΕΡΓΟ ΑΡΧΕΙΟ:" + " " * 10 + f"{getFileName(self.application_data['app-data']['active-database'])}"
@@ -215,7 +215,7 @@ class MainMenuFrame(IFrame):
         )
 
         # Creating the main navigation buttons (Search, Insert, Update)
-        self.nav_buttons_frame = tk.Frame(self.frame, bg=self.application_data['theme-color'])
+        self.nav_buttons_frame = tk.Frame(self, bg=self.application_data['theme-color'])
 
         # Create the images used in the buttons
         self.search_image = resizeImage(self.search_logo_image, int(2 * self.body_options['navigation-button-font'][1]))

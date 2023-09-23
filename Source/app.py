@@ -13,12 +13,11 @@ from Source.UI_UX.Frames.searchFrame import SearchFrame
 
 
 # The class App stands for the main application
-class App:
+class App(tk.Tk):
     """
     The App class represents the main application, where it has a main window and some useful options.
 
     Attributes:
-        window (Tk): The main window of the application
         window_icon (PhotImage): The icon of the main window
         window_width (int): The width of the main window
         window_height (int): The height of the main window
@@ -42,18 +41,19 @@ class App:
         It also gains the application data stored in a .json file called appData.json
 
         """
+        super().__init__()
         self.searchFrame = None
         self.mainMenuFrame = None
         self.databasePickerFrame = None
-        self.window = tk.Tk()  # Initialize the main window
-        self.window.protocol("WM_DELETE_WINDOW", self.__onClosing)
+
+        self.protocol("WM_DELETE_WINDOW", self.__onClosing)
 
         # Setting the options of the main window
         self.__setWindowIcon()  # Window Icon
         self.__setWindowGeometry()  # Window Geometry
-        self.window.state("zoomed")  # Window State
-        self.window.config(bg=BACKGROUND_COLOR_1)  # Background Color
-        self.window.title("Ελληνική Αστυνομία, Ατομικοί Φάκελοι")  # Window Title
+        self.state("zoomed")  # Window State
+        self.config(bg=BACKGROUND_COLOR_1)  # Background Color
+        self.title("Ελληνική Αστυνομία, Ατομικοί Φάκελοι")  # Window Title
 
         # Getting the App Data
         with open(APP_DATA_PATH, 'r', encoding='utf-8') as json_file:
@@ -82,7 +82,7 @@ class App:
         with open(APP_DATA_PATH, 'w', encoding='utf-8') as json_file:
             json.dump(self.app_data, json_file)
 
-        self.window.destroy()  # And of course destroy the main window and terminate the application
+        self.destroy()  # And of course destroy the main window and terminate the application
 
     def createFrames(self) -> None:
         """
@@ -108,7 +108,7 @@ class App:
 
         self.active_frame = frame
         self.active_frame.build()
-        self.active_frame.frame.pack()
+        self.active_frame.pack()
 
     def __createOptions(self) -> None:
         """
@@ -119,7 +119,7 @@ class App:
         self.options = {
             "app-data": self.app_data,
             "object": self,
-            "window": self.window,
+            "window": self,
             "window-width": self.window_width,
             "window-height": self.window_height,
             "theme-color": BACKGROUND_COLOR_1,
@@ -137,7 +137,7 @@ class App:
 
         """
         self.window_icon = tk.PhotoImage(file=POLICE_LOGO_PNG_PATH)
-        self.window.iconphoto(True, self.window_icon)
+        self.iconphoto(True, self.window_icon)
 
     def __setWindowGeometry(self) -> None:
         """
@@ -147,8 +147,8 @@ class App:
         
         """
         # Getting the screen width and height
-        self.screen_width = self.window.winfo_screenwidth()
-        self.screen_height = self.window.winfo_screenheight()
+        self.screen_width = self.winfo_screenwidth()
+        self.screen_height = self.winfo_screenheight()
 
         # Calculating the width and height of the main window
         if self.screen_width > self.screen_height:
@@ -162,7 +162,7 @@ class App:
         spawn_x = (self.screen_width - self.window_width) // 2
         spawn_y = (self.screen_height - self.window_height) // 2 - 40
 
-        self.window.geometry(f"{self.window_width}x{self.window_height}+{spawn_x}+{spawn_y}")
+        self.geometry(f"{self.window_width}x{self.window_height}+{spawn_x}+{spawn_y}")
 
     def run(self) -> None:
         """
@@ -170,7 +170,7 @@ class App:
         of the window object.
 
         """
-        self.window.mainloop()
+        self.mainloop()
 
 
 if __name__ == '__main__':
