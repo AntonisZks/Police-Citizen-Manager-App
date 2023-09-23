@@ -7,6 +7,7 @@ colors used in the application and some paths corresponding to useful files, for
 import tkinter as tk
 import sys
 import os
+import pandas as pd
 from typing import Any
 
 
@@ -92,6 +93,20 @@ def getFileName(file_path: str) -> Any:
         return
 
 
+def changeFileExtensionToXlsx(file_path):
+    # Get the directory and base filename without extension
+    directory, base_filename = os.path.split(file_path)
+    root, _ = os.path.splitext(base_filename)
+
+    # Create the new file path with the desired extension
+    new_file_path = os.path.join(directory, root + '.xlsx')
+
+    # Rename the file
+    os.rename(file_path, new_file_path)
+
+    return new_file_path
+
+
 def onMousewheel(event: any, area: any) -> None:
     """
     The onMousewheel() function controls the behaviour of the mouse wheel scrolling. It's often been used to situations where
@@ -115,6 +130,18 @@ def onMousewheel(event: any, area: any) -> None:
         area.yview_scroll(int(-1 * (event.delta / 120)), "units")
 
 
+def getLastFolderID(app_data: dict[str, Any]):
+    df = pd.read_excel(app_data["app-data"]["active-database"])
+    max_value = df["Α.Φ."].max()
+    return max_value
+
+
+def onEntry(event: Any, entries):
+    current_index = entries.index(event.widget)
+    next_index = (current_index + 1) % len(entries)
+    entries[next_index].focus()
+
+
 # Defining all the colors used for the Application
 BACKGROUND_COLOR_1 = "#2A508C"
 BACKGROUND_COLOR_2 = "#1C3E73"
@@ -128,6 +155,8 @@ CHANGE_PNG_PATH = resourcePath("Assets/Images/change.png")
 SEARCH_PNG_PATH = resourcePath("Assets/Images/search.png")
 INSERT_PNG_PATH = resourcePath("Assets/Images/insert.png")
 UPDATE_PNG_PATH = resourcePath("Assets/Images/update.png")
+RETURN_PNG_PATH = resourcePath("Assets/Images/back_arrow.png")
+SAVE_PNG_PATH = resourcePath("Assets/Images/save.png")
 
 # Defining the App Data path
 APP_DATA_PATH = resourcePath('Data/appData.json')

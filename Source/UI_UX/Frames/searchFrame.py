@@ -4,7 +4,6 @@ for folders by folder ID or surname using this frame.
 
 """
 
-import pandas as pd
 from Source.UI_UX.Frames.frame import IFrame
 from Source.UI_UX.Other.searchBar import SearchBar
 from Source.Extras.support import *
@@ -57,6 +56,7 @@ class SearchFrame(IFrame):
         """
         self.police_logo_image = tk.PhotoImage(file=self.header_options['image-path'])
         self.search_logo_image = tk.PhotoImage(file=self.body_options['search-bar-image-path'])
+        self.return_logo_image = tk.PhotoImage(file=self.footer_options['return-button-image-path'])
 
     def _setupStructureOptions(self, data: dict[str, any]) -> None:
         """
@@ -81,12 +81,33 @@ class SearchFrame(IFrame):
             "folderID-search-bar-place-holder": "Αριθμός Φακέλου",
             "surname-search-bar-place-holder": "Επώνυμο",
             "records-area-width": round(0.65 * self.application_data['window-width']),
-            "records-area-height": round(0.65 * self.application_data['window-height']),
+            "records-area-height": round(0.63 * self.application_data['window-height']),
             "records-area-no-records-message": "ΚΑΝΕΝΑ ΑΠΟΤΕΛΕΣΜΑ",
             "records-area-no-records-selected-message": "ΔΕΝ ΕΧΕΙ ΕΠΙΛΕΓΕΙ\nΚΑΝΕΝΑΣ ΦΑΚΕΛΟΣ",
             "records-area-font": ('Arial', round(0.03 * self.application_data['window-width'])),
             "record-button-font": ('Arial', round(0.014 * self.application_data['window-width']))
         }
+
+        # Setting up the Footer Options
+        self.footer_options = {
+            "return-button-text": " ΕΠΙΣΤΡΟΦΗ ΣΤΟ ΜΕΝΟΥ ",
+            "return-button-font": ('Arial', round(0.018 * max(self.application_data['window-width'], self.application_data['window-height']))),
+            "return-button-image-path": RETURN_PNG_PATH,
+            "return-button-padx-inner": round(0.01 * self.application_data['window-width']),
+            "return-button-pady-inner": round(0.005 * self.application_data['window-height']),
+            "return-button-padx-outer": round(0.01 * self.application_data['window-width']),
+            "return-button-pady-outer": round(0.012 * self.application_data['window-height']),
+        }
+
+    def closeAllRecordsVisualizerTabs(self):
+        for index in list(self.record_manager.selected_buttons.keys()):
+            self.record_visualiser.removeTab(index)
+
+    def __goToMainMenu(self):
+        """
+        Change the active frame to the Main Menu one.
+        """
+        self.app.setActiveFrame(self.app.mainMenuFrame)
 
     def _buildStructure(self) -> None:
         """
@@ -94,8 +115,12 @@ class SearchFrame(IFrame):
         """
         self._createHeaderFrame()  # First create the header
         self._createBodyFrame()  # Then create the body
+        self._createFooterFrame()  # Finally, create the footer
 
     def __searchByFolderID(self):
+        # Clearing the selected tabs in the Record Visualizer Notebook
+        self.closeAllRecordsVisualizerTabs()
+
         # Getting the current value of the folderID search bar
         item = self.folderID_search_bar.getItem()
         if item == "" or item == self.folderID_search_bar.place_holder:
@@ -111,6 +136,9 @@ class SearchFrame(IFrame):
         self.record_manager.createRecordButtons(filtered_df, self.body_options['record-button-font'])
 
     def __searchBySurname(self):
+        # Clearing the selected tabs in the Record Visualizer Notebook
+        self.closeAllRecordsVisualizerTabs()
+
         # Getting the current value of the Surname search bar
         item = self.surname_search_bar.getItem()
         if item == "" or item == self.surname_search_bar.place_holder:
@@ -132,7 +160,7 @@ class SearchFrame(IFrame):
         self.header = tk.Frame(self, bg=self.application_data['theme-color'])  # Creating the header frame
 
         # Creating the Header Label
-        self.header_image = resizeImage(self.police_logo_image, round(0.13 * self.application_data['window-width']))
+        self.header_image = resizeImage(self.police_logo_image, round(0.12 * self.application_data['window-width']))
         self.header_label = tk.Label(
             self.header,
             text=self.header_options['title'],
@@ -237,4 +265,19 @@ class SearchFrame(IFrame):
         self.record_visualiser.manager = self.record_manager
 
     def _createFooterFrame(self) -> None:
-        return super()._createFooterFrame()
+        """
+        Create the Footer Frame which contains the 'Return' button
+        """
+        self.return_image = resizeImage(self.return_logo_image, int(2 * self.footer_options["return-button-font"][1]))
+        self.returnButton = tk.Button(
+            self,
+            text=self.footer_options["return-button-text"],
+            font=self.footer_options["return-button-font"],
+            image=self.return_image,
+            compound=tk.LEFT,
+            padx=self.footer_options["return-button-padx-inner"],
+            pady=self.footer_options["return-button-pady-inner"],
+            command=self.__goToMainMenu
+        )
+
+        self.returnButton.pack(padx=self.footer_options["return-button-padx-outer"], pady=self.footer_options["return-button-pady-outer"])

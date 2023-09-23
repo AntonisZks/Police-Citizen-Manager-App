@@ -152,6 +152,13 @@ class MainMenuFrame(IFrame):
         """
         self.app.setActiveFrame(self.app.searchFrame)
 
+    def __gotoInsert(self) -> None:
+        """
+        Change the active frame to the Search Frame one.
+
+        """
+        self.app.setActiveFrame(self.app.insertFrame)
+
     def _buildStructure(self) -> None:
         """
         Build the general structure of the main menu frame (Header, Body).
@@ -224,7 +231,7 @@ class MainMenuFrame(IFrame):
 
         images = [self.search_image, self.insert_image, self.update_image]
         images_texts = ["search", "insert", "update"]
-        commands = [self.__gotoSearch, self.__gotoSearch, self.__gotoSearch]
+        commands = [self.__gotoSearch, self.__gotoInsert, self.__gotoSearch]
         buttons = []
 
         # Creating each button with a 'fancy' way

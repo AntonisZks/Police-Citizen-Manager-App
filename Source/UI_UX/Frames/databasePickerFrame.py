@@ -193,6 +193,16 @@ class DatabasePickerFrame(IFrame):
             messagebox.showwarning("Ήδη Υπάρχον Αρχείο", f"Το αρχείο {new_file_path} έχει ήδη οριστεί ως προεπιλογή")
             return
 
+        # Checking the extension of the new file
+        file_extension = os.path.splitext(new_file_path)[1]
+        if file_extension == ".xls":
+            user_choice = messagebox.askyesno("Μη Υποστηριζόμενη Κατάληξη Αρχείου", "Φαίνεται πως το αρχείο που προσπαθείτε να εισάγετε έχει την κατάληξη .xls η οποία δεν υποστηρίζεται. Επιθυμείτε να γίνει μετατροπή του αρχείου σε .xlsx;")
+
+            if not user_choice:
+                return
+
+            new_file_path = changeFileExtensionToXlsx(new_file_path)
+
         # If there is a new file path then update the stored databases list in the app data json file and in the window data dictionary
         if new_file_path:
             self.application_data['app-data']['stored-databases'].append(new_file_path)  # Add the new file path in the stored databases list
@@ -296,7 +306,7 @@ class DatabasePickerFrame(IFrame):
         and then it builds them again calling the __buildStructure() method.
         
         """
-        for child_widget in self.frame.winfo_children():
+        for child_widget in self.winfo_children():
             child_widget.destroy()
         self._buildStructure()
         self._setupStructureOptions(self.application_data)
