@@ -1,6 +1,6 @@
 """
-The support.py file contains some usefull constants and functions that is used by the program. Some constants are
-colors used in the application and some paths corresponding to usefull files, for example images, json files etc.
+The support.py file contains some useful constants and functions that is used by the program. Some constants are
+colors used in the application and some paths corresponding to useful files, for example images, json files etc.
 
 """
 
@@ -13,7 +13,7 @@ from typing import Any
 def resourcePath(relative_path: str) -> str:
     """
     The resourcePath() function returns the general path of a file on the current machine that is running the application.
-    In this way we can make sure that all the files that we are using will not cause an error whenver we call them on any machine.
+    In this way we can make sure that all the files that we are using will not cause an error whenever we call them on any machine.
     This function was provided by Stack Overflow. The link is the following:
     https://stackoverflow.com/questions/31836104/pyinstaller-and-onefile-how-to-include-an-image-in-the-exe-file
 
@@ -94,8 +94,8 @@ def getFileName(file_path: str) -> Any:
 
 def onMousewheel(event: any, area: any) -> None:
     """
-    The onMousewheel() function controls the behavious of the mouse wheel scrolling. It's often been used to situations where
-    there is a scrollable item such as canvas etc in the program and we want to let the user scroll.
+    The onMousewheel() function controls the behaviour of the mouse wheel scrolling. It's often been used to situations where
+    there is a scrollable item such as canvas etc. in the program, and we want to let the user scroll.
 
     Args:
         event (any): The event is usually the position of the mouse wheel in scrollable item.

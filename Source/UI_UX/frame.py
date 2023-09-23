@@ -48,7 +48,7 @@ class IFrame(ABC):
         self.app = app_data['object']  # Storing the application object
         self.frame = tk.Frame(self.parent_widget, bg=app_data['theme-color'])
 
-        # Setup the header, body, and footer options and initialize the images used
+        # Set up the header, body, and footer options and initialize the images used
         self._setupStructureOptions(self.application_data)
         self._initializeImages()
 
@@ -63,7 +63,7 @@ class IFrame(ABC):
 
     def destroy(self) -> None:
         """
-        The sestroy() method 'unpacks' the frame and destroys its children widgets. This method is common for all frames.
+        The destroy() method 'unpacks' the frame and destroys its children widgets. This method is common for all frames.
         Each frame has a specific frame object and the method just unpacks it from the main window, after destroying all
         its children widgets.
 

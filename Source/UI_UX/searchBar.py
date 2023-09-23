@@ -1,5 +1,6 @@
 import tkinter as tk
-from support import *
+from Source.support import *
+
 
 class SearchBar:
     """
@@ -20,7 +21,8 @@ class SearchBar:
         put(): Places the search bar and search button within the parent widget.
     """
 
-    def __init__(self, parent_widget: tk.Frame, app_data: dict[str, any], border_width: int, place_holder: str, font: tuple, command: callable) -> None:
+    def __init__(self, parent_widget: tk.Frame, app_data: dict[str, any], border_width: int, place_holder: str, font: tuple,
+                 command: callable) -> None:
         """
         Constructor for the SearchBar class.
 
@@ -32,6 +34,9 @@ class SearchBar:
             font (tuple): The font configuration for the text in the search bar.
             command (function): The function that is about to be called when the search button is pressed.
         """
+        self.search_button = None
+        self.search_image = None
+        self.entry = None
         self.parent_widget = parent_widget
         self.application_data = app_data
         self.border_width = border_width
@@ -42,12 +47,12 @@ class SearchBar:
         # Initialize some useful images
         self.search_logo_image = tk.PhotoImage(file=SEARCH_PNG_PATH)
 
-    def __focusIn(self, event, entry, place_holder) -> None:
+    @staticmethod
+    def __focusIn(entry, place_holder) -> None:
         """
         Event handler for when the search bar gains focus.
 
         Args:
-            event: The focus-in event.
             entry (tk.Entry): The search bar entry widget.
             place_holder (str): The placeholder text displayed in the search bar.
         """
@@ -55,14 +60,12 @@ class SearchBar:
             entry.delete(0, tk.END)
             entry.config(fg='black')
 
-    def __focusOut(self, event, entry, place_holder) -> None:
+    def __focusOut(self, entry: tk.Entry) -> None:
         """
         Event handler for when the search bar loses focus.
 
         Args:
-            event: The focus-out event.
             entry (tk.Entry): The search bar entry widget.
-            place_holder (str): The placeholder text displayed in the search bar.
         """
         if entry.get() == "":
             entry.insert(0, self.place_holder)
@@ -78,12 +81,12 @@ class SearchBar:
         # Creating the entry box
         self.entry = tk.Entry(self.parent_widget, fg="gray", font=self.font, borderwidth=self.border_width)
         self.entry.insert(0, self.place_holder)
-        self.entry.bind("<FocusIn>", lambda event: self.__focusIn(event, self.entry, self.place_holder))
-        self.entry.bind("<FocusOut>", lambda event: self.__focusOut(event, self.entry, self.place_holder))
+        self.entry.bind("<FocusIn>", lambda event: self.__focusIn(self.entry, self.place_holder))
+        self.entry.bind("<FocusOut>", lambda event: self.__focusOut(self.entry))
         self.entry.bind('<Return>', lambda event: self.command())
 
         # Creating the search button
-        self.search_image = resizeImage(self.search_logo_image, round(2*self.font[1]))
+        self.search_image = resizeImage(self.search_logo_image, round(2 * self.font[1]))
         self.search_button = tk.Button(self.parent_widget, text="Search", image=self.search_image, command=self.command)
 
     def put(self):

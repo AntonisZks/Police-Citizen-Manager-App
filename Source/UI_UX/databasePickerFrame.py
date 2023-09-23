@@ -5,39 +5,8 @@ This frame is the first one displayed when the application starts, allowing the 
 
 import json
 from tkinter import ttk, filedialog, messagebox
-from .frame import IFrame
-from ..support import *
-
-
-def __openExcelFile(index: int) -> None:
-    """
-    The __openExcelFile() method is used to open an Excel File when the user right clicks on its button.
-
-    Args:
-        index (int): The index corresponding to the correct Excel file in the stored databases sequence
-
-    """
-    with open(APP_DATA_PATH, 'r', encoding='utf-8') as json_file:
-        app_data = json.load(json_file)
-
-    file_path = app_data['stored-databases'][index]
-    os.startfile(file_path)
-
-
-def __openExcelFileFolder(index: int) -> None:
-    """
-    The __openExcelFileFolder() method opens the folder containing the Excel File of the stored databases on the given index.
-
-    Args:
-        index (int): The index to get the correct Excel file in the stored databases sequence and open its folder
-
-    """
-    with open(APP_DATA_PATH, 'r', encoding='utf-8') as json_file:
-        app_data = json.load(json_file)
-
-    file_path = app_data['stored-databases'][index]
-    folder_path = os.path.dirname(file_path)
-    os.startfile(folder_path)
+from Source.UI_UX.frame import IFrame
+from Source.support import *
 
 
 class DatabasePickerFrame(IFrame):
@@ -156,6 +125,37 @@ class DatabasePickerFrame(IFrame):
         """
         self.app.setActiveFrame(self.app.mainMenuFrame)
 
+    @staticmethod
+    def __openExcelFile(index: int) -> None:
+        """
+        The __openExcelFile() method is used to open an Excel File when the user right clicks on its button.
+
+        Args:
+            index (int): The index corresponding to the correct Excel file in the stored databases sequence
+
+        """
+        with open(APP_DATA_PATH, 'r', encoding='utf-8') as json_file:
+            app_data = json.load(json_file)
+
+        file_path = app_data['stored-databases'][index]
+        os.startfile(file_path)
+
+    @staticmethod
+    def __openExcelFileFolder(index: int) -> None:
+        """
+        The __openExcelFileFolder() method opens the folder containing the Excel File of the stored databases on the given index.
+
+        Args:
+            index (int): The index to get the correct Excel file in the stored databases sequence and open its folder
+
+        """
+        with open(APP_DATA_PATH, 'r', encoding='utf-8') as json_file:
+            app_data = json.load(json_file)
+
+        file_path = app_data['stored-databases'][index]
+        folder_path = os.path.dirname(file_path)
+        os.startfile(folder_path)
+
     def __createExcelFileButton(self, parent: tk.Widget, database_path: str) -> tk.Button:
         """
         The __createExcelFileButton() creates a button corresponding to an Excel File.
@@ -251,15 +251,15 @@ class DatabasePickerFrame(IFrame):
 
         """
         self.button_context_menu.post(event.x_root, event.y_root)
-        self.button_context_menu.entryconfigure(0, command=lambda: __openExcelFile(index))
-        self.button_context_menu.entryconfigure(1, command=lambda: __openExcelFileFolder(index))
+        self.button_context_menu.entryconfigure(0, command=lambda: self.__openExcelFile(index))
+        self.button_context_menu.entryconfigure(1, command=lambda: self.__openExcelFileFolder(index))
         self.button_context_menu.entryconfigure(3, command=lambda: self.__deleteExcelFileButton(button, index))
 
     def _buildStructure(self) -> None:
         """
         The _buildStructure() method builds the general structure of the frame (Header, Body, Footer). It also gains
-        all the stored databases to be sure if a message such as 'No Files Deteceted' is appropriate to be displayed.
-        Finally, it displayes all the Excel Files in the stored databases as buttons to the screen.
+        all the stored databases to be sure if a message such as 'No Files Detected' is appropriate to be displayed.
+        Finally, it displays all the Excel Files in the stored databases as buttons to the screen.
 
         """
         self._createHeaderFrame()  # First create the header
@@ -374,7 +374,7 @@ class DatabasePickerFrame(IFrame):
     def _createFooterFrame(self) -> None:
         """
         The _createFooterFrame() method is used by the __buildStructure() method, and it builds the footer frame of the main structure.
-        It creates an 'Add File' button whick lets the user add a new database into the stored databases.
+        It creates an 'Add File' button which lets the user add a new database into the stored databases.
 
         """
         self.footer = tk.Frame(self.frame, bg=self.application_data['theme-color'])  # Creating the footer frame

@@ -4,6 +4,8 @@ from tkinter import ttk
 
 class RecordsVisualiser:
     def __init__(self, parent_widget, app_data, width, height, bg_color, no_record_selected_message_options):
+        self.temp_label = None
+        self.temp_tab = None
         self.no_record_selected_message_options = no_record_selected_message_options
         self.app_data = app_data
         self.bg_color = bg_color

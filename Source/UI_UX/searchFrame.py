@@ -4,15 +4,13 @@ for folders by folder ID or surname using this frame.
 
 """
 
-import tkinter as tk
 import pandas as pd
-from tkinter import ttk
-from .frame import IFrame
-from .searchBar import SearchBar
-from .record import Record
-from support import *
-from .recordsManager import RecordsManager
-from .recordsVisualiser import RecordsVisualiser
+from Source.UI_UX.frame import IFrame
+from Source.UI_UX.searchBar import SearchBar
+from Source.support import *
+from Source.UI_UX.recordsManager import RecordsManager
+from Source.UI_UX.recordsVisualiser import RecordsVisualiser
+
 
 class SearchFrame(IFrame):
     """
@@ -82,12 +80,12 @@ class SearchFrame(IFrame):
             "search-bar-border-width": lambda: round(0.34 * self.body_options['search-bar-font'][1]),
             "folderID-search-bar-place-holder": "Αριθμός Φακέλου",
             "surname-search-bar-place-holder": "Επώνυμο",
-            "records-area-width": round(0.65*self.application_data['window-width']),
-            "records-area-height": round(0.65*self.application_data['window-height']),
+            "records-area-width": round(0.65 * self.application_data['window-width']),
+            "records-area-height": round(0.65 * self.application_data['window-height']),
             "records-area-no-records-message": "ΚΑΝΕΝΑ ΑΠΟΤΕΛΕΣΜΑ",
             "records-area-no-records-selected-message": "ΔΕΝ ΕΧΕΙ ΕΠΙΛΕΓΕΙ\nΚΑΝΕΝΑΣ ΦΑΚΕΛΟΣ",
-            "records-area-font": ('Arial', round(0.03*self.application_data['window-width'])),
-            "record-button-font": ('Arial', round(0.014*self.application_data['window-width']))
+            "records-area-font": ('Arial', round(0.03 * self.application_data['window-width'])),
+            "record-button-font": ('Arial', round(0.014 * self.application_data['window-width']))
         }
 
     def _buildStructure(self) -> None:
@@ -105,13 +103,13 @@ class SearchFrame(IFrame):
 
         # Getting all the stored data in the current active database
         records_df = pd.read_excel(self.application_data['app-data']['active-database'])
-        records_df = records_df.fillna('') # this command makes sure that the NaN values in the excel are filled with ''
+        records_df = records_df.fillna('')  # this command makes sure that the NaN values in the Excel are filled with ''
 
         # Keeping those data that their folderID is similar to the folderID search bar value
         filtered_df = records_df[records_df["Α.Φ."] == int(item)]
-        
+
         self.record_manager.createRecordButtons(filtered_df, self.body_options['record-button-font'])
-        
+
     def __searchBySurname(self):
         # Getting the current value of the Surname search bar
         item = self.surname_search_bar.getItem()
@@ -120,8 +118,8 @@ class SearchFrame(IFrame):
 
         # Getting all the stored data in the current active database
         records_df = pd.read_excel(self.application_data['app-data']['active-database'])
-        records_df = records_df.fillna('') # this command makes sure that the NaN values in the excel are filled with ''
-        
+        records_df = records_df.fillna('')  # this command makes sure that the NaN values in the Excel are filled with ''
+
         # Keeping those data that their folderID is similar to the folderID search bar value
         filtered_df = records_df[records_df["ΕΠΩΝΥΜΟ"].str.startswith(item.upper())]
 
@@ -195,7 +193,7 @@ class SearchFrame(IFrame):
         # Creating the record manager object that manages and displays the result records from the search
         self.record_manager = RecordsManager(
             self.results_frame,
-            self.application_data, 
+            self.application_data,
             self.body_options['records-area-width'],
             self.body_options['records-area-height'],
             self.application_data['theme-color-dark'],
@@ -208,9 +206,9 @@ class SearchFrame(IFrame):
         )
         self.record_manager.createNoRecordsMessage()
         self.record_manager.show(
-            0, 0, 
-            round(0.05*self.application_data['window-width']), 
-            round(0.018*self.application_data['window-height'])
+            0, 0,
+            round(0.05 * self.application_data['window-width']),
+            round(0.018 * self.application_data['window-height'])
         )
 
         # Creating the record visualiser object that displays the data of each record
@@ -230,8 +228,8 @@ class SearchFrame(IFrame):
         self.record_visualiser.addTemporaryTab()
         self.record_visualiser.show(
             0, 1,
-            round(0.05*self.application_data['window-width']), 
-            round(0.018*self.application_data['window-height'])
+            round(0.05 * self.application_data['window-width']),
+            round(0.018 * self.application_data['window-height'])
         )
 
         # Connecting the records Manager and Visualiser

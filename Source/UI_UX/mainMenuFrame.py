@@ -5,12 +5,12 @@ for interacting with the selected database.
 """
 
 import json
-import tkinter as tk
-from support import *
-from .frame import IFrame
+from Source.support import *
+from Source.UI_UX.frame import IFrame
 
 
-def createNavigationButton(parent: tk.Tk, text: str, font: tuple, width: int, image: tk.PhotoImage, padx: int, pady: int, command: callable) -> tk.Button:
+def createNavigationButton(parent: tk.Widget, text: str, font: tuple, width: int, image: tk.PhotoImage, pad_x: int, pad_y: int,
+                           command: callable) -> tk.Button:
     """
     Create a navigation button with text and an image according to its given properties.
 
@@ -20,14 +20,14 @@ def createNavigationButton(parent: tk.Tk, text: str, font: tuple, width: int, im
         font (tuple): The font configuration for the button text.
         width (int): The width of the button.
         image (PhotoImage): The image to display on the button.
-        padx (int): The horizontal padding of the button.
-        pady (int): The vertical padding of the button.
+        pad_x (int): The horizontal padding of the button.
+        pad_y (int): The vertical padding of the button.
         command (callable): The function to be called when the button is clicked.
 
     Returns:
         Button: The created navigation button.
     """
-    new_button = tk.Button(parent, text=text, font=font, width=width, image=image, compound=tk.LEFT, padx=padx, pady=pady, command=command)
+    new_button = tk.Button(parent, text=text, font=font, width=width, image=image, compound=tk.LEFT, padx=pad_x, pady=pad_y, command=command)
     return new_button
 
 
@@ -107,12 +107,11 @@ class MainMenuFrame(IFrame):
         self.body_options = {
             "message-title": f"ΕΝΕΡΓΟ ΑΡΧΕΙΟ:" + " " * 10 + f"{getFileName(self.application_data['app-data']['active-database'])}",
             "message-title-font": (
-            'Arial', round(0.018 * max(self.application_data['window-width'], self.application_data['window-height'])), 'bold'),
+                'Arial', round(0.018 * max(self.application_data['window-width'], self.application_data['window-height'])), 'bold'),
             "buttons-font": ('Arial', round(0.011 * max(self.application_data['window-width'],
-                                                         self.application_data['window-height']))),
+                                                        self.application_data['window-height']))),
             "change-file-button-text": "ΑΛΛΑΓΗ",
-            "change-file-button-font": (
-            'Arial', round(0.011 * max(self.application_data['window-width'], self.application_data['window-height']))),
+            "change-file-button-font": ('Arial', round(0.011 * max(self.application_data['window-width'], self.application_data['window-height']))),
             "change-file-button-padx-outer": round(0.02 * self.application_data['window-width']),
             "change-file-button-padx-inner": round(0.01 * self.application_data['window-width']),
             "change-file-button-pady-inner": round(0.005 * self.application_data['window-height']),
@@ -121,8 +120,7 @@ class MainMenuFrame(IFrame):
             "insert-image-path": INSERT_PNG_PATH,
             "update-image-path": UPDATE_PNG_PATH,
             "navigation-button-width": round(0.4 * self.application_data['window-width']),
-            "navigation-button-font": (
-            'Arial', round(0.025 * max(self.application_data['window-width'], self.application_data['window-height']))),
+            "navigation-button-font": ('Arial', round(0.025 * max(self.application_data['window-width'], self.application_data['window-height']))),
             "navigation-button-padx-inner": round(0.03 * self.application_data['window-width']),
             "navigation-button-pady-inner": round(0.012 * self.application_data['window-height']),
             "navigation-button-pady-outer": round(0.05 * self.application_data['window-height']),
@@ -204,8 +202,7 @@ class MainMenuFrame(IFrame):
         )
 
         # Creating the 'Change File' button
-        self.change_file_image = resizeImage(self.change_logo_image,
-                                             round(2 * self.body_options['change-file-button-font'][1]))
+        self.change_file_image = resizeImage(self.change_logo_image, int(2 * self.body_options['change-file-button-font'][1]))
         self.change_file_button = tk.Button(
             self.body_title_frame,
             text=self.body_options["change-file-button-text"],
@@ -221,12 +218,9 @@ class MainMenuFrame(IFrame):
         self.nav_buttons_frame = tk.Frame(self.frame, bg=self.application_data['theme-color'])
 
         # Create the images used in the buttons
-        self.search_image = resizeImage(self.search_logo_image,
-                                        round(2 * self.body_options['navigation-button-font'][1]))
-        self.insert_image = resizeImage(self.insert_logo_image,
-                                        round(2 * self.body_options['navigation-button-font'][1]))
-        self.update_image = resizeImage(self.update_logo_image,
-                                        round(2 * self.body_options['navigation-button-font'][1]))
+        self.search_image = resizeImage(self.search_logo_image, int(2 * self.body_options['navigation-button-font'][1]))
+        self.insert_image = resizeImage(self.insert_logo_image, int(2 * self.body_options['navigation-button-font'][1]))
+        self.update_image = resizeImage(self.update_logo_image, int(2 * self.body_options['navigation-button-font'][1]))
 
         images = [self.search_image, self.insert_image, self.update_image]
         images_texts = ["search", "insert", "update"]
