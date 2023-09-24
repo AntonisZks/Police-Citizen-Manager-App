@@ -187,11 +187,7 @@ class DatabasePickerFrame(IFrame):
 
         """
         filetypes = (("Excel files", "*.xls"), ("Excel files", "*.xlsx"))  # Define the available file types
-
         new_file_path = filedialog.askopenfilename(title="Επιλογή Αρχείου", filetypes=filetypes)
-        if new_file_path in self.application_data['app-data']['stored-databases']:
-            messagebox.showwarning("Ήδη Υπάρχον Αρχείο", f"Το αρχείο {new_file_path} έχει ήδη οριστεί ως προεπιλογή")
-            return
 
         # Checking the extension of the new file
         file_extension = os.path.splitext(new_file_path)[1]
@@ -201,7 +197,12 @@ class DatabasePickerFrame(IFrame):
             if not user_choice:
                 return
 
-            new_file_path = changeFileExtensionToXlsx(new_file_path)
+            new_file_path = changeFileExtensionToXlsx(new_file_path).replace('\\', '/')
+
+        # Checking if the file already exists
+        if new_file_path in self.application_data['app-data']['stored-databases']:
+            messagebox.showwarning("Ήδη Υπάρχον Αρχείο", f"Το αρχείο {new_file_path} έχει ήδη οριστεί ως προεπιλογή")
+            return
 
         # If there is a new file path then update the stored databases list in the app data json file and in the window data dictionary
         if new_file_path:

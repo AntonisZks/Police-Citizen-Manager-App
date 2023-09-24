@@ -3,6 +3,8 @@ The 'insertFrame.py' file contains the InsertFrame class, which represents the i
 and insert them to the database.
 
 """
+import re
+from tkinter import messagebox
 
 from Source.UI_UX.Frames.frame import IFrame
 from Source.Extras.support import *
@@ -83,6 +85,46 @@ class InsertFrame(IFrame):
 		# Getting the stored data in the database
 		df = pd.read_excel(self.application_data['app-data']['active-database'])
 
+		# Checking if the folderID and surname fields are filled
+		if self.entries[0].get() == "":
+			messagebox.showerror("Ελλιπή Στοιχεία", "Το πεδίο 'Αριθμός Φακέλου' πρέπει να είναι συμπληρωμένο")
+			self.entries[0].focus()
+			return
+
+		if self.entries[1].get() == "":
+			messagebox.showerror("Ελλιπή Στοιχεία", "Το πεδίο 'Επώνυμο' πρέπει να είναι συμπληρωμένο")
+			self.entries[1].focus()
+			return
+
+		# Checking if the given date agrees with the Data Prototype
+		datePattern = r'\b\d{2}/\d{2}/\d{4}\b'
+
+		if self.entries[5].get() == "DD/MM/YY":
+			self.entries[5].delete(0, tk.END)
+
+		if self.entries[5].get() != "" and not re.match(datePattern, self.entries[5].get()):
+			messagebox.showerror("Μη Έγκυρη Ημερομηνία", f"Το πεδίο 'Ημερομηνία Γέννησης' ωφείλει να ικανοποιεί το πρότυπο DD/MM/YY. Η τιμή '{self.entries[5].get()}' δεν το ικανοποιεί. Το πεδίο μπορεί να είναι κενό")
+			self.entries[5].focus()
+			return
+
+		# Checking if the given phone number is valid
+		if self.entries[9].get() == "10-ψήφιος αριθμός":
+			self.entries[9].delete(0, tk.END)
+
+		if self.entries[9].get() != "" and len(self.entries[9].get()) != 10:
+			messagebox.showerror(f"Μη Έγκυρος Αριθμός Τηλεφώνου", f"Ο αριθμός τηλεφώνου '{self.entries[9].get()}' δεν είναι έγκυρος. Ο αριθμός πρέπει να είναι 10-ψήφιος. Το πεδίο μπορεί να είναι κενό")
+			self.entries[9].focus()
+			return
+
+		if self.entries[6].get() == "π.χ. Αθήνα":
+			self.entries[6].delete(0, tk.END)
+
+		if self.entries[7].get() == "π.χ. Ακροπόλεως 51":
+			self.entries[7].delete(0, tk.END)
+
+		if self.entries[8].get() == "π.χ. Χαλάνδρι":
+			self.entries[8].delete(0, tk.END)
+
 		# Getting the new data
 		new_data = []
 		for entry in self.entries:
@@ -96,6 +138,16 @@ class InsertFrame(IFrame):
 
 		# Storing the data of the dataframe into the database
 		df.to_excel(self.application_data['app-data']['active-database'], index=False)
+
+		# Successful Data Insertion and resetting the frame
+		messagebox.showinfo("Επιτυχής Καταχώρηση", "Τα στοιχεία καταχωρήθηκαν με επιτυχία!")
+		self.__reset()
+
+	def __reset(self):
+		for childWidget in self.winfo_children():
+			childWidget.destroy()
+
+		self._buildStructure()
 
 	def _buildStructure(self) -> None:
 		"""
@@ -153,6 +205,10 @@ class InsertFrame(IFrame):
 		for entry in self.entries:
 			entry.bind('<Return>', lambda e: onEntry(e, self.entries))
 			entry.bind('<Tab>', lambda e: onEntry(e, self.entries))
+
+		# Binding the last entry (Comments One) in order to save the new form if the user presses 'Tab' or 'Return'
+		self.entries[12].bind('<Return>', lambda e: self.__saveRecord())
+		self.entries[12].bind('<Tab>', lambda e: self.__saveRecord())
 
 		# Filling the first entry (folderID one) with the new available folder id
 		lastFolderID = getLastFolderID(self.application_data)

@@ -1,6 +1,6 @@
-import os
+original_string = r'C:\Users\Username\Documents\file.txt'
 
-file_path = 'example.txt'
-file_extension = os.path.splitext(file_path)[1]
+# Replace backslashes with forward slashes
+new_string = original_string.replace('\\', '/')
 
-print("File extension:", file_extension)
+print(new_string)

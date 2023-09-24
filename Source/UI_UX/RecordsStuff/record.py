@@ -92,6 +92,35 @@ class Record:
 
     @staticmethod
     def createEmptyDataFrame(parent_widget: tk.Widget, app_data: dict[str, Any]):
+        def addPlaceHolder(entry, place_holder):
+            entry.insert(0, place_holder)
+            entry.config(fg='gray')
+            entry.bind("<FocusIn>", lambda event: __focusIn(entry, place_holder))
+            entry.bind("<FocusOut>", lambda event: __focusOut(entry, place_holder))
+
+        def __focusIn(entry, place_holder) -> None:
+            """
+            Event handler for when the entry gains focus.
+
+            Args:
+                entry (tk.Entry): The entry widget.
+                place_holder (str): The placeholder text displayed in the entry.
+            """
+            if entry.get() == place_holder:
+                entry.delete(0, tk.END)
+                entry.config(fg='black')
+
+        def __focusOut(entry: tk.Entry, place_holder) -> None:
+            """
+            Event handler for when the entry loses focus.
+
+            Args:
+                entry (tk.Entry): The entry widget.
+            """
+            if entry.get() == "":
+                entry.insert(0, place_holder)
+                entry.config(fg='gray')
+
         frame = tk.Frame(parent_widget, background=app_data['theme-color-dark'])
         frame.pack()
 
@@ -112,11 +141,16 @@ class Record:
         primary_data_frame = tk.Frame(frame, background=options['bg'], pady=round(0.01 * app_data['window-height']))
         primary_data_frame.pack()
 
-        entries = [createSmallInfo(primary_data_frame, options, "ΑΡΙΘΜΟΣ ΦΑΚΕΛΟΥ: 1020/", "", "normal", 0, 0), createSmallInfo(primary_data_frame, options, "ΕΠΩΝΥΜΟ:", "", "normal", 1, 0),
-                   createSmallInfo(primary_data_frame, options, "ΟΝΟΜΑ:", "", "normal", 1, 1), createSmallInfo(primary_data_frame, options, "ΠΑΤΡΩΝΥΜΟ:", "", "normal", 2, 0),
-                   createSmallInfo(primary_data_frame, options, "ΜΗΤΡΩΝΥΜΟ:", "", "normal", 2, 1), createSmallInfo(primary_data_frame, options, "ΗΜΕΡΟΜΗΝΙΑ ΓΕΝΝΗΣΗΣ:", "", "normal", 3, 0),
-                   createSmallInfo(primary_data_frame, options, "ΤΟΠΟΣ ΓΕΝΝΗΣΗΣ:", "", "normal", 3, 1), createSmallInfo(primary_data_frame, options, "ΔΙΕΥΘΥΝΣΗ ΚΑΤΟΙΚΙΑΣ:", "", "normal", 4, 0),
-                   createSmallInfo(primary_data_frame, options, "ΠΕΡΙΟΧΗ:", "", "normal", 4, 1), createSmallInfo(primary_data_frame, options, "ΤΗΛΕΦΩΝΟ:", "", "normal", 5, 0),
+        entries = [createSmallInfo(primary_data_frame, options, "ΑΡΙΘΜΟΣ ΦΑΚΕΛΟΥ: 1020/", "", "normal", 0, 0),
+                   createSmallInfo(primary_data_frame, options, "ΕΠΩΝΥΜΟ:", "", "normal", 1, 0),
+                   createSmallInfo(primary_data_frame, options, "ΟΝΟΜΑ:", "", "normal", 1, 1),
+                   createSmallInfo(primary_data_frame, options, "ΠΑΤΡΩΝΥΜΟ:", "", "normal", 2, 0),
+                   createSmallInfo(primary_data_frame, options, "ΜΗΤΡΩΝΥΜΟ:", "", "normal", 2, 1),
+                   createSmallInfo(primary_data_frame, options, "ΗΜΕΡΟΜΗΝΙΑ ΓΕΝΝΗΣΗΣ:", "", "normal", 3, 0),
+                   createSmallInfo(primary_data_frame, options, "ΤΟΠΟΣ ΓΕΝΝΗΣΗΣ:", "", "normal", 3, 1),
+                   createSmallInfo(primary_data_frame, options, "ΔΙΕΥΘΥΝΣΗ ΚΑΤΟΙΚΙΑΣ:", "", "normal", 4, 0),
+                   createSmallInfo(primary_data_frame, options, "ΠΕΡΙΟΧΗ:", "", "normal", 4, 1),
+                   createSmallInfo(primary_data_frame, options, "ΤΗΛΕΦΩΝΟ:", "", "normal", 5, 0),
                    createSmallInfo(primary_data_frame, options, "ΕΙΔΟΣ ΕΠΙΧΕΙΡΗΣΗΣ:", "", "normal", 5, 1)]
 
         secondary_data_frame = tk.Frame(frame, background=options['bg'])
@@ -125,9 +159,16 @@ class Record:
         entries.append(createBigInfo(secondary_data_frame, options, "ΠΑΡΑΤΗΡΗΣΕΙΣ", "", "normal"))
         entries.append(createBigInfo(secondary_data_frame, options, "ΣΧΟΛΙΑ", "", "normal"))
 
+        # Binding some entries with additional options
+        addPlaceHolder(entries[5], 'DD/MM/YY')
+        addPlaceHolder(entries[9], '10-ψήφιος αριθμός')
+        addPlaceHolder(entries[6], 'π.χ. Αθήνα')
+        addPlaceHolder(entries[7], 'π.χ. Ακροπόλεως 51')
+        addPlaceHolder(entries[8], 'π.χ. Χαλάνδρι')
+
         return frame, entries
 
-    def __str__(self):
+    def __repr__(self):
         text = f"""FolderID: {self.folderID}\n
                    Surname: {self.surname}\n
                    Name: {self.name}\n
