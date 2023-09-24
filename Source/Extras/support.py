@@ -160,3 +160,18 @@ SAVE_PNG_PATH = resourcePath("Assets/Images/save.png")
 
 # Defining the App Data path
 APP_DATA_PATH = resourcePath('Data/appData.json')
+
+# Defining a list that contains the columns names of every Excel file the user is going to work on
+COLUMNS_NAMES = ["ΑΡΙΘΜΟΣ ΦΑΚΕΛΟΥ: 1020/",
+                 "ΕΠΩΝΥΜΟ:",
+                 "ΟΝΟΜΑ:",
+                 "ΠΑΤΡΩΝΥΜΟ:",
+                 "ΜΗΤΡΩΝΥΜΟ:",
+                 "ΗΜΕΡΟΜΗΝΙΑ ΓΕΝΝΗΣΗΣ:",
+                 "ΤΟΠΟΣ ΓΕΝΝΗΣΗΣ:",
+                 "ΔΙΕΥΘΥΝΣΗ ΚΑΤΟΙΚΙΑΣ:",
+                 "ΠΕΡΙΟΧΗ:",
+                 "ΤΗΛΕΦΩΝΟ:",
+                 "ΕΙΔΟΣ ΕΠΙΧΕΙΡΗΣΗΣ:",
+                 "ΠΑΡΑΤΗΡΗΣΕΙΣ:",
+                 "ΣΧΟΛΙΑ:"]

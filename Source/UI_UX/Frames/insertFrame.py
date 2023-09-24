@@ -96,6 +96,8 @@ class InsertFrame(IFrame):
 			self.entries[1].focus()
 			return
 
+		# TODO: Clean the following mesh
+
 		# Checking if the given date agrees with the Data Prototype
 		datePattern = r'\b\d{2}/\d{2}/\d{4}\b'
 

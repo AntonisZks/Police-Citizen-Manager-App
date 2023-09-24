@@ -1,6 +1,9 @@
-original_string = r'C:\Users\Username\Documents\file.txt'
+row = 0
+while row <= 5:
+    col = 0
+    while col <= 1:
+        if row != 0 or col != 1:
+            print(row, col)
+        col += 1
 
-# Replace backslashes with forward slashes
-new_string = original_string.replace('\\', '/')
-
-print(new_string)
+    row += 1
