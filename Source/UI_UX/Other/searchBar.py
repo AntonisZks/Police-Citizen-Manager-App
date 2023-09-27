@@ -1,97 +1,112 @@
+"""
+The 'searchBar.py' file contains the SearchBar class, which represents a basic search bar. It is mostly being used in the 'searchFrame.py' and in the 'updateFrame.py'
+files where they allow the user to enter the input and get the appropriate output. The search bar consists of two elements. An entry box where the input is being written,
+and a button which is used to execute the search process.
+
+"""
+
 import tkinter as tk
 from Source.Extras.support import *
 
 
 class SearchBar:
-    """
-    The SearchBar class represents a search bar widget that can be used to enter search queries.
+    """ The SearchBar class represents a search bar widget that can be used to enter search queries.
 
     Attributes:
-        parent_widget (tk.Frame): The parent widget where the search bar will be placed.
-        application_data (dict): Data related to the application.
-        border_width (int): The width of the search bar's border.
-        place_holder (str): The placeholder text displayed in the search bar when it's empty.
+        parentWidget (tk.Frame): The parent widget where the search bar will be placed.
+        applicationSettings (dict): Data related to the application.
+        borderWidth (int): The width of the search bar's border.
+        placeHolder (str): The placeholder text displayed in the search bar when it's empty.
         font (tuple): The font configuration for the text in the search bar.
-        search_logo_image (PhotoImage): An image for the search button.
+        searchLogoImage (PhotoImage): An image for the search button.
 
     Methods:
         __focus_in(event, entry, place_holder): Event handler for when the search bar gains focus.
         __focus_out(event, entry, place_holder): Event handler for when the search bar loses focus.
         build(): Builds the search bar and associated search button.
         put(): Places the search bar and search button within the parent widget.
+
     """
 
-    def __init__(self, parent_widget: tk.Frame, app_data: dict[str, any], border_width: int, place_holder: str, font: tuple,
-                 command: callable) -> None:
-        """
-        Constructor for the SearchBar class.
+    def __init__(self, parentWidget: tk.Widget, applicationSettings: dict[str, any], borderWidth: int, placeHolder: str, font: tuple, command: callable) -> None:
+        """ Constructor for the SearchBar class. the search bar widget consists of two elements, an entry box and a button. Each one has its own characteristics.
+            The entry box has a width, a border width, a font and a placeholder. The button has a width, an image and a command to execute when it is clicked.
 
         Args:
-            parent_widget (tk.Frame): The parent widget where the search bar will be placed.
-            app_data (dict): Data related to the application.
-            border_width (int): The width of the search bar's border.
-            place_holder (str): The placeholder text displayed in the search bar when it's empty.
+            parentWidget (tk.Frame): The parent widget where the search bar will be placed.
+            applicationSettings (dict): Settings related to the application.
+            borderWidth (int): The width of the search bar's border.
+            placeHolder (str): The placeholder text displayed in the search bar when it's empty.
             font (tuple): The font configuration for the text in the search bar.
             command (function): The function that is about to be called when the search button is pressed.
+
         """
-        self.search_button = None
-        self.search_image = None
-        self.entry = None
-        self.parent_widget = parent_widget
-        self.application_data = app_data
-        self.border_width = border_width
-        self.place_holder = place_holder
-        self.font = font
-        self.command = command
+
+        self.searchButton = None  # Temporary initialization of the search button
+        self.searchImage = None   # Temporary initialization of the search image
+        self.entry = None         # Temporary initialization of the entry box
+
+        self.parentWidget = parentWidget                # The parent widget containing the search bar
+        self.applicationSettings = applicationSettings  # The settings of the application
+        self.borderWidth = borderWidth                  # The border width of the entry box
+        self.placeHolder = placeHolder                  # The placeholder of the entry box
+        self.font = font                                # The font of the entry box
+        self.command = command                          # The command to be executed when the button is clicked
 
         # Initialize some useful images
-        self.search_logo_image = tk.PhotoImage(file=SEARCH_PNG_PATH)
+        self.searchLogoImage = tk.PhotoImage(file=SEARCH_PNG_PATH)
 
     @staticmethod
-    def __focusIn(entry, place_holder) -> None:
-        """
-        Event handler for when the search bar gains focus.
+    def __focusIn(entry: tk.Entry, placeHolder: str) -> None:
+        """ Event handler for when the search bar gains focus.
 
         Args:
             entry (tk.Entry): The search bar entry widget.
-            place_holder (str): The placeholder text displayed in the search bar.
+            placeHolder (str): The placeholder text displayed in the search bar.
+
         """
-        if entry.get() == place_holder:
+
+        # Delete the placeholder of the search bar and change the text color to black
+        if entry.get() == placeHolder:
             entry.delete(0, tk.END)
             entry.config(fg='black')
 
     def __focusOut(self, entry: tk.Entry) -> None:
-        """
-        Event handler for when the search bar loses focus.
+        """ Event handler for when the search bar loses focus.
 
         Args:
             entry (tk.Entry): The search bar entry widget.
+
         """
+
+        # Fill the entry with its placeholder and turn the text color to grey
         if entry.get() == "":
-            entry.insert(0, self.place_holder)
+            entry.insert(0, self.placeHolder)
             entry.config(fg='gray')
 
-    def getItem(self):
+    def getItem(self) -> str:
+        """ Returns the stored value inside the entry box, as a string """
+
         return self.entry.get()
 
     def build(self) -> None:
-        """
-        Build the search bar and associated search button.
-        """
+        """ Builds the search bar and associates the search button. """
+
         # Creating the entry box
-        self.entry = tk.Entry(self.parent_widget, fg="gray", font=self.font, borderwidth=self.border_width)
-        self.entry.insert(0, self.place_holder)
-        self.entry.bind("<FocusIn>", lambda event: self.__focusIn(self.entry, self.place_holder))
-        self.entry.bind("<FocusOut>", lambda event: self.__focusOut(self.entry))
-        self.entry.bind('<Return>', lambda event: self.command())
+        self.entry = tk.Entry(self.parentWidget, fg="gray", font=self.font, borderwidth=self.borderWidth)
+        self.entry.insert(0, self.placeHolder)
+
+        # Binding the entry with some additional options
+        self.entry.bind("<FocusIn>", lambda event: self.__focusIn(self.entry, self.placeHolder))  # Binding with focusing in
+        self.entry.bind("<FocusOut>", lambda event: self.__focusOut(self.entry))                  # Binding with focusing out
+        self.entry.bind('<Return>', lambda event: self.command())                                 # Binding with the 'Return' key on the keyboard
 
         # Creating the search button
-        self.search_image = resizeImage(self.search_logo_image, round(2 * self.font[1]))
-        self.search_button = tk.Button(self.parent_widget, text="Search", image=self.search_image, command=self.command)
+        self.searchImage = resizeImage(self.searchLogoImage, round(2 * self.font[1]))
+        self.searchButton = tk.Button(self.parentWidget, text="Search", image=self.searchImage, command=self.command)
 
     def put(self):
-        """
-        Place the search bar and search button within the parent widget.
-        """
-        self.entry.grid(row=0, column=0)
-        self.search_button.grid(row=0, column=1)
+        """ Places the search bar and search button within the parent widget. """
+
+        self.entry.grid(row=0, column=0)         # Placing the entry on the left
+        self.searchButton.grid(row=0, column=1)  # Placing the entry on the right

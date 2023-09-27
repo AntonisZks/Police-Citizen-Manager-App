@@ -1,137 +1,159 @@
 """
-The 'insertFrame.py' file contains the InsertFrame class, which represents the insert frame of the application. Users can create a new form
-and insert them to the database.
+The 'insertFrame.py' file contains the InsertFrame class, which represents the insert frame of the application. This frame allows the user to create a new form,
+which contains the data of a Person ('Folder ID', 'Surname', 'Name', 'Father name', 'Mother name', etc.) and add it into the current database they work with at
+that time. The frame makes sure that the fields 'Folder ID' and 'Surname' must be filled and the that the field 'Birthdate' and 'Phone number' agree with prototypes
+of them. I f the user enters something wrong, the insertion stops, and a related message appears on the screen and describes what exactly went wrong during the insertion
+of the data. The form the user has to fill is consists of several entries called dataHolderFields, where they have a main label describing what to insert, and an entry box
+so as the user enters the data inside it. All the previous are implemented with specific methods.
 
 """
+
 import re
 from tkinter import messagebox
-
 from Source.UI_UX.Frames.frame import IFrame
 from Source.Extras.support import *
 from Source.UI_UX.RecordsStuff.record import Record
 
 
 class InsertFrame(IFrame):
-	def __init__(self, app_data: dict[str, any]) -> None:
-		"""
-		Constructor for the SearchFrame class.
+	""" The InsertFrame class represents the insert frame of the application where the user can create a new form of a new person's data,
+		and add it to the database.
+
+	"""
+
+	def __init__(self, applicationSettings: dict[str, Any]) -> None:
+		""" Constructor for the InsertFrame class. The constructor of the InsertFrame calls the constructor of the base class IFrame
+			and initializes a scrollbar object to None.
 
 		Args:
-			app_data (dict): Data related to the application.
+			applicationSettings (dict[str, Any]): Settings related to the application.
+
 		"""
 		# Initializing the basic frame
-		super().__init__(app_data)
+		super().__init__(applicationSettings)
 
-		self.record_area_scrollbar = None
+		self.record_area_scrollbar = None  # Initialize a temporary variable for the side scrollbar
 
 	def _initializeImages(self) -> None:
-		"""
-		Initialize images used in the frame.
-		"""
+		""" Initializes some all the images used in the frame. """
+		
 		self.police_logo_image = tk.PhotoImage(file=self.header_options['image-path'])
 		self.return_logo_image = tk.PhotoImage(file=self.footer_options['return-button-image-path'])
 		self.save_logo_image = tk.PhotoImage(file=self.footer_options['save-button-image-path'])
 
-	def _setupStructureOptions(self, data: dict[str, any]) -> None:
-		"""
-		Set up options for the frame's structure.
+	def _setupStructureOptions(self, parentWidgetSettings: dict[str, Any]) -> None:
+		""" Sets up the options for the frame's structure.
 
 		Args:
-			data (dict): Data related to the application.
+			parentWidgetSettings (dict[str, Any]): Data related to the application.
+			
 		"""
+
 		# Setting up the Header Options
 		self.header_options = {
 			"title": "ΚΑΤΑΧΩΡΗΣΗ ΣΤΟΙΧΕΙΩΝ ΦΑΚΕΛΟΥ",
 			"image-path": POLICE_LOGO_PNG_PATH,
-			"font": ('Arial', round(0.022 * max(self.application_data['window-width'], self.application_data['window-height'])), 'bold')
+			"font": ('Arial', round(0.022 * max(self.applicationSettings['window-width'], self.applicationSettings['window-height'])), 'bold')
 		}
 
 		# Setting up the Body Options
 		self.body_options = {
-			"empty-form-padx": round(0.04 * self.application_data['window-width']),
-			"empty-form-pady": round(0.04 * self.application_data['window-height']),
+			"empty-form-padx": round(0.04 * self.applicationSettings['window-width']),
+			"empty-form-pady": round(0.04 * self.applicationSettings['window-height']),
 			"title": "Σ Υ Μ Π Λ Η Ρ Ω Σ Η   Φ Ο Ρ Μ Α Σ",
-			"title-font": ('Arial', round(0.022 * max(self.application_data['window-width'], self.application_data['window-height'])), 'bold', 'italic', 'underline'),
-			"title-pady": round(0.02 * self.application_data['window-height'])
+			"title-font": ('Arial', round(0.022 * max(self.applicationSettings['window-width'], self.applicationSettings['window-height'])), 'bold', 'italic', 'underline'),
+			"title-pady": round(0.02 * self.applicationSettings['window-height'])
 		}
 
 		# Setting up the Footer Options
 		self.footer_options = {
 			"return-button-text": " ΕΠΙΣΤΡΟΦΗ ΣΤΟ ΜΕΝΟΥ ",
-			"return-button-font": ('Arial', round(0.013 * max(self.application_data['window-width'], self.application_data['window-height']))),
+			"return-button-font": ('Arial', round(0.013 * max(self.applicationSettings['window-width'], self.applicationSettings['window-height']))),
 			"return-button-image-path": RETURN_PNG_PATH,
-			"return-button-padx-inner": round(0.01 * self.application_data['window-width']),
-			"return-button-pady-inner": round(0.005 * self.application_data['window-height']),
-			"return-button-padx-outer": round(0.01 * self.application_data['window-width']),
-			"return-button-pady-outer": round(0.012 * self.application_data['window-height']),
+			"return-button-padx-inner": round(0.01 * self.applicationSettings['window-width']),
+			"return-button-pady-inner": round(0.005 * self.applicationSettings['window-height']),
+			"return-button-padx-outer": round(0.01 * self.applicationSettings['window-width']),
+			"return-button-pady-outer": round(0.012 * self.applicationSettings['window-height']),
 			"save-button-text": " ΑΠΟΘΗΚΕΥΣΗ ΣΤΟΙΧΕΙΩΝ ",
-			"save-button-font": ('Arial', round(0.012 * max(self.application_data['window-width'], self.application_data['window-height']))),
+			"save-button-font": ('Arial', round(0.012 * max(self.applicationSettings['window-width'], self.applicationSettings['window-height']))),
 			"save-button-image-path": SAVE_PNG_PATH,
-			"save-button-padx-inner": round(0.01 * self.application_data['window-width']),
-			"save-button-pady-inner": round(0.005 * self.application_data['window-height']),
-			"save-button-padx-outer": round(0.01 * self.application_data['window-width']),
-			"save-button-pady-outer": round(0.013 * self.application_data['window-height']),
+			"save-button-padx-inner": round(0.01 * self.applicationSettings['window-width']),
+			"save-button-pady-inner": round(0.005 * self.applicationSettings['window-height']),
+			"save-button-padx-outer": round(0.01 * self.applicationSettings['window-width']),
+			"save-button-pady-outer": round(0.013 * self.applicationSettings['window-height']),
 
-			"buttons-frame-pady": round(0.020 * self.application_data['window-height'])
+			"buttons-frame-pady": round(0.020 * self.applicationSettings['window-height'])
 		}
 
-	def __goToMainMenu(self):
-		"""
-		Change the active frame to the Main Menu one.
-		"""
+	def __goToMainMenu(self) -> None:
+		""" Changes the active frame to the Main Menu one. """
+
 		self.app.setActiveFrame(self.app.mainMenuFrame)
 
-	def __saveRecord(self):
-		# Getting the stored data in the database
-		df = pd.read_excel(self.application_data['app-data']['active-database'])
+	def __validInputData(self) -> bool:
+		""" Checks if the data, the user has entered are valid for insertion. If so, the method returns True. If not an error appears on the screen
+			describing the cause of insertion failure, and the method returns False. """
+
+		# Removing all the placeholders
+		for dataHolderField in self.dataHolderFields:
+			dataHolderField.removePlaceHolder()
 
 		# Checking if the folderID and surname fields are filled
-		if self.entries[0].get() == "":
+		if self.dataHolderFields[0].dataHolder.get() == "":
 			messagebox.showerror("Ελλιπή Στοιχεία", "Το πεδίο 'Αριθμός Φακέλου' πρέπει να είναι συμπληρωμένο")
-			self.entries[0].focus()
-			return
+			self.dataHolderFields[0].dataHolder.focus()
+			return False
 
-		if self.entries[1].get() == "":
+		if self.dataHolderFields[1].dataHolder.get() == "":
 			messagebox.showerror("Ελλιπή Στοιχεία", "Το πεδίο 'Επώνυμο' πρέπει να είναι συμπληρωμένο")
-			self.entries[1].focus()
-			return
-
-		# TODO: Clean the following mesh
+			self.dataHolderFields[1].dataHolder.focus()
+			return False
 
 		# Checking if the given date agrees with the Data Prototype
 		datePattern = r'\b\d{2}/\d{2}/\d{4}\b'
 
-		if self.entries[5].get() == "DD/MM/YY":
-			self.entries[5].delete(0, tk.END)
-
-		if self.entries[5].get() != "" and not re.match(datePattern, self.entries[5].get()):
-			messagebox.showerror("Μη Έγκυρη Ημερομηνία", f"Το πεδίο 'Ημερομηνία Γέννησης' ωφείλει να ικανοποιεί το πρότυπο DD/MM/YY. Η τιμή '{self.entries[5].get()}' δεν το ικανοποιεί. Το πεδίο μπορεί να είναι κενό")
-			self.entries[5].focus()
-			return
+		if self.dataHolderFields[5].dataHolder.get() != "" and not re.match(datePattern, self.dataHolderFields[5].dataHolder.get()):
+			messagebox.showerror("Μη Έγκυρη Ημερομηνία", f"Το πεδίο 'Ημερομηνία Γέννησης' ωφείλει να ικανοποιεί το πρότυπο DD/MM/YY. Η τιμή '{self.dataHolderFields[5].dataHolder.get()}' δεν το ικανοποιεί. Το πεδίο μπορεί να είναι κενό")
+			self.dataHolderFields[5].dataHolder.focus()
+			return False
 
 		# Checking if the given phone number is valid
-		if self.entries[9].get() == "10-ψήφιος αριθμός":
-			self.entries[9].delete(0, tk.END)
+		if self.dataHolderFields[9].dataHolder.get() != "" and len(self.dataHolderFields[9].dataHolder.get()) != 10:
+			messagebox.showerror(f"Μη Έγκυρος Αριθμός Τηλεφώνου", f"Ο αριθμός τηλεφώνου '{self.dataHolderFields[9].dataHolder.get()}' δεν είναι έγκυρος. Ο αριθμός πρέπει να είναι 10-ψήφιος. Το πεδίο μπορεί να είναι κενό")
+			self.dataHolderFields[9].dataHolder.focus()
+			return False
 
-		if self.entries[9].get() != "" and len(self.entries[9].get()) != 10:
-			messagebox.showerror(f"Μη Έγκυρος Αριθμός Τηλεφώνου", f"Ο αριθμός τηλεφώνου '{self.entries[9].get()}' δεν είναι έγκυρος. Ο αριθμός πρέπει να είναι 10-ψήφιος. Το πεδίο μπορεί να είναι κενό")
-			self.entries[9].focus()
+		# Adding all the placeholders again
+		for dataHolderField in self.dataHolderFields:
+			dataHolderField.addPlaceHolder()
+
+		return True
+
+	def __saveRecord(self) -> None:
+		""" Saves the new person's data the user entered if they are valid of course. The method first gains access to the data of the current database
+			the user is working with, and after that it checks whether the data are valid in order to continue. If so, the method adds the new data to a temporary
+			'Pandas' dataframe and then saves this dataframe into an Excel file which is the same file from where the data were gained at first. After the insertion
+			is completed the method a message appears on the screen saying that the insertion was successful. """
+
+		# Getting the stored data in the database
+		df = pd.read_excel(self.applicationSettings['app-data']['active-database'])
+
+		# Checking if the user entered valid inputs in the form
+		if not self.__validInputData():
+			# Adding all the placeholders again
+			for dataHolderField in self.dataHolderFields:
+				dataHolderField.addPlaceHolder()
+
 			return
 
-		if self.entries[6].get() == "π.χ. Αθήνα":
-			self.entries[6].delete(0, tk.END)
-
-		if self.entries[7].get() == "π.χ. Ακροπόλεως 51":
-			self.entries[7].delete(0, tk.END)
-
-		if self.entries[8].get() == "π.χ. Χαλάνδρι":
-			self.entries[8].delete(0, tk.END)
+		# Removing all the placeholders
+		for dataHolderField in self.dataHolderFields:
+			dataHolderField.removePlaceHolder()
 
 		# Getting the new data
 		new_data = []
-		for entry in self.entries:
-			value = entry.get() if isinstance(entry, tk.Entry) else entry.get("1.0", tk.END)
-			value = value.replace("\n", "")
+		for dataHolderField in self.dataHolderFields:
+			value = dataHolderField.getData().replace("\n", "")
 			new_data.append(value)
 
 		# Adding the new data to the dataframe
@@ -139,43 +161,48 @@ class InsertFrame(IFrame):
 		df.loc[len(df)] = new_row
 
 		# Storing the data of the dataframe into the database
-		df.to_excel(self.application_data['app-data']['active-database'], index=False)
+		df.to_excel(self.applicationSettings['app-data']['active-database'], index=False)
+
+		# Adding all the placeholders again
+		for dataHolderField in self.dataHolderFields:
+			dataHolderField.addPlaceHolder()
 
 		# Successful Data Insertion and resetting the frame
 		messagebox.showinfo("Επιτυχής Καταχώρηση", "Τα στοιχεία καταχωρήθηκαν με επιτυχία!")
-		self.__reset()
+		self.__resetStructure()
 
-	def __reset(self):
+	def __resetStructure(self):
+		""" Resets the structure of the frame. Specifically it destroys all the children widgets of the frame, and then it calls the
+			method _buildStructure() again. """
+
 		for childWidget in self.winfo_children():
 			childWidget.destroy()
 
 		self._buildStructure()
 
 	def _buildStructure(self) -> None:
-		"""
-		Build the general structure of the search frame.
-		"""
+		""" Builds the general structure of the search frame (Header, Body, Footer). """
+
 		self._createHeaderFrame()  # First create the header
 		self._createBodyFrame()  # Then create the body
 		self._createFooterFrame()  # Finally, create the footer
 
 	def _createHeaderFrame(self) -> None:
-		"""
-		Create the Header Frame, which contains the main label and logo.
-		"""
-		self.header = tk.Frame(self, bg=self.application_data['theme-color'])  # Creating the header frame
+		""" Creates the Header Frame, which contains the main label and logo. """
+
+		self.header = tk.Frame(self, bg=self.applicationSettings['theme-color'])  # Creating the header frame
 
 		# Creating the Header Label
-		self.header_image = resizeImage(self.police_logo_image, round(0.10 * self.application_data['window-width']))
+		self.header_image = resizeImage(self.police_logo_image, round(0.10 * self.applicationSettings['window-width']))
 		self.header_label = tk.Label(
 			self.header,
 			text=self.header_options['title'],
 			font=self.header_options['font'],
-			bg=self.application_data['theme-color'],
-			fg=self.application_data['label-fg-color'],
+			bg=self.applicationSettings['theme-color'],
+			fg=self.applicationSettings['label-fg-color'],
 			image=self.header_image, compound=tk.LEFT,
-			padx=round(0.04 * self.application_data['window-width']),
-			pady=round(0.04 * (self.application_data['window-height']))
+			padx=round(0.04 * self.applicationSettings['window-width']),
+			pady=round(0.04 * (self.applicationSettings['window-height']))
 		)
 
 		# Packing the header and its widgets
@@ -183,10 +210,11 @@ class InsertFrame(IFrame):
 		self.header.pack()
 
 	def _createBodyFrame(self) -> None:
-		"""
-		Create the Body Frame, which contains the search bars.
-		"""
-		self.body = tk.Frame(self, bg=self.application_data["theme-color-dark"])
+		""" Creates the Body Frame, which contains the basic form the user has to fill. The form consists of some special objects called dataHolderFields
+			which consists of two parts. A label describing the input type and an entry box where the value is being entered inside it. The user has to fill
+			those dataHolderFields (not all of them) and then they can insert the data they entered inside the database. """
+
+		self.body = tk.Frame(self, bg=self.applicationSettings["theme-color-dark"])
 		self.body.pack()
 
 		# Creating a title
@@ -194,36 +222,37 @@ class InsertFrame(IFrame):
 			self.body,
 			text=self.body_options["title"],
 			font=self.body_options["title-font"],
-			bg=self.application_data["theme-color-dark"],
-			fg=self.application_data['label-fg-color']
+			bg=self.applicationSettings["theme-color-dark"],
+			fg=self.applicationSettings['label-fg-color']
 		)
 		self.titleLabel.pack(pady=(self.body_options["title-pady"], 0))
 
 		# Creating an empty form the user has to fill
-		frame, self.entries = Record.createEmptyDataFrame(self.body, self.application_data)
+		frame, self.dataHolderFields = Record.createEmptyDataFrame(self.body, self.applicationSettings)
 		frame.pack(padx=self.body_options["empty-form-padx"], pady=(0, self.body_options["empty-form-pady"]))
 
 		# Binding the entries in order to have access to each one using the keyboard 'Return' and 'Tab' buttons
-		for entry in self.entries:
-			entry.bind('<Return>', lambda e: onEntry(e, self.entries))
-			entry.bind('<Tab>', lambda e: onEntry(e, self.entries))
+		for dataHolder in self.dataHolderFields:
+			dataHolder.dataHolder.bind('<Return>', lambda e: onEntry(e, self.dataHolderFields))
+			dataHolder.dataHolder.bind('<Tab>', lambda e: onEntry(e, self.dataHolderFields))
 
 		# Binding the last entry (Comments One) in order to save the new form if the user presses 'Tab' or 'Return'
-		self.entries[12].bind('<Return>', lambda e: self.__saveRecord())
-		self.entries[12].bind('<Tab>', lambda e: self.__saveRecord())
+		self.dataHolderFields[12].dataHolder.bind('<Return>', lambda e: self.__saveRecord())
+		self.dataHolderFields[12].dataHolder.bind('<Tab>', lambda e: self.__saveRecord())
 
 		# Filling the first entry (folderID one) with the new available folder id
-		lastFolderID = getLastFolderID(self.application_data)
-		self.entries[0].insert(0, lastFolderID + 1)
+		lastFolderID = getLastFolderID(self.applicationSettings)
+		self.dataHolderFields[0].dataHolder.insert(0, lastFolderID + 1)
 
 		# Focus in the first entry (surname one)
-		self.entries[1].focus()
+		self.dataHolderFields[1].dataHolder.focus()
 
 	def _createFooterFrame(self) -> None:
-		"""
-		Create the Footer Frame which contains the 'Return' button
-		"""
-		self.footer = tk.Frame(self, bg=self.application_data["theme-color"])
+		""" Creates the Footer of the frame. The footer part contains two buttons. The one called 'Return' and the one called 'Save'. The 'Return' button
+			allows the user to navigate back to the Main Menu Frame, while the 'Save' button allows them to save the data they entered in the form, inside
+			the database. """
+
+		self.footer = tk.Frame(self, bg=self.applicationSettings["theme-color"])
 		self.footer.pack(pady=self.footer_options["buttons-frame-pady"])
 
 		# Creating the 'Return' button

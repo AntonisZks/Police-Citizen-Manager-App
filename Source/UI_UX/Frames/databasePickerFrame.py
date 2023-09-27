@@ -1,6 +1,11 @@
 """
-The 'databasePickerFrame.py' module contains the DatabasePickerFrame class and its methods.
-This frame is the first one displayed when the application starts, allowing the user to select a database (Excel file) to work with.
+The 'databasePickerFrame.py' module contains the DatabasePickerFrame class and its methods. This frame is the first one displayed when the application starts,
+allowing the user to select a database (Excel file) to work with. The user has the options also to add new databases, existed in their computer, on the main
+database canvas, and that means that the selected database is going to be stored as a pre-selected one, until they decide to remove it. By running the application
+for the first time the canvas will be empty, meaning that the user has to select a database to work with. It is important that the selected database (Excel file)
+must have the extension '.xlsx' and the extension '.xls'. The program detects what files have the '.xls' extension and ask the user whether they want to change
+the file's extension from '.xls' to '.xlsx'. Last but not least, the user can also open the actual Excel file they selected, threw the application, by just
+right-clicking on it.
 """
 
 import json
@@ -10,9 +15,8 @@ from Source.Extras.support import *
 
 
 class DatabasePickerFrame(IFrame):
-    """
-    The DatabasePickerFrame class represents the starting frame of the application, allowing the user to choose a database.
-    It includes a header, a body for displaying databases, and a footer with an 'Add File' button.
+    """ The DatabasePickerFrame class represents the starting frame of the application, allowing the user to choose a database.
+        It includes a header, a body for displaying databases, and a footer with an 'Add File' button.
 
     Attributes:
         parent_data (dict): The data of the parent widget (main window).
@@ -55,30 +59,26 @@ class DatabasePickerFrame(IFrame):
         __showExcelFileButtonContextMenu(event, button, index): Displays the context menu for a database button.
     """
 
-    def __init__(self, app_data: dict[str, any]) -> None:
-        """
-        Constructor for the DatabasePickerFrame class. Initializes the frame and its structure.
+    def __init__(self, applicationSettings: dict[str, any]) -> None:
+        """ Constructor for the DatabasePickerFrame class. Initializes the frame and its structure.
 
         Args:
-            app_data (dict[str, any]): Data of the parent widget (main window).
+            applicationSettings (dict[str, any]): Data of the parent widget (main window).
 
         """
-        super().__init__(app_data)
+        super().__init__(applicationSettings)
 
     def _initializeImages(self) -> None:
-        """
-        Initializes images used in the frame.
+        """ Initializes images used in the frame. """
 
-        """
         self.police_logo_image = tk.PhotoImage(file=self.header_options['image-path'])
         self.add_image = tk.PhotoImage(file=self.footer_options['add-button-image-path'])
 
-    def _setupStructureOptions(self, data: dict[str, any]) -> None:
-        """
-        Initializes options for all three frames (Header, Body, Footer).
+    def _setupStructureOptions(self, parentWidgetSettings: dict[str, Any]) -> None:
+        """ Initializes options for all three frames (Header, Body, Footer).
 
         Args:
-            data (dict[str, any]): Data of the parent widget.
+            parentWidgetSettings (dict[str, Any]): The settings of the parent widget.
 
         """
         self.__createExcelFileButtonContextMenu()
@@ -87,48 +87,44 @@ class DatabasePickerFrame(IFrame):
         self.header_options = {
             "title": "ΕΛΛΗΝΙΚΗ ΑΣΤΥΝΟΜΙΑ\nΑ.Τ. ΗΡΑΚΛΕΙΟΥ ΑΤΤΙΚΗΣ\nΠΡΟΓΡΑΜΜΑ ΑΡΧΕΙΟΘΕΤΗΣΗΣ\nΥΠΟΘΕΣΕΩΝ ΠΟΛΙΤΩΝ",
             "image-path": POLICE_LOGO_PNG_PATH,
-            "font": ('Arial', round(0.022 * max(self.application_data['window-width'], self.application_data['window-height'])), 'bold')
+            "font": ('Arial', round(0.022 * max(self.applicationSettings['window-width'], self.applicationSettings['window-height'])), 'bold')
         }
 
         # Body Options
         self.body_options = {
             "message-title": textSpaced("ΓΙΑ  ΣΥΝΕΧΕΙΑ  ΕΠΙΛΕΞΤΕ  ΑΡΧΕΙΟ:"),
             "no-files-message": "ΔΕΝ ΕΧΕΙ ΠΡΟΕΠΙΛΕΓΕΙ\nΚΑΝΕΝΑ ΑΡΧΕΙΟ",
-            "message-title-font": ('Arial', round(0.018 * max(self.application_data['window-width'], self.application_data['window-height'])), 'bold'),
-            "files-font": ('Arial', round(0.011 * max(self.application_data['window-width'], self.application_data['window-height']))),
-            "no-files-message-font": ('Arial', round(0.02 * max(self.application_data['window-width'], self.application_data['window-height'])))
+            "message-title-font": ('Arial', round(0.018 * max(self.applicationSettings['window-width'], self.applicationSettings['window-height'])), 'bold'),
+            "files-font": ('Arial', round(0.011 * max(self.applicationSettings['window-width'], self.applicationSettings['window-height']))),
+            "no-files-message-font": ('Arial', round(0.02 * max(self.applicationSettings['window-width'], self.applicationSettings['window-height'])))
         }
 
         # Footer Options
         self.footer_options = {
             "add-button-text": "ΠΡΟΣΘΗΚΗ ΑΡΧΕΙΟΥ",
             "add-button-image-path": ADD_PNG_PATH,
-            "font": ('Arial', round(0.018 * max(self.application_data['window-width'], self.application_data['window-height'])))
+            "font": ('Arial', round(0.018 * max(self.applicationSettings['window-width'], self.applicationSettings['window-height'])))
         }
 
     def __setActiveDatabase(self, database_path: str) -> None:
-        """
-        The __setActiveDatabase() method is used to set the active database of the application
+        """ The __setActiveDatabase() method is used to set the active database of the application
 
         Args:
             database_path (str): The full path to the database (Excel File)
         """
         # Updating the application data in the program and save them in a json file
-        self.application_data['app-data']['active-database'] = database_path
+        self.applicationSettings['app-data']['active-database'] = database_path
         with open(APP_DATA_PATH, 'w', encoding='utf-8') as json_file:
-            json.dump(self.application_data['app-data'], json_file)
+            json.dump(self.applicationSettings['app-data'], json_file)
 
     def __gotoMainMenu(self) -> None:
-        """
-        The __gotoMainMenu() method changes the active frame to the Main Menu one.
-        
-        """
+        """ The __gotoMainMenu() method changes the active frame to the Main Menu one. """
+
         self.app.setActiveFrame(self.app.mainMenuFrame)
 
     @staticmethod
     def __openExcelFile(index: int) -> None:
-        """
-        The __openExcelFile() method is used to open an Excel File when the user right clicks on its button.
+        """ The __openExcelFile() method is used to open an Excel File when the user right clicks on its button.
 
         Args:
             index (int): The index corresponding to the correct Excel file in the stored databases sequence
@@ -142,8 +138,7 @@ class DatabasePickerFrame(IFrame):
 
     @staticmethod
     def __openExcelFileFolder(index: int) -> None:
-        """
-        The __openExcelFileFolder() method opens the folder containing the Excel File of the stored databases on the given index.
+        """ The __openExcelFileFolder() method opens the folder containing the Excel File of the stored databases on the given index.
 
         Args:
             index (int): The index to get the correct Excel file in the stored databases sequence and open its folder
@@ -157,8 +152,7 @@ class DatabasePickerFrame(IFrame):
         os.startfile(folder_path)
 
     def __createExcelFileButton(self, parent: tk.Widget, database_path: str) -> tk.Button:
-        """
-        The __createExcelFileButton() creates a button corresponding to an Excel File.
+        """ The __createExcelFileButton() creates a button corresponding to an Excel File.
 
         Args:
             parent (Tk): The parent widget of the frame. It is always the main window of the application
@@ -168,7 +162,7 @@ class DatabasePickerFrame(IFrame):
             Button: The final button ready to be used
 
         """
-        button_width = round(0.022 * self.application_data['window-width'])
+        button_width = round(0.022 * self.applicationSettings['window-width'])
         newExcelFileButton = tk.Button(
             parent,
             text=getFileName(database_path),
@@ -180,12 +174,10 @@ class DatabasePickerFrame(IFrame):
         return newExcelFileButton
 
     def __addExcelFile(self) -> None:
-        """
-        The __addExcelFile() method adds a new Excel File in the stored databases. First it gives the user the ability to choose
-        which database he/she wants to add and then after a quick check of not be included already it adds the new file in the 
-        stored databases.
+        """ The __addExcelFile() method adds a new Excel File in the stored databases. First it gives the user the ability to choose
+            which database he/she wants to add and then after a quick check of not be included already it adds the new file in the
+            stored databases. """
 
-        """
         filetypes = (("Excel files", "*.xls"), ("Excel files", "*.xlsx"))  # Define the available file types
         new_file_path = filedialog.askopenfilename(title="Επιλογή Αρχείου", filetypes=filetypes)
 
@@ -200,13 +192,13 @@ class DatabasePickerFrame(IFrame):
             new_file_path = changeFileExtensionToXlsx(new_file_path).replace('\\', '/')
 
         # Checking if the file already exists
-        if new_file_path in self.application_data['app-data']['stored-databases']:
+        if new_file_path in self.applicationSettings['app-data']['stored-databases']:
             messagebox.showwarning("Ήδη Υπάρχον Αρχείο", f"Το αρχείο {new_file_path} έχει ήδη οριστεί ως προεπιλογή")
             return
 
         # If there is a new file path then update the stored databases list in the app data json file and in the window data dictionary
         if new_file_path:
-            self.application_data['app-data']['stored-databases'].append(new_file_path)  # Add the new file path in the stored databases list
+            self.applicationSettings['app-data']['stored-databases'].append(new_file_path)  # Add the new file path in the stored databases list
             with open(APP_DATA_PATH, 'r', encoding='utf-8') as json_file:
                 app_data = json.load(json_file)
 
@@ -218,9 +210,8 @@ class DatabasePickerFrame(IFrame):
         self.__rebuildStructure()
 
     def __deleteExcelFileButton(self, button: tk.Button, index: int) -> None:
-        """
-        The __deleteExcelFileButton() method deletes the Excel File button and the actual Excel file from the stored databases
-        the user has chosen by right-clicking on it.
+        """ The __deleteExcelFileButton() method deletes the Excel File button and the actual Excel file from the stored databases
+            the user has chosen by right-clicking on it.
 
         Args:
             button (Button): The button to be deleted
@@ -231,7 +222,7 @@ class DatabasePickerFrame(IFrame):
             button.destroy()
             with open(APP_DATA_PATH, 'r', encoding='utf-8') as json_file:
                 app_data = json.load(json_file)
-            self.application_data['app-data']['stored-databases'].pop(index)
+            self.applicationSettings['app-data']['stored-databases'].pop(index)
             app_data['stored-databases'].pop(index)
 
             with open(APP_DATA_PATH, 'w', encoding='utf-8') as json_file:
@@ -239,11 +230,9 @@ class DatabasePickerFrame(IFrame):
             self.__rebuildStructure()
 
     def __createExcelFileButtonContextMenu(self) -> None:
-        """
-        The __createExcelFileButtonContextMenu() method creates a context menu for its individual Excel File button.
-        The context menu for each button includes options such as 'Open Excel', 'Open Excel Folder' and 'Remove File'.
-        
-        """
+        """ The __createExcelFileButtonContextMenu() method creates a context menu for its individual Excel File button.
+            The context menu for each button includes options such as 'Open Excel', 'Open Excel Folder' and 'Remove File'. """
+
         # Create a context menu for each file button when the user right clicks on it
         self.button_context_menu = tk.Menu(self, tearoff=False)
         self.button_context_menu.add_command(label="Άνοιγμα Excel")
@@ -252,8 +241,7 @@ class DatabasePickerFrame(IFrame):
         self.button_context_menu.add_command(label='Αφαίρεση Αρχείου')
 
     def __showExcelFileButtonContextMenu(self, event, button, index) -> None:
-        """
-        The __showExcelFileButtonContextMenu() method is used to display the context menu of each Excel File button.
+        """ The __showExcelFileButtonContextMenu() method is used to display the context menu of each Excel File button.
 
         Args:
             event (any): The event corresponds to the mouse cursor position
@@ -267,18 +255,16 @@ class DatabasePickerFrame(IFrame):
         self.button_context_menu.entryconfigure(3, command=lambda: self.__deleteExcelFileButton(button, index))
 
     def _buildStructure(self) -> None:
-        """
-        The _buildStructure() method builds the general structure of the frame (Header, Body, Footer). It also gains
-        all the stored databases to be sure if a message such as 'No Files Detected' is appropriate to be displayed.
-        Finally, it displays all the Excel Files in the stored databases as buttons to the screen.
+        """ The _buildStructure() method builds the general structure of the frame (Header, Body, Footer). It also gains
+            all the stored databases to be sure if a message such as 'No Files Detected' is appropriate to be displayed.
+            Finally, it displays all the Excel Files in the stored databases as buttons to the screen. """
 
-        """
         self._createHeaderFrame()  # First create the header
         self._createBodyFrame()  # Then create the body
         self._createFooterFrame()  # Finally create the footer
 
         # Getting the stored databases
-        stored_databases = self.application_data['app-data']['stored-databases']
+        stored_databases = self.applicationSettings['app-data']['stored-databases']
 
         # Creating a 'No Files' message if needed
         if len(stored_databases) == 0:
@@ -286,14 +272,14 @@ class DatabasePickerFrame(IFrame):
                 self.file_picker_frame,
                 text=self.body_options["no-files-message"],
                 font=self.body_options['no-files-message-font'],
-                bg=self.application_data['theme-color-dark'],
-                fg=self.application_data['theme-color-very-dark']
+                bg=self.applicationSettings['theme-color-dark'],
+                fg=self.applicationSettings['theme-color-very-dark']
             )
-            self.body_no_files_message.pack(padx=round(0.27 * self.application_data['window-width']),
-                                            pady=round(0.2 * self.application_data['window-height']))
+            self.body_no_files_message.pack(padx=round(0.27 * self.applicationSettings['window-width']),
+                                            pady=round(0.2 * self.applicationSettings['window-height']))
 
         # Adding all the stored databases as buttons
-        button_gap = round(0.015 * self.application_data['window-width'])
+        button_gap = round(0.015 * self.applicationSettings['window-width'])
         for index in range(len(stored_databases)):
             row, column = index // 3, index % 3
             new_button = self.__createExcelFileButton(self.file_picker_frame, stored_databases[index])
@@ -302,35 +288,31 @@ class DatabasePickerFrame(IFrame):
             new_button.bind('<Button-3>', lambda event, button=new_button, i=index: self.__showExcelFileButtonContextMenu(event, button, i))
 
     def __rebuildStructure(self) -> None:
-        """
-        The __rebuildStructure() method is used to update the display of the frame. First it deletes all the widgets inside it,
-        and then it builds them again calling the __buildStructure() method.
-        
-        """
+        """ The __rebuildStructure() method is used to update the display of the frame. First it deletes all the widgets inside it,
+            and then it builds them again calling the __buildStructure() method. """
+
         for child_widget in self.winfo_children():
             child_widget.destroy()
         self._buildStructure()
-        self._setupStructureOptions(self.application_data)
+        self._setupStructureOptions(self.applicationSettings)
 
     def _createHeaderFrame(self) -> None:
-        """
-        The _createHeaderFrame() method is used by the __buildStructure() method, and it builds the header frame of the main structure.
-        It creates a main label with a title and an image of the 'Greek Police Logo' next to it.
+        """ The _createHeaderFrame() method is used by the __buildStructure() method, and it builds the header frame of the main structure.
+            It creates a main label with a title and an image of the 'Greek Police Logo' next to it. """
 
-        """
-        self.header = tk.Frame(self, bg=self.application_data['theme-color'])  # Creating the header frame
+        self.header = tk.Frame(self, bg=self.applicationSettings['theme-color'])  # Creating the header frame
 
         # Creating the Header Label
-        self.header_image = resizeImage(self.police_logo_image, round(0.13 * self.application_data['window-width']))
+        self.header_image = resizeImage(self.police_logo_image, round(0.13 * self.applicationSettings['window-width']))
         self.header_label = tk.Label(
             self.header,
             text=self.header_options['title'],
             font=self.header_options['font'],
-            bg=self.application_data['theme-color'],
-            fg=self.application_data['label-fg-color'],
+            bg=self.applicationSettings['theme-color'],
+            fg=self.applicationSettings['label-fg-color'],
             image=self.header_image, compound=tk.LEFT,
-            padx=round(0.04 * self.application_data['window-width']),
-            pady=round(0.04 * (self.application_data['window-height']))
+            padx=round(0.04 * self.applicationSettings['window-width']),
+            pady=round(0.04 * (self.applicationSettings['window-height']))
         )
 
         # Packing the header and its widgets
@@ -338,36 +320,34 @@ class DatabasePickerFrame(IFrame):
         self.header.pack()
 
     def _createBodyFrame(self) -> None:
-        """
-        The _createBodyFrame() method is used by the __buildStructure() method, and it builds the body frame of the main structure.
-        It creates a message telling the user to pick a database to work with, the general canvas where all the stored databases are going
-        to be displayed and a scrollbar in order to let the user have access to all the individual stored databases. Finally, it does some binding
-        to provide a better way of scrolling with the mouse wheel.
+        """ The _createBodyFrame() method is used by the __buildStructure() method, and it builds the body frame of the main structure.
+            It creates a message telling the user to pick a database to work with, the general canvas where all the stored databases are going
+            to be displayed and a scrollbar in order to let the user have access to all the individual stored databases. Finally, it does some binding
+            to provide a better way of scrolling with the mouse wheel. """
 
-        """
-        self.body = tk.Frame(self, bg=self.application_data['theme-color'])  # Creating the body frame
+        self.body = tk.Frame(self, bg=self.applicationSettings['theme-color'])  # Creating the body frame
 
         # Creating the Body Label Message
         self.body_label_message = tk.Label(
             self.body, text=self.body_options['message-title'],
             font=self.body_options['message-title-font'],
-            bg=self.application_data['theme-color'],
-            fg=self.application_data['label-fg-color']
+            bg=self.applicationSettings['theme-color'],
+            fg=self.applicationSettings['label-fg-color']
         )
 
         # Creating the file picker area containing the databases' buttons
         self.file_picker_area = tk.Canvas(
             self.body,
-            background=self.application_data['theme-color-dark'],
-            highlightbackground=self.application_data['theme-color'],
-            width=round(0.9 * self.application_data['window-width']),
-            height=round(0.5 * self.application_data['window-height'])
+            background=self.applicationSettings['theme-color-dark'],
+            highlightbackground=self.applicationSettings['theme-color'],
+            width=round(0.9 * self.applicationSettings['window-width']),
+            height=round(0.5 * self.applicationSettings['window-height'])
         )
 
         self.file_picker_area.bind('<Configure>', lambda e: self.file_picker_area.configure(scrollregion=self.file_picker_area.bbox("all")))
         self.file_picker_area.bind('<MouseWheel>', lambda e: onMousewheel(e, self.file_picker_area))
 
-        self.file_picker_frame = ttk.Label(self.file_picker_area, background=self.application_data['theme-color-dark'])
+        self.file_picker_frame = ttk.Label(self.file_picker_area, background=self.applicationSettings['theme-color-dark'])
         self.file_picker_area.create_window((0, 0), window=self.file_picker_frame, anchor=tk.NW)
         self.file_picker_frame.bind('<MouseWheel>', lambda e: onMousewheel(e, self.file_picker_area))
 
@@ -377,18 +357,16 @@ class DatabasePickerFrame(IFrame):
 
         # Packing the body and its widgets
         self.body_label_message.pack()
-        self.file_picker_area.pack(padx=round(0.05 * self.application_data['window-width']),
-                                   pady=round(0.04 * self.application_data['window-height']))
+        self.file_picker_area.pack(padx=round(0.05 * self.applicationSettings['window-width']),
+                                   pady=round(0.04 * self.applicationSettings['window-height']))
         self.file_picker_scrollbar.place(relx=1, rely=0, relheight=1, anchor=tk.NE)
         self.body.pack()
 
     def _createFooterFrame(self) -> None:
-        """
-        The _createFooterFrame() method is used by the __buildStructure() method, and it builds the footer frame of the main structure.
-        It creates an 'Add File' button which lets the user add a new database into the stored databases.
+        """ The _createFooterFrame() method is used by the __buildStructure() method, and it builds the footer frame of the main structure.
+            It creates an 'Add File' button which lets the user add a new database into the stored databases. """
 
-        """
-        self.footer = tk.Frame(self, bg=self.application_data['theme-color'])  # Creating the footer frame
+        self.footer = tk.Frame(self, bg=self.applicationSettings['theme-color'])  # Creating the footer frame
 
         # Creating the 'Add File' button
         self.add_file_image = resizeImage(self.add_image, round(1.3 * self.footer_options['font'][1]))
@@ -404,4 +382,4 @@ class DatabasePickerFrame(IFrame):
 
         # Packing the footer and its widgets
         self.footer.pack()
-        self.add_file_button.pack(padx=round(0.028 * self.application_data['window-width']))
+        self.add_file_button.pack(padx=round(0.028 * self.applicationSettings['window-width']))

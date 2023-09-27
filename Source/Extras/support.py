@@ -136,10 +136,11 @@ def getLastFolderID(app_data: dict[str, Any]):
     return max_value
 
 
-def onEntry(event: Any, entries):
-    current_index = entries.index(event.widget)
-    next_index = (current_index + 1) % len(entries)
-    entries[next_index].focus()
+def onEntry(event: Any, dataHolderFields):
+    dataHolders = [dataHolderField.dataHolder for dataHolderField in dataHolderFields]
+    current_index = dataHolders.index(event.widget)
+    next_index = (current_index + 1) % len(dataHolders)
+    dataHolders[next_index].focus()
 
 
 # Defining all the colors used for the Application

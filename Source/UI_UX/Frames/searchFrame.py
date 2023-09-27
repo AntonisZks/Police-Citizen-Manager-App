@@ -1,6 +1,12 @@
 """
-The 'searchFrame.py' file contains the SearchFrame class, which represents the search frame of the application. Users can search 
-for folders by folder ID or surname using this frame.
+The 'searchFrame.py' file contains the SearchFrame class, which represents the search frame of the application. The frame provides two options of searching,
+'By Folder ID' and 'By Surname'. Providing two input fields on the upper part of the frame, the user can search for folders, according to the input they entered
+inside the suitable input field. The 'Search By FolderID' field makes sure that its given data must be exactly the same with the results, while the 'Search By Surname'
+field says that the results must start with the given data. The frame provides two canvas in the body part. The left canvas displays all the results records that match with
+the given data to search by the user. They appear as a vertical list of check buttons, the user can click on them. A supporting side scrollbar is provided too. The right canvas
+displays the data of every result showed in the left canvas. When the user clicks on a result record, a new tab is being added to the right canvas containing the data of that
+result record. Therefore, the user can navigate threw different result records they selected. Finally, the frame contains a 'Return' button in order to let the user go back to the
+main menu frame.
 
 """
 
@@ -12,8 +18,7 @@ from Source.UI_UX.RecordsStuff.recordsVisualiser import RecordsVisualiser
 
 
 class SearchFrame(IFrame):
-    """
-    The SearchFrame class represents the search frame of the application where the user can search for folders by folder ID or surname.
+    """ The SearchFrame class represents the search frame of the application where the user can search for folders by folder ID or surname.
 
     Attributes:
         header_options (dict): Options for the Header Frame.
@@ -38,138 +43,150 @@ class SearchFrame(IFrame):
         _createBodyFrame(): Creates the Body Frame.
     """
 
-    def __init__(self, app_data: dict[str, any]) -> None:
-        """
-        Constructor for the SearchFrame class.
+    def __init__(self, applicationSettings: dict[str, Any]) -> None:
+        """ Constructor for the SearchFrame class. The constructor of the SearchFrame calls the constructor of the base class IFrame
+            and initializes a scrollbar object to None.
 
         Args:
-            app_data (dict): Data related to the application.
-        """
-        # Initializing the basic frame
-        super().__init__(app_data)
+            applicationSettings (dict): Data related to the application.
 
-        self.record_area_scrollbar = None
+        """
+
+        # Initializing the basic frame
+        super().__init__(applicationSettings)
+
+        self.record_area_scrollbar = None  # Initialize a temporary variable for the side scrollbar
 
     def _initializeImages(self) -> None:
-        """
-        Initialize images used in the frame.
-        """
+        """ Initializes all the images used in the frame. """
+
         self.police_logo_image = tk.PhotoImage(file=self.header_options['image-path'])
         self.search_logo_image = tk.PhotoImage(file=self.body_options['search-bar-image-path'])
         self.return_logo_image = tk.PhotoImage(file=self.footer_options['return-button-image-path'])
 
-    def _setupStructureOptions(self, data: dict[str, any]) -> None:
-        """
-        Set up options for the frame's structure.
+    def _setupStructureOptions(self, parentWidgetSettings: dict[str, Any]) -> None:
+        """ Sets up the options for the frame's structure.
 
         Args:
-            data (dict): Data related to the application.
+            parentWidgetSettings (dict[str, Any]): Data related to the application.
+
         """
+
         # Setting up the Header Options
         self.header_options = {
             "title": "ΑΝΑΖΗΤΗΣΗ ΦΑΚΕΛΩΝ ΜΕ:",
             "image-path": POLICE_LOGO_PNG_PATH,
-            "font": ('Arial', round(0.022 * max(self.application_data['window-width'], self.application_data['window-height'])), 'bold')
+            "font": ('Arial', round(0.022 * max(self.applicationSettings['window-width'], self.applicationSettings['window-height'])), 'bold')
         }
 
         # Setting up the Body Options
         self.body_options = {
             "search-bar-image-path": SEARCH_PNG_PATH,
-            "search-bar-font": ('Arial', round(0.021 * max(self.application_data['window-width'], self.application_data['window-height']))),
-            "search-bar-padx-outer": round(0.08 * self.application_data['window-width']),
+            "search-bar-font": ('Arial', round(0.021 * max(self.applicationSettings['window-width'], self.applicationSettings['window-height']))),
+            "search-bar-padx-outer": round(0.08 * self.applicationSettings['window-width']),
             "search-bar-border-width": lambda: round(0.34 * self.body_options['search-bar-font'][1]),
             "folderID-search-bar-place-holder": "Αριθμός Φακέλου",
             "surname-search-bar-place-holder": "Επώνυμο",
-            "records-area-width": round(0.65 * self.application_data['window-width']),
-            "records-area-height": round(0.63 * self.application_data['window-height']),
+            "records-area-width": round(0.65 * self.applicationSettings['window-width']),
+            "records-area-height": round(0.63 * self.applicationSettings['window-height']),
             "records-area-no-records-message": "ΚΑΝΕΝΑ ΑΠΟΤΕΛΕΣΜΑ",
             "records-area-no-records-selected-message": "ΔΕΝ ΕΧΕΙ ΕΠΙΛΕΓΕΙ\nΚΑΝΕΝΑΣ ΦΑΚΕΛΟΣ",
-            "records-area-font": ('Arial', round(0.03 * self.application_data['window-width'])),
-            "record-button-font": ('Arial', round(0.014 * self.application_data['window-width']))
+            "records-area-font": ('Arial', round(0.03 * self.applicationSettings['window-width'])),
+            "record-button-font": ('Arial', round(0.014 * self.applicationSettings['window-width']))
         }
 
         # Setting up the Footer Options
         self.footer_options = {
             "return-button-text": " ΕΠΙΣΤΡΟΦΗ ΣΤΟ ΜΕΝΟΥ ",
-            "return-button-font": ('Arial', round(0.018 * max(self.application_data['window-width'], self.application_data['window-height']))),
+            "return-button-font": ('Arial', round(0.018 * max(self.applicationSettings['window-width'], self.applicationSettings['window-height']))),
             "return-button-image-path": RETURN_PNG_PATH,
-            "return-button-padx-inner": round(0.01 * self.application_data['window-width']),
-            "return-button-pady-inner": round(0.005 * self.application_data['window-height']),
-            "return-button-padx-outer": round(0.01 * self.application_data['window-width']),
-            "return-button-pady-outer": round(0.012 * self.application_data['window-height']),
+            "return-button-padx-inner": round(0.01 * self.applicationSettings['window-width']),
+            "return-button-pady-inner": round(0.005 * self.applicationSettings['window-height']),
+            "return-button-padx-outer": round(0.01 * self.applicationSettings['window-width']),
+            "return-button-pady-outer": round(0.012 * self.applicationSettings['window-height']),
         }
 
-    def closeAllRecordsVisualizerTabs(self):
+    def closeAllRecordsVisualizerTabs(self) -> None:
+        """ Removes all the tabs from the record manager object. """
+
         for index in list(self.record_manager.selected_buttons.keys()):
             self.record_visualiser.removeTab(index)
 
     def __goToMainMenu(self):
-        """
-        Change the active frame to the Main Menu one.
-        """
-        self.app.setActiveFrame(self.app.mainMenuFrame)
+        """ Changes the active frame to the Main Menu one. """
+
+        self.app.setActiveFrame(self.app.mainMenuFrame)  # Setting the active frame to MainMenuFrame
 
     def _buildStructure(self) -> None:
-        """
-        Build the general structure of the search frame.
-        """
+        """ Builds the general structure of the search frame (Search, Insert, Update). """
+
         self._createHeaderFrame()  # First create the header
-        self._createBodyFrame()  # Then create the body
+        self._createBodyFrame()    # Then create the body
         self._createFooterFrame()  # Finally, create the footer
 
-    def __searchByFolderID(self):
+    def __searchByFolderID(self) -> None:
+        """ Gains access to the database the user is currently working with, and returns all of its data that their 'folder ID' field matches with the
+            one the user entered inside the 'Search By Folder ID' input field. The 'folder ID' field of the results must be exactly the same with the 'folder ID' value
+            the user entered. """
+
         # Clearing the selected tabs in the Record Visualizer Notebook
         self.closeAllRecordsVisualizerTabs()
 
         # Getting the current value of the folderID search bar
         item = self.folderID_search_bar.getItem()
-        if item == "" or item == self.folderID_search_bar.place_holder:
+        if item == "" or item == self.folderID_search_bar.placeHolder:
             return
 
         # Getting all the stored data in the current active database
-        records_df = pd.read_excel(self.application_data['app-data']['active-database'])
+        records_df = pd.read_excel(self.applicationSettings['app-data']['active-database'])
         records_df = records_df.fillna('')  # this command makes sure that the NaN values in the Excel are filled with ''
 
         # Keeping those data that their folderID is similar to the folderID search bar value
         filtered_df = records_df[records_df["Α.Φ."] == int(item)]
 
+        # Creating the record buttons containing the returned results
         self.record_manager.createRecordButtons(filtered_df, self.body_options['record-button-font'])
 
-    def __searchBySurname(self):
+    def __searchBySurname(self) -> None:
+        """ Gains access to the database the user is currently working with, and returns all of its data that their 'surname' field starts with the
+            one the user entered inside the 'Search By Surname' input field. The 'surname' field of the results must start with the 'surname' value
+            the user entered. """
+
         # Clearing the selected tabs in the Record Visualizer Notebook
         self.closeAllRecordsVisualizerTabs()
 
         # Getting the current value of the Surname search bar
         item = self.surname_search_bar.getItem()
-        if item == "" or item == self.surname_search_bar.place_holder:
+        if item == "" or item == self.surname_search_bar.placeHolder:
             return
 
         # Getting all the stored data in the current active database
-        records_df = pd.read_excel(self.application_data['app-data']['active-database'])
+        records_df = pd.read_excel(self.applicationSettings['app-data']['active-database'])
         records_df = records_df.fillna('')  # this command makes sure that the NaN values in the Excel are filled with ''
 
         # Keeping those data that their folderID is similar to the folderID search bar value
         filtered_df = records_df[records_df["ΕΠΩΝΥΜΟ"].str.startswith(item.upper())]
 
+        # Creating the record buttons containing the returned results
         self.record_manager.createRecordButtons(filtered_df, self.body_options['record-button-font'])
 
     def _createHeaderFrame(self) -> None:
-        """
-        Create the Header Frame, which contains the main label and logo.
-        """
-        self.header = tk.Frame(self, bg=self.application_data['theme-color'])  # Creating the header frame
+        """ The _createHeaderFrame() method is used by the __buildStructure() method, and it builds the header frame of the main structure.
+            It creates a main label with a title and an image of the 'Greek Police Logo' next to it. """
+
+        self.header = tk.Frame(self, bg=self.applicationSettings['theme-color'])  # Creating the header frame
 
         # Creating the Header Label
-        self.header_image = resizeImage(self.police_logo_image, round(0.12 * self.application_data['window-width']))
+        self.header_image = resizeImage(self.police_logo_image, round(0.12 * self.applicationSettings['window-width']))
         self.header_label = tk.Label(
             self.header,
             text=self.header_options['title'],
             font=self.header_options['font'],
-            bg=self.application_data['theme-color'],
-            fg=self.application_data['label-fg-color'],
+            bg=self.applicationSettings['theme-color'],
+            fg=self.applicationSettings['label-fg-color'],
             image=self.header_image, compound=tk.LEFT,
-            padx=round(0.04 * self.application_data['window-width']),
-            pady=round(0.04 * (self.application_data['window-height']))
+            padx=round(0.04 * self.applicationSettings['window-width']),
+            pady=round(0.04 * (self.applicationSettings['window-height']))
         )
 
         # Packing the header and its widgets
@@ -177,87 +194,84 @@ class SearchFrame(IFrame):
         self.header.pack()
 
     def _createBodyFrame(self) -> None:
-        """
-        Create the Body Frame, which contains the search bars.
-        """
-        self.body = tk.Frame(self, bg=self.application_data['theme-color'])  # Creating the body frame
-        self.body.pack()
+        """ The _createBodyFrame() method is used by the __buildStructure() method, and it builds the body frame of the main structure.
+            It creates the two canvas containing the results records, as a list and the data of each record the user selected. """
+
+        self.body = tk.Frame(self, bg=self.applicationSettings['theme-color'])  # Creating the body frame
+        self.body.pack()                                                        # Packing the body frame
 
         # Creating a general frame that will hold the Search Bars
-        self.searchbars_frame = tk.Frame(self.body, bg=self.application_data['theme-color'])
+        self.searchbars_frame = tk.Frame(self.body, bg=self.applicationSettings['theme-color'])
         self.searchbars_frame.pack()
 
         # Creating the folderID Search Bar
-        self.folderID_search_bar_frame = tk.Frame(self.searchbars_frame, bg=self.application_data['theme-color'])
+        self.folderID_search_bar_frame = tk.Frame(self.searchbars_frame, bg=self.applicationSettings['theme-color'])
         self.folderID_search_bar_frame.grid(row=0, column=0, padx=self.body_options["search-bar-padx-outer"])
         self.folderID_search_bar = SearchBar(
-            self.folderID_search_bar_frame, self.application_data,
+            self.folderID_search_bar_frame, self.applicationSettings,
             self.body_options["search-bar-border-width"](),  # IMPORTANT: The border width key has a function as a value, that's why we call it
             self.body_options["folderID-search-bar-place-holder"],
             self.body_options["search-bar-font"],
             self.__searchByFolderID
         )
-        self.folderID_search_bar.build()
-        self.folderID_search_bar.put()
+        self.folderID_search_bar.build()  # Building the 'Search By Folder ID' search bar
+        self.folderID_search_bar.put()    # Putting the 'Search By Folder ID' search bar on the screen
 
         # Creating the surname Search Bar
-        self.surname_search_bar_frame = tk.Frame(self.searchbars_frame, bg=self.application_data['theme-color'])
+        self.surname_search_bar_frame = tk.Frame(self.searchbars_frame, bg=self.applicationSettings['theme-color'])
         self.surname_search_bar_frame.grid(row=0, column=1, padx=self.body_options["search-bar-padx-outer"])
         self.surname_search_bar = SearchBar(
             self.surname_search_bar_frame,
-            self.application_data,
+            self.applicationSettings,
             self.body_options["search-bar-border-width"](),  # IMPORTANT: The border width key has a function as a value, that's why we call it
             self.body_options["surname-search-bar-place-holder"],
             self.body_options["search-bar-font"],
             self.__searchBySurname
         )
-        self.surname_search_bar.build()
-        self.surname_search_bar.put()
+        self.surname_search_bar.build()  # Building the 'Search By Surname' search bar
+        self.surname_search_bar.put()    # Putting the 'Search By Surname' search bar on the screen
 
         # Creating a main frame that will hold the records area left and the person data area right
-        self.results_frame = tk.Frame(self.body, bg=self.application_data['theme-color'])
+        self.results_frame = tk.Frame(self.body, bg=self.applicationSettings['theme-color'])
         self.results_frame.pack()
 
         # Creating the record manager object that manages and displays the result records from the search
         self.record_manager = RecordsManager(
             self.results_frame,
-            self.application_data,
+            self.applicationSettings,
             self.body_options['records-area-width'],
             self.body_options['records-area-height'],
-            self.application_data['theme-color-dark'],
+            self.applicationSettings['theme-color-dark'],
             {
                 "text": self.body_options['records-area-no-records-message'],
                 "font": self.body_options['records-area-font'],
-                "bg": self.application_data['theme-color-dark'],
-                "fg": self.application_data['theme-color-very-dark']
+                "bg": self.applicationSettings['theme-color-dark'],
+                "fg": self.applicationSettings['theme-color-very-dark']
             }
         )
+
         self.record_manager.createNoRecordsMessage()
         self.record_manager.show(
             0, 0,
-            round(0.05 * self.application_data['window-width']),
-            round(0.018 * self.application_data['window-height'])
+            round(0.05 * self.applicationSettings['window-width']),
+            round(0.018 * self.applicationSettings['window-height'])
         )
 
         # Creating the record visualiser object that displays the data of each record
         self.record_visualiser = RecordsVisualiser(
             self.results_frame,
-            self.application_data,
-            self.body_options['records-area-width'],
-            self.body_options['records-area-height'],
-            self.application_data['theme-color-dark'],
+            self.applicationSettings,
+            self.body_options['records-area-width'], self.body_options['records-area-height'],
+            self.applicationSettings['theme-color-dark'],
             {
-                "text": self.body_options['records-area-no-records-selected-message'],
-                "font": self.body_options['records-area-font'],
-                "bg": self.application_data['theme-color-dark'],
-                "fg": self.application_data['theme-color-very-dark']
+                "text": self.body_options['records-area-no-records-selected-message'], "font": self.body_options['records-area-font'],
+                "bg": self.applicationSettings['theme-color-dark'], "fg": self.applicationSettings['theme-color-very-dark']
             }
         )
         self.record_visualiser.addTemporaryTab()
         self.record_visualiser.show(
             0, 1,
-            round(0.05 * self.application_data['window-width']),
-            round(0.018 * self.application_data['window-height'])
+            round(0.05 * self.applicationSettings['window-width']), round(0.018 * self.applicationSettings['window-height'])
         )
 
         # Connecting the records Manager and Visualiser
@@ -265,19 +279,20 @@ class SearchFrame(IFrame):
         self.record_visualiser.manager = self.record_manager
 
     def _createFooterFrame(self) -> None:
-        """
-        Create the Footer Frame which contains the 'Return' button
-        """
+        """ The _createFooterFrame() method is used by the __buildStructure() method, and it builds the footer frame of the main structure.
+            It creates a 'Return' button in order to let the user go back to the Main Menu if they want. """
+
+        # Creating an image that is going to be displayed on the 'Return' button
         self.return_image = resizeImage(self.return_logo_image, int(2 * self.footer_options["return-button-font"][1]))
+
+        # Creating the actual button
         self.returnButton = tk.Button(
             self,
-            text=self.footer_options["return-button-text"],
-            font=self.footer_options["return-button-font"],
-            image=self.return_image,
-            compound=tk.LEFT,
-            padx=self.footer_options["return-button-padx-inner"],
-            pady=self.footer_options["return-button-pady-inner"],
+            text=self.footer_options["return-button-text"], font=self.footer_options["return-button-font"],
+            image=self.return_image, compound=tk.LEFT,
+            padx=self.footer_options["return-button-padx-inner"], pady=self.footer_options["return-button-pady-inner"],
             command=self.__goToMainMenu
         )
 
+        # Packing the button
         self.returnButton.pack(padx=self.footer_options["return-button-padx-outer"], pady=self.footer_options["return-button-pady-outer"])

@@ -15,8 +15,7 @@ from Source.UI_UX.Frames.insertFrame import InsertFrame
 
 # The class App stands for the main application
 class App(tk.Tk):
-    """
-    The App class represents the main application, where it has a main window and some useful options.
+    """ The App class represents the main application, where it has a main window and some useful options.
 
     Attributes:
         window_icon (PhotImage): The icon of the main window
@@ -36,12 +35,10 @@ class App(tk.Tk):
     """
 
     def __init__(self) -> None:
-        """
-        The constructor of the application. Here all the basic stuff of the application are being initialized,
-        such as the main window, the icon of the window, the geometry of the window, the title etc.
-        It also gains the application data stored in a .json file called appData.json
+        """ The constructor of the application. Here all the basic stuff of the application are being initialized,
+            such as the main window, the icon of the window, the geometry of the window, the title etc.
+            It also gains the application data stored in a .json file called appData.json. """
 
-        """
         super().__init__()
         self.insertFrame = None
         self.searchFrame = None
@@ -72,12 +69,10 @@ class App(tk.Tk):
         self.setActiveFrame(self.databasePickerFrame)
 
     def __onClosing(self) -> None:
-        """
-        The __onClosing() method is called when the user decides to close the application. When this happens the program is making
-        sure that the active database of the application is being removed, to not leaving useless data behind. This function
-        is responsible for this work.
-        
-        """
+        """ The __onClosing() method is called when the user decides to close the application. When this happens the program is making
+            sure that the active database of the application is being removed, to not leaving useless data behind. This function
+            is responsible for this work. """
+
         self.app_data['active-database'] = ""  # Modify the active database and make it empty
 
         # Add the modified application data in the json file
@@ -87,20 +82,17 @@ class App(tk.Tk):
         self.destroy()  # And of course destroy the main window and terminate the application
 
     def createFrames(self) -> None:
-        """
-        The __createFrames() method creates all the frames used by the application.
-        By default, the first frame ever used is the DatabasePickerFrame which gives the user
-        the ability to choose which database he/she wants to administrate.
+        """ The __createFrames() method creates all the frames used by the application.
+            By default, the first frame ever used is the DatabasePickerFrame which gives the user
+            the ability to choose which database he/she wants to administrate. """
 
-        """
         self.databasePickerFrame = DatabasePickerFrame(self.options)
         self.mainMenuFrame = MainMenuFrame(self.options)
         self.searchFrame = SearchFrame(self.options)
         self.insertFrame = InsertFrame(self.options)
 
     def setActiveFrame(self, frame: IFrame | None) -> None:
-        """
-        The setActiveFrame() method sets the given frame as an active one to the application.
+        """ The setActiveFrame() method sets the given frame as an active one to the application.
 
         Args:
             frame (Frame): The frame passed in order to be set as active
@@ -114,11 +106,9 @@ class App(tk.Tk):
         self.active_frame.pack()
 
     def __createOptions(self) -> None:
-        """
-        The __createOptions() method creates all the useful options for the application.
-        Some of them are the app_data, the main window, the window width and height, the theme colors etc.
+        """ The __createOptions() method creates all the useful options for the application.
+            Some of them are the app_data, the main window, the window width and height, the theme colors etc. """
 
-        """
         self.options = {
             "app-data": self.app_data,
             "object": self,
@@ -135,20 +125,16 @@ class App(tk.Tk):
         }
 
     def __setWindowIcon(self) -> None:
-        """
-        The __setWindowIcon() method sets the icon of the window. It obtains the image by the file support.py
+        """ The __setWindowIcon() method sets the icon of the window. It obtains the image by the file support.py """
 
-        """
         self.window_icon = tk.PhotoImage(file=POLICE_LOGO_PNG_PATH)
         self.iconphoto(True, self.window_icon)
 
     def __setWindowGeometry(self) -> None:
-        """
-        The __setWindowGeometry() method sets the geometry of the window. It obtains the current screen dimensions,
-        and then it calculates the width and the height of the window. It also calculates the spawn position of the window
-        which by default is the center of the screen. Finally, it sets all the above to the main window.
-        
-        """
+        """ The __setWindowGeometry() method sets the geometry of the window. It obtains the current screen dimensions,
+            and then it calculates the width and the height of the window. It also calculates the spawn position of the window
+            which by default is the center of the screen. Finally, it sets all the above to the main window. """
+
         # Getting the screen width and height
         self.screen_width = self.winfo_screenwidth()
         self.screen_height = self.winfo_screenheight()
@@ -168,27 +154,12 @@ class App(tk.Tk):
         self.geometry(f"{self.window_width}x{self.window_height}+{spawn_x}+{spawn_y}")
 
     def run(self) -> None:
-        """
-        The run() method is called when the application needs to run. It calls the mainloop() method
-        of the window object.
+        """ The run() method is called when the application needs to run. It calls the mainloop() method
+            of the window object. """
 
-        """
         self.mainloop()
 
 
 if __name__ == '__main__':
-    myApp = App()
-    myApp.run()
-
-    # attributes = vars(myApp.databasePickerFrame)
-    # attribute_types = {attr: type(value).__name__ for attr, value in attributes.items()}
-    # for attr, attr_type in attribute_types.items():
-    #     print(f"Attribute: {attr}, type: {attr_type}")
-
-    # methods = [method for method in dir(myApp.databasePickerFrame) if callable(getattr(myApp.databasePickerFrame, method))]
-    # for method in methods:
-    #     print("Method:", method)
-
-    # methods = [method for method in dir(myApp.mainMenuFrame) if callable(getattr(myApp.mainMenuFrame, method))]
-    # for method in methods:
-    #     print("Method:", method)
+    myApp = App()  # Create an App object
+    myApp.run()    # Call the run() method of the App object to start the application
