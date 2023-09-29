@@ -11,6 +11,7 @@ from Source.UI_UX.Frames.databasePickerFrame import DatabasePickerFrame
 from Source.UI_UX.Frames.mainMenuFrame import MainMenuFrame
 from Source.UI_UX.Frames.searchFrame import SearchFrame
 from Source.UI_UX.Frames.insertFrame import InsertFrame
+from Source.UI_UX.Frames.updateFrame import UpdateFrame
 
 
 # The class App stands for the main application
@@ -42,6 +43,7 @@ class App(tk.Tk):
         super().__init__()
         self.insertFrame = None
         self.searchFrame = None
+        self.updateFrame = None
         self.mainMenuFrame = None
         self.databasePickerFrame = None
 
@@ -90,6 +92,7 @@ class App(tk.Tk):
         self.mainMenuFrame = MainMenuFrame(self.options)
         self.searchFrame = SearchFrame(self.options)
         self.insertFrame = InsertFrame(self.options)
+        self.updateFrame = UpdateFrame(self.options)
 
     def setActiveFrame(self, frame: IFrame | None) -> None:
         """ The setActiveFrame() method sets the given frame as an active one to the application.

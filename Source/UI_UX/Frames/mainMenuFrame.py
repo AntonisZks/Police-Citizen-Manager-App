@@ -146,6 +146,11 @@ class MainMenuFrame(IFrame):
 
         self.app.setActiveFrame(self.app.insertFrame)  # Setting the active frame to InsertFrame
 
+    def __gotoUpdate(self) -> None:
+        """ Changes the active frame to the Update Frame. """
+
+        self.app.setActiveFrame(self.app.updateFrame)  # Setting the active frame to UpdateFrame
+
     def _buildStructure(self) -> None:
         """ Builds the general structure of the main menu frame (Header, Body). """
 
@@ -184,11 +189,7 @@ class MainMenuFrame(IFrame):
 
         # Creating the body label message
         self.body_options['message-title'] = f"ΕΝΕΡΓΟ ΑΡΧΕΙΟ:" + " " * 10 + f"{getFileName(self.applicationSettings['app-data']['active-database'])}"
-        self.body_label_message = tk.Label(
-            self.body_title_frame,
-            text=self.body_options['message-title'], font=self.body_options['message-title-font'],
-            bg=self.applicationSettings['theme-color'], fg=self.applicationSettings['label-fg-color']
-        )
+        self.body_label_message = tk.Label(self.body_title_frame, text=self.body_options['message-title'], font=self.body_options['message-title-font'], bg=self.applicationSettings['theme-color'], fg=self.applicationSettings['label-fg-color'])
 
         # Creating the 'Change File' button
         self.change_file_image = resizeImage(self.change_logo_image, int(2 * self.body_options['change-file-button-font'][1]))
@@ -210,7 +211,7 @@ class MainMenuFrame(IFrame):
 
         images = [self.search_image, self.insert_image, self.update_image]    # A List that contains the navigation buttons images
         images_texts = ["search", "insert", "update"]                         # A List that contains the navigation buttons titles
-        commands = [self.__gotoSearch, self.__gotoInsert, self.__gotoSearch]  # A List that contains the navigation buttons commands
+        commands = [self.__gotoSearch, self.__gotoInsert, self.__gotoUpdate]  # A List that contains the navigation buttons commands
 
         buttons = []  # An empty list that will contain all the buttons
 

@@ -63,7 +63,7 @@ class DataHolderField(ABC):
 
 
 class SmallDataHolderField(DataHolderField):
-	def __init__(self, parentWidget: tk.Widget, dataSettings: dict[str, Any], labelText: str, dataHolderText: str, dataHolderState: Literal["normal", "disabled", "readonly"], placeHolder: str, row: int = 0, column: int = 0) -> None:
+	def __init__(self, parentWidget: tk.Widget, dataSettings: dict[str, Any], labelText: str, dataHolderText: str, dataHolderState: str, placeHolder: str, row: int = 0, column: int = 0) -> None:
 		""" The constructor of the SmallDataHolderField. Calls the constructor of the parent class and also builds the data holder field. """
 
 		super().__init__(parentWidget, dataSettings, labelText, dataHolderText, dataHolderState, placeHolder, row, column)
@@ -134,7 +134,7 @@ class SmallDataHolderField(DataHolderField):
 
 
 class BigDataHolderField(DataHolderField):
-	def __init__(self, parentWidget: tk.Widget, dataSettings: dict[str, Any], labelText: str, dataHolderText: str, dataHolderState: Literal["normal", "disabled", "readonly"], placeHolder: str, row: int = 0, column: int = 0):
+	def __init__(self, parentWidget: tk.Widget, dataSettings: dict[str, Any], labelText: str, dataHolderText: str, dataHolderState: str, placeHolder: str, row: int = 0, column: int = 0):
 		""" The constructor of the BigDataHolderField. Calls the constructor of the parent class and also builds the data holder field. """
 
 		super().__init__(parentWidget, dataSettings, labelText, dataHolderText, dataHolderState, placeHolder, row, column)

@@ -11,7 +11,7 @@ from typing import Any
 from Source.UI_UX.RecordsStuff.record import Record
 
 
-class RecordsVisualiser:
+class ResultRecordDataVisualizer:
     def __init__(self, parentWidget: tk.Widget, applicationSettings: dict[str, Any], width: int, height: int, bgColor: str, noRecordSelectedMessageSettings: dict[str, Any]) -> None:
         """ The constructor of the records' visualizer.
 
@@ -28,12 +28,12 @@ class RecordsVisualiser:
         # Initializing some temporary data
         self.tempLabel = None
         self.tempTab = None
-        self.manager = None
+        self.listVisualizer = None
 
         # Initializing the attributes
-        self.no_record_selected_message_options = noRecordSelectedMessageSettings
-        self.app_data = applicationSettings
-        self.bg_color = bgColor
+        self.noRecordSelectedMessageSettings = noRecordSelectedMessageSettings
+        self.applicationSettings = applicationSettings
+        self.bgColor = bgColor
         self.notebook = ttk.Notebook(parentWidget, width=width, height=height)
 
         self.selectedResultsCounter = 0  # Counter of the records that have been selected by the user
@@ -46,7 +46,7 @@ class RecordsVisualiser:
             record (Record): The actual record we want to add its data to the tab.
 
         """
-        tab_frame = record.createDataFrame(self.notebook, self.app_data)
+        tab_frame = record.createDataFrame(self.notebook, self.applicationSettings)
 
         # Deleting the first temporary tab
         if self.selectedResultsCounter == 0:
@@ -54,7 +54,7 @@ class RecordsVisualiser:
 
         # Adding a new tab to the notebook
         self.notebook.add(tab_frame, text=record.surname)
-        self.manager.selected_buttons[index] = tab_frame
+        self.listVisualizer.selected_buttons[index] = tab_frame
         self.selectedResultsCounter += 1  # Increase the selected results counter by 1
 
         self.notebook.select(tab_frame)  # Setting the new tab in the notebook, as an active one
@@ -68,7 +68,7 @@ class RecordsVisualiser:
         """
 
         # Getting the tab at the given index
-        tab_frame = self.manager.selected_buttons.pop(index)
+        tab_frame = self.listVisualizer.selected_buttons.pop(index)
         self.notebook.forget(tab_frame)   # Removing the tab from the notebook
         self.selectedResultsCounter -= 1  # Decreasing the selected records counter by 1
 
@@ -81,9 +81,9 @@ class RecordsVisualiser:
         """ Adds a temporary tab in the notebook. The temporary tab of the RecordVisualizer class, is a special tab used only to notify the user that no record has been selected by them. """
 
         # Creating the temporary tab and its 'No Selected Record' label
-        self.tempTab = tk.Frame(self.notebook, background=self.bg_color)
-        self.tempLabel = tk.Label(self.tempTab, text=self.no_record_selected_message_options['text'], font=self.no_record_selected_message_options['font'], bg=self.no_record_selected_message_options['bg'], fg=self.no_record_selected_message_options['fg'])
-        self.tempLabel.pack(pady=round(0.26 * self.app_data['window-height']))  # Packing the label in the temporary tab
+        self.tempTab = tk.Frame(self.notebook, background=self.bgColor)
+        self.tempLabel = tk.Label(self.tempTab, text=self.noRecordSelectedMessageSettings['text'], font=self.noRecordSelectedMessageSettings['font'], bg=self.noRecordSelectedMessageSettings['bg'], fg=self.noRecordSelectedMessageSettings['fg'])
+        self.tempLabel.pack(pady=round(0.26 * self.applicationSettings['window-height']))  # Packing the label in the temporary tab
 
     def show(self, row, column, padx, pady):
         self.notebook.grid(row=row, column=column, padx=padx, pady=pady)

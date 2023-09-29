@@ -13,13 +13,30 @@ from tkinter import messagebox
 from Source.UI_UX.Frames.frame import IFrame
 from Source.Extras.support import *
 from Source.UI_UX.RecordsStuff.record import Record
+from Source.UI_UX.RecordsStuff.recordsManager import RecordsManager
 
 
 class InsertFrame(IFrame):
-	""" The InsertFrame class represents the insert frame of the application where the user can create a new form of a new person's data,
-		and add it to the database.
+	""" The InsertFrame class represents the insert frame of the application where the user can create a new form of
+    	a new person's data and add it to the database.
 
-	"""
+    Attributes:
+        applicationSettings (dict[str, Any]): Settings related to the application.
+
+    Methods:
+        __init__() -> None: Constructor for the InsertFrame class. Initializes the frame and scrollbar object.
+        _initializeImages() -> None: Initializes the images used in the frame.
+        _setupStructureOptions() -> None: Sets up the options for the frame's structure.
+        __goToMainMenu() -> None: Changes the active frame to the Main Menu one.
+        __validInputData() -> bool: Checks if the data entered by the user are valid for insertion.
+        __saveRecord() -> None: Saves the new person's data entered by the user if they are valid.
+        __resetStructure(): Resets the structure of the frame by destroying all children widgets and rebuilding it.
+        _buildStructure() -> None: Builds the general structure of the insert frame.
+        _createHeaderFrame() -> None: Creates the Header Frame, which contains the main label and logo.
+        _createBodyFrame() -> None: Creates the Body Frame, which contains the form for the user to fill.
+        _createFooterFrame() -> None: Creates the Footer of the frame with 'Return' and 'Save' buttons.
+
+    """
 
 	def __init__(self, applicationSettings: dict[str, Any]) -> None:
 		""" Constructor for the InsertFrame class. The constructor of the InsertFrame calls the constructor of the base class IFrame
@@ -36,7 +53,7 @@ class InsertFrame(IFrame):
 
 	def _initializeImages(self) -> None:
 		""" Initializes some all the images used in the frame. """
-		
+
 		self.police_logo_image = tk.PhotoImage(file=self.header_options['image-path'])
 		self.return_logo_image = tk.PhotoImage(file=self.footer_options['return-button-image-path'])
 		self.save_logo_image = tk.PhotoImage(file=self.footer_options['save-button-image-path'])
@@ -46,7 +63,7 @@ class InsertFrame(IFrame):
 
 		Args:
 			parentWidgetSettings (dict[str, Any]): Data related to the application.
-			
+
 		"""
 
 		# Setting up the Header Options
@@ -90,45 +107,6 @@ class InsertFrame(IFrame):
 
 		self.app.setActiveFrame(self.app.mainMenuFrame)
 
-	def __validInputData(self) -> bool:
-		""" Checks if the data, the user has entered are valid for insertion. If so, the method returns True. If not an error appears on the screen
-			describing the cause of insertion failure, and the method returns False. """
-
-		# Removing all the placeholders
-		for dataHolderField in self.dataHolderFields:
-			dataHolderField.removePlaceHolder()
-
-		# Checking if the folderID and surname fields are filled
-		if self.dataHolderFields[0].dataHolder.get() == "":
-			messagebox.showerror("Ελλιπή Στοιχεία", "Το πεδίο 'Αριθμός Φακέλου' πρέπει να είναι συμπληρωμένο")
-			self.dataHolderFields[0].dataHolder.focus()
-			return False
-
-		if self.dataHolderFields[1].dataHolder.get() == "":
-			messagebox.showerror("Ελλιπή Στοιχεία", "Το πεδίο 'Επώνυμο' πρέπει να είναι συμπληρωμένο")
-			self.dataHolderFields[1].dataHolder.focus()
-			return False
-
-		# Checking if the given date agrees with the Data Prototype
-		datePattern = r'\b\d{2}/\d{2}/\d{4}\b'
-
-		if self.dataHolderFields[5].dataHolder.get() != "" and not re.match(datePattern, self.dataHolderFields[5].dataHolder.get()):
-			messagebox.showerror("Μη Έγκυρη Ημερομηνία", f"Το πεδίο 'Ημερομηνία Γέννησης' ωφείλει να ικανοποιεί το πρότυπο DD/MM/YY. Η τιμή '{self.dataHolderFields[5].dataHolder.get()}' δεν το ικανοποιεί. Το πεδίο μπορεί να είναι κενό")
-			self.dataHolderFields[5].dataHolder.focus()
-			return False
-
-		# Checking if the given phone number is valid
-		if self.dataHolderFields[9].dataHolder.get() != "" and len(self.dataHolderFields[9].dataHolder.get()) != 10:
-			messagebox.showerror(f"Μη Έγκυρος Αριθμός Τηλεφώνου", f"Ο αριθμός τηλεφώνου '{self.dataHolderFields[9].dataHolder.get()}' δεν είναι έγκυρος. Ο αριθμός πρέπει να είναι 10-ψήφιος. Το πεδίο μπορεί να είναι κενό")
-			self.dataHolderFields[9].dataHolder.focus()
-			return False
-
-		# Adding all the placeholders again
-		for dataHolderField in self.dataHolderFields:
-			dataHolderField.addPlaceHolder()
-
-		return True
-
 	def __saveRecord(self) -> None:
 		""" Saves the new person's data the user entered if they are valid of course. The method first gains access to the data of the current database
 			the user is working with, and after that it checks whether the data are valid in order to continue. If so, the method adds the new data to a temporary
@@ -139,7 +117,7 @@ class InsertFrame(IFrame):
 		df = pd.read_excel(self.applicationSettings['app-data']['active-database'])
 
 		# Checking if the user entered valid inputs in the form
-		if not self.__validInputData():
+		if not RecordsManager.validData(self.dataHolderFields):
 			# Adding all the placeholders again
 			for dataHolderField in self.dataHolderFields:
 				dataHolderField.addPlaceHolder()
@@ -218,13 +196,7 @@ class InsertFrame(IFrame):
 		self.body.pack()
 
 		# Creating a title
-		self.titleLabel = tk.Label(
-			self.body,
-			text=self.body_options["title"],
-			font=self.body_options["title-font"],
-			bg=self.applicationSettings["theme-color-dark"],
-			fg=self.applicationSettings['label-fg-color']
-		)
+		self.titleLabel = tk.Label(self.body, text=self.body_options["title"], font=self.body_options["title-font"], bg=self.applicationSettings["theme-color-dark"], fg=self.applicationSettings['label-fg-color'])
 		self.titleLabel.pack(pady=(self.body_options["title-pady"], 0))
 
 		# Creating an empty form the user has to fill

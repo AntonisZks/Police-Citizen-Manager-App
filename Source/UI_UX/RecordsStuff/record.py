@@ -7,7 +7,6 @@ the same frame, but this time it doesn't contain any data. Instead, the frame al
 
 """
 
-import math
 from tkinter import Frame
 
 from Source.Extras.support import *
@@ -46,15 +45,15 @@ class Record:
         self.phone, self.business_type = correctInsertion(phone), correctInsertion(business_type)
         self.notes, self.comments = correctInsertion(notes), correctInsertion(comments)
 
-    def createDataFrame(self, parent_widget: tk.Widget, applicationSettings: dict[str, Any]) -> tk.Frame:
+        self.databaseIndex = None
+
+    def createDataFrame(self, parent_widget: tk.Widget, applicationSettings: dict[str, Any], edit: bool = False) -> tk.Frame:
         """ Creates a frame containing a form representing the record's data inside dataHolderFields.
 
         Args:
-            parent_widget (tkinter.Widget): The widget containing the frame
-            applicationSettings (dict[str, Any]): The settings of the application
-
-        Returns:
-            tkinter.Frame
+            parent_widget (tkinter.Widget): The widget containing the frame.
+            applicationSettings (dict[str, Any]): The settings of the application.
+            edit (bool): Declares if editing the record's data is allowed.
 
         """
 
@@ -86,14 +85,16 @@ class Record:
 
         # Creating the Data Holders
         index = 0
+        fieldState = "readonly" if not edit else "normal"
         for row in range(6):
             for column in range(2):
                 if not (row == 0 and column == 1):
-                    SmallDataHolderField(primary_data_frame, formSettings, COLUMNS_NAMES[index], list(vars(self).values())[index], "readonly", "", row, column).put()  # Create a small data holder field and put it onto the scene
+                    SmallDataHolderField(primary_data_frame, formSettings, COLUMNS_NAMES[index], list(vars(self).values())[index], fieldState, "", row, column).put()  # Create a small data holder field and put it onto the scene
                     index += 1
 
+        fieldState = "disabled" if not edit else "normal"
         for index in range(11, 13):
-            BigDataHolderField(secondary_data_frame, formSettings, COLUMNS_NAMES[11], list(vars(self).values())[index], "disabled", "").put()  # Create a small data holder field and put it onto the scene
+            BigDataHolderField(secondary_data_frame, formSettings, COLUMNS_NAMES[11], list(vars(self).values())[index], fieldState, "").put()  # Create a small data holder field and put it onto the scene
 
         return frame
 

@@ -9,15 +9,16 @@ result record. Therefore, the user can navigate threw different result records t
 main menu frame.
 
 """
+from tkinter import messagebox
 
 from Source.UI_UX.Frames.frame import IFrame
 from Source.UI_UX.Other.searchBar import SearchBar
 from Source.Extras.support import *
 from Source.UI_UX.RecordsStuff.resultsRecordsListVisualizer import ResultsRecordsListVisualizer
-from Source.UI_UX.RecordsStuff.resultRecordDataVisualizer import ResultRecordDataVisualizer
+from Source.UI_UX.RecordsStuff.resultsRecordsDataEditor import ResultsRecordsDataEditor
 
 
-class SearchFrame(IFrame):
+class UpdateFrame(IFrame):
     """ The SearchFrame class represents the search frame of the application where the user can search for folders by folder ID or surname.
 
     Attributes:
@@ -64,6 +65,8 @@ class SearchFrame(IFrame):
         self.police_logo_image = tk.PhotoImage(file=self.header_options['image-path'])
         self.search_logo_image = tk.PhotoImage(file=self.body_options['search-bar-image-path'])
         self.return_logo_image = tk.PhotoImage(file=self.footer_options['return-button-image-path'])
+        self.save_logo_image = tk.PhotoImage(file=self.footer_options['save-button-image-path'])
+        self.delete_logo_image = tk.PhotoImage(file=self.footer_options['delete-button-image-path'])
 
     def _setupStructureOptions(self, parentWidgetSettings: dict[str, Any]) -> None:
         """ Sets up the options for the frame's structure.
@@ -98,25 +101,131 @@ class SearchFrame(IFrame):
 
         # Setting up the Footer Options
         self.footer_options = {
+            "save-button-text": " ΑΠΟΘΗΚΕΥΣΗ ΑΛΛΑΓΩΝ ",
+            "save-button-font": ('Arial', round(0.018 * max(self.applicationSettings['window-width'], self.applicationSettings['window-height']))),
+            "save-button-image-path": SAVE_PNG_PATH,
+            "delete-button-text": " ΔΙΑΓΡΑΦΗ ΣΤΟΙΧΕΙΩΝ ",
+            "delete-button-font": ('Arial', round(0.018 * max(self.applicationSettings['window-width'], self.applicationSettings['window-height']))),
+            "delete-button-image-path": DELETE_PNG_PATH,
             "return-button-text": " ΕΠΙΣΤΡΟΦΗ ΣΤΟ ΜΕΝΟΥ ",
             "return-button-font": ('Arial', round(0.018 * max(self.applicationSettings['window-width'], self.applicationSettings['window-height']))),
             "return-button-image-path": RETURN_PNG_PATH,
-            "return-button-padx-inner": round(0.01 * self.applicationSettings['window-width']),
-            "return-button-pady-inner": round(0.005 * self.applicationSettings['window-height']),
-            "return-button-padx-outer": round(0.01 * self.applicationSettings['window-width']),
-            "return-button-pady-outer": round(0.012 * self.applicationSettings['window-height']),
+            "button-padx-inner": round(0.01 * self.applicationSettings['window-width']),
+            "button-pady-inner": round(0.005 * self.applicationSettings['window-height']),
+            "button-padx-outer": round(0.01 * self.applicationSettings['window-width']),
+            "button-pady-outer": round(0.012 * self.applicationSettings['window-height']),
         }
 
     def closeAllRecordsVisualizerTabs(self) -> None:
         """ Removes all the tabs from the record manager object. """
 
         for index in list(self.resultsRecordsListVisualizer.selected_buttons.keys()):
-            self.resultRecordDataVisualizer.removeTab(index)
+            self.resultsRecordsDataEditor.removeTab(index)
 
     def __goToMainMenu(self):
         """ Changes the active frame to the Main Menu one. """
 
         self.app.setActiveFrame(self.app.mainMenuFrame)  # Setting the active frame to MainMenuFrame
+
+    # TODO: Create a special class that manages the records (accessing, inserting, changing, deleting) and then create an object an object of that class to manage the change of the data
+    def __saveChanges(self):
+        """ Saves the changes the user has done to specifics records, in the database. """
+
+        if self.resultsRecordsListVisualizer.records is not None:
+            recordsStates = [self.resultsRecordsListVisualizer.checkButtonsVar[-1].get()]  # Getting and fixing the states (ON/OFF) of every record in the record manager
+            for i in range(len(self.resultsRecordsListVisualizer.checkButtonsVar) - 1):
+                recordsStates.append(self.resultsRecordsListVisualizer.checkButtonsVar[i].get())
+
+            # Getting the line indexes of every record
+            recordsDatabaseIndexes = []
+            for record in self.resultsRecordsListVisualizer.records:
+                recordsDatabaseIndexes.append(record.databaseIndex)
+
+            database_df = pd.read_excel(self.applicationSettings['app-data']['active-database'])  # Creating a dataframe containing all the records in the database
+            changedRecords = []  # Initializing an empty list that will hold all the records that has been changed
+
+            # Iterate through all the tabs in the record visualizer and get the changes the user has done
+            for tab in self.resultsRecordsDataEditor.notebook.tabs():
+                tab = self.resultsRecordsDataEditor.notebook.nametowidget(tab)  # Getting the actual tab
+
+                # Checking if the current tab has two children (primary data frame and secondary data frame)
+                if len(tab.winfo_children()) == 2:
+                    primaryDataFrame = tab.winfo_children()[0]    # Getting the primary data frame
+                    secondaryDataFrame = tab.winfo_children()[1]  # Getting the secondary data frame
+
+                    data = []  # Initializing a list which is going to contain the changed data of each tab
+
+                    # Iterate through all the primary data and add them to the changed data list
+                    for dataHolderField in primaryDataFrame.winfo_children():
+                        data.append(dataHolderField.winfo_children()[1].get())
+
+                    # Iterate through all the secondary data and add them to the changed data list
+                    for dataHolderField in secondaryDataFrame.winfo_children():
+                        data.append(dataHolderField.winfo_children()[1].get('1.0', tk.END))
+
+                    changedRecords.append(data)  # Adding the new changed record to the changed records list
+
+            if any(recordsStates) > 0:
+
+                # Add the changed data to the data frame
+                for changedRecord in changedRecords:
+                    database_df.loc[len(database_df)] = changedRecord
+
+                # Delete the previous records in the dataframe
+                for i in range(len(recordsDatabaseIndexes)):
+                    if recordsStates[i] == 1:
+                        database_df = database_df.drop(recordsDatabaseIndexes[i])
+
+                database_df.to_excel(self.applicationSettings['app-data']['active-database'], index=False)  # Store the data frame to the database
+
+                # Show a message box and notify the user that the changes were successful, and go back to the main menu
+                numberOfChangesString = f"{len(self.resultsRecordsDataEditor.notebook.tabs())} φακέλους." if len(self.resultsRecordsDataEditor.notebook.tabs()) > 1 else "1 φάκελο."
+                messagebox.showinfo("Επιτυχής Διόρθωση Δεδομένων", "Έγινε επιτυχής διόρθωση δεδομένων σε " + numberOfChangesString)
+                self.__goToMainMenu()
+
+            else:
+
+                # Show a message box and notify the user that they haven't selected any file to change
+                messagebox.showinfo("Καμία Διόρθωση", "Δεν έχετε επιλέξει κανένα φάκελο για διόρθωση")
+
+    # TODO: Create a special class that manages the records (accessing, inserting, changing, deleting) and then create an object an object of that class to manage the deletion of the data
+    def __deleteRecords(self):
+        """ Deletes the records the user has selected from the database. """
+
+        if self.resultsRecordsListVisualizer.records is not None:
+            recordsStates = [self.resultsRecordsListVisualizer.checkButtonsVar[-1].get()]  # Getting and fixing the states (ON/OFF) of every record in the record manager
+            for i in range(len(self.resultsRecordsListVisualizer.checkButtonsVar) - 1):
+                recordsStates.append(self.resultsRecordsListVisualizer.checkButtonsVar[i].get())
+
+            # Getting the line indexes of every record
+            recordsDatabaseIndexes = []
+            for record in self.resultsRecordsListVisualizer.records:
+                recordsDatabaseIndexes.append(record.databaseIndex)
+
+            database_df = pd.read_excel(self.applicationSettings['app-data']['active-database'])  # Creating a dataframe containing all the records in the database
+
+            if any(recordsStates) > 0:
+
+                # Delete the lines corresponding to the selected records form the dataframe
+                for i in range(len(recordsDatabaseIndexes)):
+                    if recordsStates[i] == 1:
+                        database_df = database_df.drop(recordsDatabaseIndexes[i])
+
+                # Show a message box and ask them if they are sure about deleting the selected files
+                numberOfChangesString = f"{len(self.resultsRecordsDataEditor.notebook.tabs())} φακέλων! " if len(self.resultsRecordsDataEditor.notebook.tabs()) > 1 else "1 φακέλου! "
+                messagebox.showwarning("Προειδοποίηση", "Πρόκειται να γίνει διαγραφή " + numberOfChangesString + "Επιθυμείτε να συνεχίσετε;")
+
+                database_df.to_excel(self.applicationSettings['app-data']['active-database'], index=False)  # Store the data frame to the database
+
+                # Show a message box and notify the user that the deletion were successful, and go back to the main menu
+                numberOfChangesString = f"{len(self.resultsRecordsDataEditor.notebook.tabs())} φακέλων." if len(self.resultsRecordsDataEditor.notebook.tabs()) > 1 else "1 φακέλου."
+                messagebox.showinfo("Επιτυχής Διαγραφή Δεδομένων", "Έγινε επιτυχής διαγραφή " + numberOfChangesString)
+                self.__goToMainMenu()
+
+            else:
+
+                # Show a message box and notify the user that they haven't selected any file to change
+                messagebox.showinfo("Καμία Διαγραφή", "Δεν έχετε επιλέξει κανένα φάκελο για διαγραφή")
 
     def _buildStructure(self) -> None:
         """ Builds the general structure of the search frame (Search, Insert, Update). """
@@ -236,7 +345,7 @@ class SearchFrame(IFrame):
         self.results_frame = tk.Frame(self.body, bg=self.applicationSettings['theme-color'])
         self.results_frame.pack()
 
-        # Creating the results records list object that manages and displays the result records from the search
+        # Creating the record manager object that manages and displays the result records from the search
         self.resultsRecordsListVisualizer = ResultsRecordsListVisualizer(
             self.results_frame,
             self.applicationSettings,
@@ -258,8 +367,8 @@ class SearchFrame(IFrame):
             round(0.018 * self.applicationSettings['window-height'])
         )
 
-        # Creating the result record data visualizer object that displays the data of each record
-        self.resultRecordDataVisualizer = ResultRecordDataVisualizer(
+        # Creating the record editor object that lets the user edit a specific record
+        self.resultsRecordsDataEditor = ResultsRecordsDataEditor(
             self.results_frame,
             self.applicationSettings,
             self.body_options['records-area-width'], self.body_options['records-area-height'],
@@ -269,31 +378,60 @@ class SearchFrame(IFrame):
                 "bg": self.applicationSettings['theme-color-dark'], "fg": self.applicationSettings['theme-color-very-dark']
             }
         )
-        self.resultRecordDataVisualizer.addTemporaryTab()
-        self.resultRecordDataVisualizer.show(
+        self.resultsRecordsDataEditor.addTemporaryTab()
+        self.resultsRecordsDataEditor.show(
             0, 1,
             round(0.05 * self.applicationSettings['window-width']), round(0.018 * self.applicationSettings['window-height'])
         )
 
         # Connecting the records Manager and Visualiser
-        self.resultsRecordsListVisualizer.dataVisualiser = self.resultRecordDataVisualizer
-        self.resultRecordDataVisualizer.listVisualizer = self.resultsRecordsListVisualizer
+        self.resultsRecordsListVisualizer.dataVisualiser = self.resultsRecordsDataEditor
+        self.resultsRecordsDataEditor.manager = self.resultsRecordsListVisualizer
 
     def _createFooterFrame(self) -> None:
         """ The _createFooterFrame() method is used by the __buildStructure() method, and it builds the footer frame of the main structure.
             It creates a 'Return' button in order to let the user go back to the Main Menu if they want. """
 
+        self.footer = tk.Frame(self, bg=self.applicationSettings['theme-color'])  # Creating the footer frame
+        self.footer.pack()                                                        # Packing the footer frame
+
         # Creating an image that is going to be displayed on the 'Return' button
         self.return_image = resizeImage(self.return_logo_image, int(2 * self.footer_options["return-button-font"][1]))
 
-        # Creating the actual button
+        # Creating the 'Return' button
         self.returnButton = tk.Button(
-            self,
+            self.footer,
             text=self.footer_options["return-button-text"], font=self.footer_options["return-button-font"],
             image=self.return_image, compound=tk.LEFT,
-            padx=self.footer_options["return-button-padx-inner"], pady=self.footer_options["return-button-pady-inner"],
+            padx=self.footer_options["button-padx-inner"], pady=self.footer_options["button-pady-inner"],
             command=self.__goToMainMenu
         )
 
-        # Packing the button
-        self.returnButton.pack(padx=self.footer_options["return-button-padx-outer"], pady=self.footer_options["return-button-pady-outer"])
+        # Creating an image that is going to be displayed on the 'Save' button
+        self.save_image = resizeImage(self.save_logo_image, int(2 * self.footer_options["save-button-font"][1]))
+
+        # Creating the 'Return' button
+        self.saveButton = tk.Button(
+            self.footer,
+            text=self.footer_options["save-button-text"], font=self.footer_options["save-button-font"],
+            image=self.save_image, compound=tk.LEFT,
+            padx=self.footer_options["button-padx-inner"], pady=self.footer_options["button-pady-inner"],
+            command=self.__saveChanges
+        )
+
+        # Creating an image that is going to be displayed on the 'Delete' button
+        self.delete_image = resizeImage(self.delete_logo_image, int(2 * self.footer_options["delete-button-font"][1]))
+
+        # Creating the 'Return' button
+        self.deleteButton = tk.Button(
+            self.footer,
+            text=self.footer_options["delete-button-text"], font=self.footer_options["delete-button-font"],
+            image=self.delete_image, compound=tk.LEFT,
+            padx=self.footer_options["button-padx-inner"], pady=self.footer_options["button-pady-inner"],
+            command=self.__deleteRecords
+        )
+
+        # Packing the buttons
+        self.returnButton.grid(row=0, column=0, padx=self.footer_options["button-padx-outer"], pady=self.footer_options["button-pady-outer"])
+        self.saveButton.grid(row=0, column=1, padx=self.footer_options["button-padx-outer"], pady=self.footer_options["button-pady-outer"])
+        self.deleteButton.grid(row=0, column=2, padx=self.footer_options["button-padx-outer"], pady=self.footer_options["button-pady-outer"])

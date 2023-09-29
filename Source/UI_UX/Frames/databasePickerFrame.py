@@ -163,13 +163,7 @@ class DatabasePickerFrame(IFrame):
 
         """
         button_width = round(0.022 * self.applicationSettings['window-width'])
-        newExcelFileButton = tk.Button(
-            parent,
-            text=getFileName(database_path),
-            font=self.body_options['files-font'],
-            width=button_width,
-            command=lambda: f"{self.__setActiveDatabase(database_path)}{self.__gotoMainMenu()}"
-        )
+        newExcelFileButton = tk.Button( parent, text=getFileName(database_path), font=self.body_options['files-font'], width=button_width, command=lambda: f"{self.__setActiveDatabase(database_path)}{self.__gotoMainMenu()}")
 
         return newExcelFileButton
 
@@ -275,8 +269,7 @@ class DatabasePickerFrame(IFrame):
                 bg=self.applicationSettings['theme-color-dark'],
                 fg=self.applicationSettings['theme-color-very-dark']
             )
-            self.body_no_files_message.pack(padx=round(0.27 * self.applicationSettings['window-width']),
-                                            pady=round(0.2 * self.applicationSettings['window-height']))
+            self.body_no_files_message.pack(padx=round(0.27 * self.applicationSettings['window-width']), pady=round(0.2 * self.applicationSettings['window-height']))
 
         # Adding all the stored databases as buttons
         button_gap = round(0.015 * self.applicationSettings['window-width'])
