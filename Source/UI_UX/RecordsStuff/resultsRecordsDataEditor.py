@@ -28,7 +28,7 @@ class ResultsRecordsDataEditor:
         # Initializing some temporary data
         self.tempLabel = None
         self.tempTab = None
-        self.manager = None
+        self.listVisualizer = None
 
         # Initializing the attributes
         self.noRecordSelectedMessageSettings = noRecordSelectedMessageSettings
@@ -54,7 +54,7 @@ class ResultsRecordsDataEditor:
 
         # Adding a new tab to the notebook
         self.notebook.add(tab_frame, text=record.surname)
-        self.manager.selected_buttons[index] = tab_frame
+        self.listVisualizer.selected_buttons[index] = tab_frame
         self.selectedResultsCounter += 1  # Increase the selected results counter by 1
 
         self.notebook.select(tab_frame)  # Setting the new tab in the notebook, as an active one
@@ -68,7 +68,7 @@ class ResultsRecordsDataEditor:
         """
 
         # Getting the tab at the given index
-        tab_frame = self.manager.selected_buttons.pop(index)
+        tab_frame = self.listVisualizer.selected_buttons.pop(index)
         self.notebook.forget(tab_frame)   # Removing the tab from the notebook
         self.selectedResultsCounter -= 1  # Decreasing the selected records counter by 1
 
@@ -83,7 +83,7 @@ class ResultsRecordsDataEditor:
         # Creating the temporary tab and its 'No Selected Record' label
         self.tempTab = tk.Frame(self.notebook, background=self.bgColor)
         self.tempLabel = tk.Label(self.tempTab, text=self.noRecordSelectedMessageSettings['text'], font=self.noRecordSelectedMessageSettings['font'], bg=self.noRecordSelectedMessageSettings['bg'], fg=self.noRecordSelectedMessageSettings['fg'])
-        self.tempLabel.pack(pady=round(0.26 * self.applicationSettings['window-height']))  # Packing the label in the temporary tab
+        self.tempLabel.pack(pady=round(0.30 * self.applicationSettings['window-height']))  # Packing the label in the temporary tab
 
     def show(self, row, column, padx, pady):
         self.notebook.grid(row=row, column=column, padx=padx, pady=pady)

@@ -84,12 +84,16 @@ class SearchFrame(IFrame):
         self.body_options = {
             "search-bar-image-path": SEARCH_PNG_PATH,
             "search-bar-font": ('Arial', round(0.021 * max(self.applicationSettings['window-width'], self.applicationSettings['window-height']))),
+            "search-bar-width": round(0.022 * self.applicationSettings['window-width']),
             "search-bar-padx-outer": round(0.08 * self.applicationSettings['window-width']),
+            "search-bar-pady-outer": round(0.01 * self.applicationSettings['window-height']),
             "search-bar-border-width": lambda: round(0.34 * self.body_options['search-bar-font'][1]),
             "folderID-search-bar-place-holder": "Αριθμός Φακέλου",
             "surname-search-bar-place-holder": "Επώνυμο",
-            "records-area-width": round(0.65 * self.applicationSettings['window-width']),
-            "records-area-height": round(0.63 * self.applicationSettings['window-height']),
+            "list-visualizer-width": round(0.65 * self.applicationSettings['window-width']),
+            "list-visualizer-height": round(0.55 * self.applicationSettings['window-height']),
+            "data-visualizer-width": round(0.65 * self.applicationSettings['window-width']),
+            "data-visualizer-height": round(0.685 * self.applicationSettings['window-height']),
             "records-area-no-records-message": "ΚΑΝΕΝΑ ΑΠΟΤΕΛΕΣΜΑ",
             "records-area-no-records-selected-message": "ΔΕΝ ΕΧΕΙ ΕΠΙΛΕΓΕΙ\nΚΑΝΕΝΑΣ ΦΑΚΕΛΟΣ",
             "records-area-font": ('Arial', round(0.03 * self.applicationSettings['window-width'])),
@@ -201,15 +205,21 @@ class SearchFrame(IFrame):
         self.body = tk.Frame(self, bg=self.applicationSettings['theme-color'])  # Creating the body frame
         self.body.pack()                                                        # Packing the body frame
 
+        self.leftFrame = tk.Frame(self.body, bg=self.applicationSettings['theme-color'])   # Creating the left frame of the body
+        self.rightFrame = tk.Frame(self.body, bg=self.applicationSettings['theme-color'])  # Creating the right frame of the body
+
+        self.leftFrame.grid(row=0, column=0)   # Griding the left frame in the scene
+        self.rightFrame.grid(row=0, column=1)  # Griding the right frame in the scene
+
         # Creating a general frame that will hold the Search Bars
-        self.searchbars_frame = tk.Frame(self.body, bg=self.applicationSettings['theme-color'])
+        self.searchbars_frame = tk.Frame(self.leftFrame, bg=self.applicationSettings['theme-color'])
         self.searchbars_frame.pack()
 
         # Creating the folderID Search Bar
         self.folderID_search_bar_frame = tk.Frame(self.searchbars_frame, bg=self.applicationSettings['theme-color'])
-        self.folderID_search_bar_frame.grid(row=0, column=0, padx=self.body_options["search-bar-padx-outer"])
+        self.folderID_search_bar_frame.pack(padx=self.body_options["search-bar-padx-outer"], pady=self.body_options["search-bar-pady-outer"])
         self.folderID_search_bar = SearchBar(
-            self.folderID_search_bar_frame, self.applicationSettings,
+            self.folderID_search_bar_frame, self.applicationSettings, self.body_options["search-bar-width"],
             self.body_options["search-bar-border-width"](),  # IMPORTANT: The border width key has a function as a value, that's why we call it
             self.body_options["folderID-search-bar-place-holder"],
             self.body_options["search-bar-font"],
@@ -220,10 +230,9 @@ class SearchFrame(IFrame):
 
         # Creating the surname Search Bar
         self.surname_search_bar_frame = tk.Frame(self.searchbars_frame, bg=self.applicationSettings['theme-color'])
-        self.surname_search_bar_frame.grid(row=0, column=1, padx=self.body_options["search-bar-padx-outer"])
+        self.surname_search_bar_frame.pack(padx=self.body_options["search-bar-padx-outer"], pady=self.body_options["search-bar-pady-outer"])
         self.surname_search_bar = SearchBar(
-            self.surname_search_bar_frame,
-            self.applicationSettings,
+            self.surname_search_bar_frame, self.applicationSettings, self.body_options["search-bar-width"],
             self.body_options["search-bar-border-width"](),  # IMPORTANT: The border width key has a function as a value, that's why we call it
             self.body_options["surname-search-bar-place-holder"],
             self.body_options["search-bar-font"],
@@ -233,15 +242,15 @@ class SearchFrame(IFrame):
         self.surname_search_bar.put()    # Putting the 'Search By Surname' search bar on the screen
 
         # Creating a main frame that will hold the records area left and the person data area right
-        self.results_frame = tk.Frame(self.body, bg=self.applicationSettings['theme-color'])
-        self.results_frame.pack()
+        self.leftResultsFrame = tk.Frame(self.leftFrame, bg=self.applicationSettings['theme-color'])
+        self.leftResultsFrame.pack()
 
         # Creating the results records list object that manages and displays the result records from the search
         self.resultsRecordsListVisualizer = ResultsRecordsListVisualizer(
-            self.results_frame,
+            self.leftResultsFrame,
             self.applicationSettings,
-            self.body_options['records-area-width'],
-            self.body_options['records-area-height'],
+            self.body_options['list-visualizer-width'],
+            self.body_options['list-visualizer-height'],
             self.applicationSettings['theme-color-dark'],
             {
                 "text": self.body_options['records-area-no-records-message'],
@@ -258,11 +267,16 @@ class SearchFrame(IFrame):
             round(0.018 * self.applicationSettings['window-height'])
         )
 
+        # Creating a main frame that will hold the records area left and the person data area right
+        self.rightResultsFrame = tk.Frame(self.rightFrame, bg=self.applicationSettings['theme-color'])
+        self.rightResultsFrame.pack()
+
         # Creating the result record data visualizer object that displays the data of each record
         self.resultRecordDataVisualizer = ResultRecordDataVisualizer(
-            self.results_frame,
+            self.rightResultsFrame,
             self.applicationSettings,
-            self.body_options['records-area-width'], self.body_options['records-area-height'],
+            self.body_options['data-visualizer-width'],
+            self.body_options['data-visualizer-height'],
             self.applicationSettings['theme-color-dark'],
             {
                 "text": self.body_options['records-area-no-records-selected-message'], "font": self.body_options['records-area-font'],

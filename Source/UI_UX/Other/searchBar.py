@@ -28,7 +28,7 @@ class SearchBar:
 
     """
 
-    def __init__(self, parentWidget: tk.Widget, applicationSettings: dict[str, any], borderWidth: int, placeHolder: str, font: tuple, command: callable) -> None:
+    def __init__(self, parentWidget: tk.Widget, applicationSettings: dict[str, any], width: int, borderWidth: int, placeHolder: str, font: tuple, command: callable) -> None:
         """ Constructor for the SearchBar class. the search bar widget consists of two elements, an entry box and a button. Each one has its own characteristics.
             The entry box has a width, a border width, a font and a placeholder. The button has a width, an image and a command to execute when it is clicked.
 
@@ -48,6 +48,7 @@ class SearchBar:
 
         self.parentWidget = parentWidget                # The parent widget containing the search bar
         self.applicationSettings = applicationSettings  # The settings of the application
+        self.width = width                              # the width of the search bar
         self.borderWidth = borderWidth                  # The border width of the entry box
         self.placeHolder = placeHolder                  # The placeholder of the entry box
         self.font = font                                # The font of the entry box
@@ -93,7 +94,7 @@ class SearchBar:
         """ Builds the search bar and associates the search button. """
 
         # Creating the entry box
-        self.entry = tk.Entry(self.parentWidget, fg="gray", font=self.font, borderwidth=self.borderWidth)
+        self.entry = tk.Entry(self.parentWidget, fg="gray", font=self.font, borderwidth=self.borderWidth, width=self.width)
         self.entry.insert(0, self.placeHolder)
 
         # Binding the entry with some additional options

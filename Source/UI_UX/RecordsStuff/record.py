@@ -73,7 +73,7 @@ class Record:
             "entry-border-width": round(0.005 * applicationSettings['window-width']),
             "text-area-border-width": round(0.005 * applicationSettings['window-width']),
             'big-info-width': round(0.041 * applicationSettings['window-width']),
-            'big-info-height': round(0.005 * applicationSettings['window-width'])
+            'big-info-height': round(0.006 * applicationSettings['window-width'])
         }
 
         # Creating the two general frames that will hold the Data Holders (primary_data_frame, secondary_data_frame)
@@ -94,7 +94,7 @@ class Record:
 
         fieldState = "disabled" if not edit else "normal"
         for index in range(11, 13):
-            BigDataHolderField(secondary_data_frame, formSettings, COLUMNS_NAMES[11], list(vars(self).values())[index], fieldState, "").put()  # Create a small data holder field and put it onto the scene
+            BigDataHolderField(secondary_data_frame, formSettings, COLUMNS_NAMES[index], list(vars(self).values())[index], fieldState, "").put()  # Create a small data holder field and put it onto the scene
 
         return frame
 
@@ -145,7 +145,7 @@ class Record:
                     index += 1
 
         for index in range(11, 13):
-            dataHolderField = BigDataHolderField(secondary_data_frame, options, COLUMNS_NAMES[11], "", "normal", placeHolders[index])
+            dataHolderField = BigDataHolderField(secondary_data_frame, options, COLUMNS_NAMES[index], "", "normal", placeHolders[index])
             dataHolderFields.append(dataHolderField)
             dataHolderField.put()
 
