@@ -6,7 +6,6 @@ check for records' validation or even delete records from databases. All these i
 
 import re
 import pandas as pd
-from Source.UI_UX.RecordsStuff.dataHolderFields import SmallDataHolderField, BigDataHolderField
 from tkinter import messagebox
 from typing import Any
 from functools import singledispatchmethod
@@ -81,7 +80,7 @@ class RecordsManager:
 
 	@staticmethod
 	@__validData.register
-	def validData(data: list[SmallDataHolderField | BigDataHolderField]) -> bool:
+	def validData(data: list) -> bool:
 		""" Checks if the given data are valid according to the application record's data prototypes. """
 
 		# Checking if the folderID and surname fields are filled
@@ -121,7 +120,7 @@ class RecordsManager:
 
 	@staticmethod
 	@__validData.register
-	def validData(data: list[str | Any]) -> bool:
+	def validData(data: list) -> bool:
 		""" Checks if the given data are valid according to the application record's data prototypes. """
 
 		# Checking if the folderID and surname fields are filled
