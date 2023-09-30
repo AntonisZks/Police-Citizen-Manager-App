@@ -14,6 +14,7 @@ from tkinter import messagebox
 from Source.UI_UX.Frames.frame import IFrame
 from Source.UI_UX.Other.searchBar import SearchBar
 from Source.Extras.support import *
+from Source.UI_UX.RecordsStuff.recordsManager import RecordsManager
 from Source.UI_UX.RecordsStuff.resultsRecordsListVisualizer import ResultsRecordsListVisualizer
 from Source.UI_UX.RecordsStuff.resultsRecordsDataEditor import ResultsRecordsDataEditor
 
@@ -131,7 +132,6 @@ class UpdateFrame(IFrame):
 
         self.app.setActiveFrame(self.app.mainMenuFrame)  # Setting the active frame to MainMenuFrame
 
-    # TODO: Create a special class that manages the records (accessing, inserting, changing, deleting) and then create an object an object of that class to manage the change of the data
     def __saveChanges(self):
         """ Saves the changes the user has done to specifics records, in the database. """
 
@@ -145,7 +145,13 @@ class UpdateFrame(IFrame):
             for record in self.resultsRecordsListVisualizer.records:
                 recordsDatabaseIndexes.append(record.databaseIndex)
 
-            database_df = pd.read_excel(self.applicationSettings['app-data']['active-database'])  # Creating a dataframe containing all the records in the database
+            # Zipping the records indexes and states into a tuple in order to filter some of them later
+            recordsIndexesStates = tuple(zip(recordsDatabaseIndexes, recordsStates))
+
+            # Getting those data where their state is 1
+            filteredRecordsIndexesStates = tuple(filter(lambda item: item[0] if item[1] == 1 else None, recordsIndexesStates))
+            recordIndexes = [item[0] for item in filteredRecordsIndexesStates]
+
             changedRecords = []  # Initializing an empty list that will hold all the records that has been changed
 
             # Iterate through all the tabs in the record visualizer and get the changes the user has done
@@ -169,30 +175,24 @@ class UpdateFrame(IFrame):
 
                     changedRecords.append(data)  # Adding the new changed record to the changed records list
 
-            if any(recordsStates) > 0:
-
-                # Add the changed data to the data frame
-                for changedRecord in changedRecords:
-                    database_df.loc[len(database_df)] = changedRecord
-
-                # Delete the previous records in the dataframe
-                for i in range(len(recordsDatabaseIndexes)):
-                    if recordsStates[i] == 1:
-                        database_df = database_df.drop(recordsDatabaseIndexes[i])
-
-                database_df.to_excel(self.applicationSettings['app-data']['active-database'], index=False)  # Store the data frame to the database
-
-                # Show a message box and notify the user that the changes were successful, and go back to the main menu
-                numberOfChangesString = f"{len(self.resultsRecordsDataEditor.notebook.tabs())} φακέλους." if len(self.resultsRecordsDataEditor.notebook.tabs()) > 1 else "1 φάκελο."
-                messagebox.showinfo("Επιτυχής Διόρθωση Δεδομένων", "Έγινε επιτυχής διόρθωση δεδομένων σε " + numberOfChangesString)
-                self.__goToMainMenu()
-
-            else:
+            if any(recordsStates) == 0:
 
                 # Show a message box and notify the user that they haven't selected any file to change
                 messagebox.showinfo("Καμία Διόρθωση", "Δεν έχετε επιλέξει κανένα φάκελο για διόρθωση")
+                return
 
-    # TODO: Create a special class that manages the records (accessing, inserting, changing, deleting) and then create an object an object of that class to manage the deletion of the data
+            # Checking if the data are valid
+            if any(not RecordsManager.validData(changedRecord) for changedRecord in changedRecords):
+                return
+
+            RecordsManager.updateDataInDatabase(changedRecords, recordIndexes, self.applicationSettings['app-data']['active-database'])  # Updating the data and save them to the database
+
+            # Show a message box and notify the user that the changes were successful, and go back to the main menu
+            numberOfChangesString = f"{len(self.resultsRecordsDataEditor.notebook.tabs())} φακέλους." if len(self.resultsRecordsDataEditor.notebook.tabs()) > 1 else "1 φάκελο."
+            messagebox.showinfo("Επιτυχής Διόρθωση Δεδομένων", "Έγινε επιτυχής διόρθωση δεδομένων σε " + numberOfChangesString)
+
+            self.__goToMainMenu()  # Go to the main menu of the application
+
     def __deleteRecords(self):
         """ Deletes the records the user has selected from the database. """
 
@@ -206,30 +206,31 @@ class UpdateFrame(IFrame):
             for record in self.resultsRecordsListVisualizer.records:
                 recordsDatabaseIndexes.append(record.databaseIndex)
 
-            database_df = pd.read_excel(self.applicationSettings['app-data']['active-database'])  # Creating a dataframe containing all the records in the database
+            # Zipping the records indexes and states into a tuple in order to filter some of them later
+            recordsIndexesStates = tuple(zip(recordsDatabaseIndexes, recordsStates))
 
-            if any(recordsStates) > 0:
+            # Getting those data where their state is 1
+            filteredRecordsIndexesStates = tuple(filter(lambda item: item[0] if item[1] == 1 else None, recordsIndexesStates))
+            recordIndexes = [item[0] for item in filteredRecordsIndexesStates]
 
-                # Delete the lines corresponding to the selected records form the dataframe
-                for i in range(len(recordsDatabaseIndexes)):
-                    if recordsStates[i] == 1:
-                        database_df = database_df.drop(recordsDatabaseIndexes[i])
-
-                # Show a message box and ask them if they are sure about deleting the selected files
-                numberOfChangesString = f"{len(self.resultsRecordsDataEditor.notebook.tabs())} φακέλων! " if len(self.resultsRecordsDataEditor.notebook.tabs()) > 1 else "1 φακέλου! "
-                messagebox.showwarning("Προειδοποίηση", "Πρόκειται να γίνει διαγραφή " + numberOfChangesString + "Επιθυμείτε να συνεχίσετε;")
-
-                database_df.to_excel(self.applicationSettings['app-data']['active-database'], index=False)  # Store the data frame to the database
-
-                # Show a message box and notify the user that the deletion were successful, and go back to the main menu
-                numberOfChangesString = f"{len(self.resultsRecordsDataEditor.notebook.tabs())} φακέλων." if len(self.resultsRecordsDataEditor.notebook.tabs()) > 1 else "1 φακέλου."
-                messagebox.showinfo("Επιτυχής Διαγραφή Δεδομένων", "Έγινε επιτυχής διαγραφή " + numberOfChangesString)
-                self.__goToMainMenu()
-
-            else:
+            if any(recordsStates) == 0:
 
                 # Show a message box and notify the user that they haven't selected any file to change
                 messagebox.showinfo("Καμία Διαγραφή", "Δεν έχετε επιλέξει κανένα φάκελο για διαγραφή")
+                return
+
+            # Show a message box and ask them if they are sure about deleting the selected files
+            numberOfChangesString = f"{len(self.resultsRecordsDataEditor.notebook.tabs())} φακέλων! " if len(self.resultsRecordsDataEditor.notebook.tabs()) > 1 else "1 φακέλου! "
+            if not messagebox.askyesno("Προειδοποίηση", "Πρόκειται να γίνει διαγραφή " + numberOfChangesString + "Επιθυμείτε να συνεχίσετε;", icon=messagebox.WARNING):
+                return
+
+            RecordsManager.deleteRecordsFromDatabase(recordIndexes, self.applicationSettings['app-data']['active-database'])
+
+            # Show a message box and notify the user that the deletion were successful, and go back to the main menu
+            numberOfChangesString = f"{len(self.resultsRecordsDataEditor.notebook.tabs())} φακέλων." if len(self.resultsRecordsDataEditor.notebook.tabs()) > 1 else "1 φακέλου."
+            messagebox.showinfo("Επιτυχής Διαγραφή Δεδομένων", "Έγινε επιτυχής διαγραφή " + numberOfChangesString)
+
+            self.__goToMainMenu()  # Go to the main menu of the application
 
     def _buildStructure(self) -> None:
         """ Builds the general structure of the search frame (Search, Insert, Update). """

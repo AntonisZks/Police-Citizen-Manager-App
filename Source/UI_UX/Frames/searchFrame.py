@@ -15,6 +15,7 @@ from Source.UI_UX.Other.searchBar import SearchBar
 from Source.Extras.support import *
 from Source.UI_UX.RecordsStuff.resultsRecordsListVisualizer import ResultsRecordsListVisualizer
 from Source.UI_UX.RecordsStuff.resultRecordDataVisualizer import ResultRecordDataVisualizer
+from Source.UI_UX.RecordsStuff.recordsManager import RecordsManager
 
 
 class SearchFrame(IFrame):
@@ -143,8 +144,7 @@ class SearchFrame(IFrame):
             return
 
         # Getting all the stored data in the current active database
-        records_df = pd.read_excel(self.applicationSettings['app-data']['active-database'])
-        records_df = records_df.fillna('')  # this command makes sure that the NaN values in the Excel are filled with ''
+        records_df = RecordsManager.getRecordsFromDatabase(self.applicationSettings['app-data']['active-database'])  # Gaining the data from the database
 
         # Keeping those data that their folderID is similar to the folderID search bar value
         filtered_df = records_df[records_df["Α.Φ."] == int(item)]
@@ -166,8 +166,7 @@ class SearchFrame(IFrame):
             return
 
         # Getting all the stored data in the current active database
-        records_df = pd.read_excel(self.applicationSettings['app-data']['active-database'])
-        records_df = records_df.fillna('')  # this command makes sure that the NaN values in the Excel are filled with ''
+        records_df = RecordsManager.getRecordsFromDatabase(self.applicationSettings['app-data']['active-database'])  # Gaining the data from the database
 
         # Keeping those data that their folderID is similar to the folderID search bar value
         filtered_df = records_df[records_df["ΕΠΩΝΥΜΟ"].str.startswith(item.upper())]

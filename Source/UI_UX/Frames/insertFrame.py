@@ -8,7 +8,6 @@ so as the user enters the data inside it. All the previous are implemented with 
 
 """
 
-import re
 from tkinter import messagebox
 from Source.UI_UX.Frames.frame import IFrame
 from Source.Extras.support import *
@@ -113,9 +112,6 @@ class InsertFrame(IFrame):
 			'Pandas' dataframe and then saves this dataframe into an Excel file which is the same file from where the data were gained at first. After the insertion
 			is completed the method a message appears on the screen saying that the insertion was successful. """
 
-		# Getting the stored data in the database
-		df = pd.read_excel(self.applicationSettings['app-data']['active-database'])
-
 		# Checking if the user entered valid inputs in the form
 		if not RecordsManager.validData(self.dataHolderFields):
 			# Adding all the placeholders again
@@ -135,11 +131,7 @@ class InsertFrame(IFrame):
 			new_data.append(value)
 
 		# Adding the new data to the dataframe
-		new_row = dict(zip(df.columns, new_data))
-		df.loc[len(df)] = new_row
-
-		# Storing the data of the dataframe into the database
-		df.to_excel(self.applicationSettings['app-data']['active-database'], index=False)
+		RecordsManager.saveRecordToDatabase(new_data, self.applicationSettings['app-data']['active-database'])
 
 		# Adding all the placeholders again
 		for dataHolderField in self.dataHolderFields:
