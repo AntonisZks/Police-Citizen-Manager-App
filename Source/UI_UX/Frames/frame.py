@@ -37,7 +37,7 @@ class IFrame(ABC, tk.Frame):
 
     """
 
-    def __init__(self, applicationSettings: dict[str, Any]) -> None:
+    def __init__(self, applicationSettings: dict[str, Any], askForPassword=False) -> None:
         """ The constructor of the Frame class. Here the actual frame is being built while some additional data
             are being initialized such as application options.
 
@@ -54,6 +54,7 @@ class IFrame(ABC, tk.Frame):
         self.applicationSettings = applicationSettings                                          # Applying the application settings
         self.parent_widget = applicationSettings['window']                                      # The parent widget is going to be the main window
         self.app = applicationSettings['object']                                                # Storing the application object
+        self.askForPassword = askForPassword                                                    # Variable to check if password is required to access this frame
 
         # Set up the header, body, and footer options and initialize the images used
         self._setupStructureOptions(self.applicationSettings)
@@ -74,7 +75,7 @@ class IFrame(ABC, tk.Frame):
         # Destroying all the frame's children widgets
         for child_widget in self.winfo_children():
             child_widget.destroy()
-        
+
         self.pack_forget()  # Unpacking the frame from its parent
 
     @abstractmethod

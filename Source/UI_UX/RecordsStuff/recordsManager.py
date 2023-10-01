@@ -9,6 +9,7 @@ import pandas as pd
 from tkinter import messagebox
 from typing import Any
 from functools import singledispatchmethod
+from Source.UI_UX.RecordsStuff.dataHolderFields import SmallDataHolderField, BigDataHolderField
 
 
 class RecordsManager:
@@ -79,8 +80,7 @@ class RecordsManager:
 		raise NotImplementedError(f"{type(data)} is not supported as a type of argument in validData().")
 
 	@staticmethod
-	@__validData.register
-	def validData(data: list) -> bool:
+	def validData(*data: SmallDataHolderField | BigDataHolderField) -> bool:
 		""" Checks if the given data are valid according to the application record's data prototypes. """
 
 		# Checking if the folderID and surname fields are filled
@@ -119,8 +119,7 @@ class RecordsManager:
 		return True
 
 	@staticmethod
-	@__validData.register
-	def validData(data: list) -> bool:
+	def validData2(*data: str) -> bool:
 		""" Checks if the given data are valid according to the application record's data prototypes. """
 
 		# Checking if the folderID and surname fields are filled

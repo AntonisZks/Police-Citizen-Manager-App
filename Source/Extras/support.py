@@ -177,6 +177,9 @@ UPDATE_PNG_PATH = resourcePath("Assets/Images/update.png")
 RETURN_PNG_PATH = resourcePath("Assets/Images/back_arrow.png")
 SAVE_PNG_PATH = resourcePath("Assets/Images/save.png")
 DELETE_PNG_PATH = resourcePath("Assets/Images/delete.png")
+HIDE_PNG_PATH = resourcePath("Assets/Images/hide_password.png")
+VIEW_PNG_PATH = resourcePath("Assets/Images/view_password.png")
+
 
 # Defining the App Data path
 APP_DATA_PATH = resourcePath('Data/appData.json')

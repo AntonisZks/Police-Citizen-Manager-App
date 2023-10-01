@@ -46,7 +46,7 @@ class UpdateFrame(IFrame):
 
     """
 
-    def __init__(self, applicationSettings: dict[str, Any]) -> None:
+    def __init__(self, applicationSettings: dict[str, Any], askForPassword: bool = False) -> None:
         """ Constructor for the SearchFrame class. The constructor of the SearchFrame calls the constructor of the base class IFrame
             and initializes a scrollbar object to None.
 
@@ -56,7 +56,7 @@ class UpdateFrame(IFrame):
         """
 
         # Initializing the basic frame
-        super().__init__(applicationSettings)
+        super().__init__(applicationSettings, askForPassword)
 
         self.record_area_scrollbar = None  # Initialize a temporary variable for the side scrollbar
 
@@ -130,7 +130,7 @@ class UpdateFrame(IFrame):
     def __goToMainMenu(self):
         """ Changes the active frame to the Main Menu one. """
 
-        self.app.setActiveFrame(self.app.mainMenuFrame)  # Setting the active frame to MainMenuFrame
+        self.app.tryToSetActiveFrame(self.app.mainMenuFrame)  # Setting the active frame to MainMenuFrame
 
     def __saveChanges(self):
         """ Saves the changes the user has done to specifics records, in the database. """
@@ -149,7 +149,7 @@ class UpdateFrame(IFrame):
             recordsIndexesStates = tuple(zip(recordsDatabaseIndexes, recordsStates))
 
             # Getting those data where their state is 1
-            filteredRecordsIndexesStates = tuple(filter(lambda item: item[0] if item[1] == 1 else None, recordsIndexesStates))
+            filteredRecordsIndexesStates = tuple(filter(lambda item: item if item[1] == 1 else None, recordsIndexesStates))
             recordIndexes = [item[0] for item in filteredRecordsIndexesStates]
 
             changedRecords = []  # Initializing an empty list that will hold all the records that has been changed
@@ -182,7 +182,7 @@ class UpdateFrame(IFrame):
                 return
 
             # Checking if the data are valid
-            if any(not RecordsManager.validData(changedRecord) for changedRecord in changedRecords):
+            if any(not RecordsManager.validData2(*changedRecord) for changedRecord in changedRecords):
                 return
 
             RecordsManager.updateDataInDatabase(changedRecords, recordIndexes, self.applicationSettings['app-data']['active-database'])  # Updating the data and save them to the database
@@ -210,7 +210,7 @@ class UpdateFrame(IFrame):
             recordsIndexesStates = tuple(zip(recordsDatabaseIndexes, recordsStates))
 
             # Getting those data where their state is 1
-            filteredRecordsIndexesStates = tuple(filter(lambda item: item[0] if item[1] == 1 else None, recordsIndexesStates))
+            filteredRecordsIndexesStates = tuple(filter(lambda item: item if item[1] == 1 else None, recordsIndexesStates))
             recordIndexes = [item[0] for item in filteredRecordsIndexesStates]
 
             if any(recordsStates) == 0:

@@ -67,14 +67,14 @@ class MainMenuFrame(IFrame):
 
     """
 
-    def __init__(self, applicationSettings: dict[str, Any]) -> None:
+    def __init__(self, applicationSettings: dict[str, Any], askForPassword: bool = False) -> None:
         """ The constructor of the MainMenuFrame class. Here, the actual frame and the main structure are being built, while additional data such as
             images and options are being initialized.
 
         Args:
             applicationSettings (dict[str, Any]): The settings of the parent widget (Application Window).
         """
-        super().__init__(applicationSettings)  # Initializing the basic frame
+        super().__init__(applicationSettings, askForPassword)  # Initializing the basic frame
 
     def _initializeImages(self) -> None:
         """ Initialize all the images used in the frame. """
@@ -134,22 +134,22 @@ class MainMenuFrame(IFrame):
     def __gotoDatabasePicker(self) -> None:
         """ Changes the active frame to the Database Picker one. """
 
-        self.app.setActiveFrame(self.app.databasePickerFrame)  # Setting the active frame to DatabasePickerFrame
+        self.app.tryToSetActiveFrame(self.app.databasePickerFrame)  # Setting the active frame to DatabasePickerFrame
 
     def __gotoSearch(self) -> None:
         """ Changes the active frame to the Search Frame. """
 
-        self.app.setActiveFrame(self.app.searchFrame)  # Setting the active frame to SearchFrame
+        self.app.tryToSetActiveFrame(self.app.searchFrame)  # Setting the active frame to SearchFrame
 
     def __gotoInsert(self) -> None:
         """ Changes the active frame to the Insert Frame. """
 
-        self.app.setActiveFrame(self.app.insertFrame)  # Setting the active frame to InsertFrame
+        self.app.tryToSetActiveFrame(self.app.insertFrame)  # Setting the active frame to InsertFrame
 
     def __gotoUpdate(self) -> None:
         """ Changes the active frame to the Update Frame. """
 
-        self.app.setActiveFrame(self.app.updateFrame)  # Setting the active frame to UpdateFrame
+        self.app.tryToSetActiveFrame(self.app.updateFrame)  # Setting the active frame to UpdateFrame
 
     def _buildStructure(self) -> None:
         """ Builds the general structure of the main menu frame (Header, Body). """

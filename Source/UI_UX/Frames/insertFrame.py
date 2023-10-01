@@ -37,7 +37,7 @@ class InsertFrame(IFrame):
 
     """
 
-	def __init__(self, applicationSettings: dict[str, Any]) -> None:
+	def __init__(self, applicationSettings: dict[str, Any], askForPassword: bool = False) -> None:
 		""" Constructor for the InsertFrame class. The constructor of the InsertFrame calls the constructor of the base class IFrame
 			and initializes a scrollbar object to None.
 
@@ -46,7 +46,7 @@ class InsertFrame(IFrame):
 
 		"""
 		# Initializing the basic frame
-		super().__init__(applicationSettings)
+		super().__init__(applicationSettings, askForPassword)
 
 		self.record_area_scrollbar = None  # Initialize a temporary variable for the side scrollbar
 
@@ -104,7 +104,7 @@ class InsertFrame(IFrame):
 	def __goToMainMenu(self) -> None:
 		""" Changes the active frame to the Main Menu one. """
 
-		self.app.setActiveFrame(self.app.mainMenuFrame)
+		self.app.tryToSetActiveFrame(self.app.mainMenuFrame)
 
 	def __saveRecord(self) -> None:
 		""" Saves the new person's data the user entered if they are valid of course. The method first gains access to the data of the current database
@@ -113,7 +113,7 @@ class InsertFrame(IFrame):
 			is completed the method a message appears on the screen saying that the insertion was successful. """
 
 		# Checking if the user entered valid inputs in the form
-		if not RecordsManager.validData(self.dataHolderFields):
+		if not RecordsManager.validData(*self.dataHolderFields):
 			# Adding all the placeholders again
 			for dataHolderField in self.dataHolderFields:
 				dataHolderField.addPlaceHolder()

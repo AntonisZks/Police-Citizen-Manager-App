@@ -45,7 +45,7 @@ class SearchFrame(IFrame):
 
     """
 
-    def __init__(self, applicationSettings: dict[str, Any]) -> None:
+    def __init__(self, applicationSettings: dict[str, Any], askForPassword: bool = False) -> None:
         """ Constructor for the SearchFrame class. The constructor of the SearchFrame calls the constructor of the base class IFrame
             and initializes a scrollbar object to None.
 
@@ -55,7 +55,7 @@ class SearchFrame(IFrame):
         """
 
         # Initializing the basic frame
-        super().__init__(applicationSettings)
+        super().__init__(applicationSettings, askForPassword)
 
         self.record_area_scrollbar = None  # Initialize a temporary variable for the side scrollbar
 
@@ -121,7 +121,7 @@ class SearchFrame(IFrame):
     def __goToMainMenu(self):
         """ Changes the active frame to the Main Menu one. """
 
-        self.app.setActiveFrame(self.app.mainMenuFrame)  # Setting the active frame to MainMenuFrame
+        self.app.tryToSetActiveFrame(self.app.mainMenuFrame)  # Setting the active frame to MainMenuFrame
 
     def _buildStructure(self) -> None:
         """ Builds the general structure of the search frame (Search, Insert, Update). """

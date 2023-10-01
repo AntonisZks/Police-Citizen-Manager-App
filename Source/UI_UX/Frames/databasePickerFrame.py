@@ -59,14 +59,14 @@ class DatabasePickerFrame(IFrame):
         __showExcelFileButtonContextMenu(event, button, index): Displays the context menu for a database button.
     """
 
-    def __init__(self, applicationSettings: dict[str, any]) -> None:
+    def __init__(self, applicationSettings: dict[str, any], askForPassword: bool = False) -> None:
         """ Constructor for the DatabasePickerFrame class. Initializes the frame and its structure.
 
         Args:
             applicationSettings (dict[str, any]): Data of the parent widget (main window).
 
         """
-        super().__init__(applicationSettings)
+        super().__init__(applicationSettings, askForPassword)
 
     def _initializeImages(self) -> None:
         """ Initializes images used in the frame. """
@@ -115,12 +115,12 @@ class DatabasePickerFrame(IFrame):
         # Updating the application data in the program and save them in a json file
         self.applicationSettings['app-data']['active-database'] = database_path
         with open(APP_DATA_PATH, 'w', encoding='utf-8') as json_file:
-            json.dump(self.applicationSettings['app-data'], json_file)
+            json.dump(self.applicationSettings['app-data'], json_file, indent=4, separators=(",\n", ": "))
 
     def __gotoMainMenu(self) -> None:
         """ The __gotoMainMenu() method changes the active frame to the Main Menu one. """
 
-        self.app.setActiveFrame(self.app.mainMenuFrame)
+        self.app.tryToSetActiveFrame(self.app.mainMenuFrame)
 
     @staticmethod
     def __openExcelFile(index: int) -> None:
@@ -163,7 +163,7 @@ class DatabasePickerFrame(IFrame):
 
         """
         button_width = round(0.022 * self.applicationSettings['window-width'])
-        newExcelFileButton = tk.Button( parent, text=getFileName(database_path), font=self.body_options['files-font'], width=button_width, command=lambda: f"{self.__setActiveDatabase(database_path)}{self.__gotoMainMenu()}")
+        newExcelFileButton = tk.Button(parent, text=getFileName(database_path), font=self.body_options['files-font'], width=button_width, command=lambda: f"{self.__setActiveDatabase(database_path)}{self.__gotoMainMenu()}")
 
         return newExcelFileButton
 
@@ -199,7 +199,7 @@ class DatabasePickerFrame(IFrame):
             app_data['stored-databases'].append(new_file_path)
 
             with open(APP_DATA_PATH, 'w', encoding='utf-8') as json_file:
-                json.dump(app_data, json_file)
+                json.dump(app_data, json_file, indent=4, separators=(",\n", ": "))
 
         self.__rebuildStructure()
 
@@ -220,7 +220,7 @@ class DatabasePickerFrame(IFrame):
             app_data['stored-databases'].pop(index)
 
             with open(APP_DATA_PATH, 'w', encoding='utf-8') as json_file:
-                json.dump(app_data, json_file)
+                json.dump(app_data, json_file, indent=4, separators=(",\n", ": "))
             self.__rebuildStructure()
 
     def __createExcelFileButtonContextMenu(self) -> None:

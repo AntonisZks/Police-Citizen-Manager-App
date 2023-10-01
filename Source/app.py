@@ -12,6 +12,7 @@ from Source.UI_UX.Frames.mainMenuFrame import MainMenuFrame
 from Source.UI_UX.Frames.searchFrame import SearchFrame
 from Source.UI_UX.Frames.insertFrame import InsertFrame
 from Source.UI_UX.Frames.updateFrame import UpdateFrame
+from passwordWindow import PasswordWindow
 
 
 # The class App stands for the main application
@@ -68,7 +69,7 @@ class App(tk.Tk):
 
         # Set the active frame
         self.active_frame = None
-        self.setActiveFrame(self.databasePickerFrame)
+        self.tryToSetActiveFrame(self.databasePickerFrame)
 
     def __onClosing(self) -> None:
         """ The __onClosing() method is called when the user decides to close the application. When this happens the program is making
@@ -79,7 +80,7 @@ class App(tk.Tk):
 
         # Add the modified application data in the json file
         with open(APP_DATA_PATH, 'w', encoding='utf-8') as json_file:
-            json.dump(self.app_data, json_file)
+            json.dump(self.app_data, json_file, indent=4, separators=(",", ": "))
 
         self.destroy()  # And of course destroy the main window and terminate the application
 
@@ -92,14 +93,23 @@ class App(tk.Tk):
         self.mainMenuFrame = MainMenuFrame(self.options)
         self.searchFrame = SearchFrame(self.options)
         self.insertFrame = InsertFrame(self.options)
-        self.updateFrame = UpdateFrame(self.options)
+        self.updateFrame = UpdateFrame(self.options, askForPassword=True)
 
-    def setActiveFrame(self, frame: IFrame | None) -> None:
+    def tryToSetActiveFrame(self, frame: IFrame | None) -> None:
+        """ The tryToSetActiveFrame() method checks if the given frame needs a password verification and then sets it as an active one in the application.
+
+        Args:
+            frame (Frame): The frame passed in order to be set as active
+
+        """
+        PasswordWindow(self.options, frame) if frame.askForPassword else self.setActiveFrame(frame)
+
+    def setActiveFrame(self, frame: IFrame | None):
         """ The setActiveFrame() method sets the given frame as an active one to the application.
 
         Args:
             frame (Frame): The frame passed in order to be set as active
-        
+
         """
         if self.active_frame is not None:
             self.active_frame.destroy()
