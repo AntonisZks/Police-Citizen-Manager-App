@@ -12,6 +12,7 @@ from Source.UI_UX.Frames.mainMenuFrame import MainMenuFrame
 from Source.UI_UX.Frames.searchFrame import SearchFrame
 from Source.UI_UX.Frames.insertFrame import InsertFrame
 from Source.UI_UX.Frames.updateFrame import UpdateFrame
+from Source.UI_UX.Menus.menuBar import MainApplicationWindowMenuBar
 from passwordWindow import PasswordWindow
 
 
@@ -48,7 +49,7 @@ class App(tk.Tk):
         self.mainMenuFrame = None
         self.databasePickerFrame = None
 
-        self.protocol("WM_DELETE_WINDOW", self.__onClosing)
+        self.protocol("WM_DELETE_WINDOW", self.onClosing)
 
         # Setting the options of the main window
         self.__setWindowIcon()  # Window Icon
@@ -71,7 +72,10 @@ class App(tk.Tk):
         self.active_frame = None
         self.tryToSetActiveFrame(self.databasePickerFrame)
 
-    def __onClosing(self) -> None:
+        # Creating the menu bar
+        self.menuBar = MainApplicationWindowMenuBar(self)
+
+    def onClosing(self) -> None:
         """ The __onClosing() method is called when the user decides to close the application. When this happens the program is making
             sure that the active database of the application is being removed, to not leaving useless data behind. This function
             is responsible for this work. """
