@@ -13,6 +13,7 @@ from Source.UI_UX.Frames.searchFrame import SearchFrame
 from Source.UI_UX.Frames.insertFrame import InsertFrame
 from Source.UI_UX.Frames.updateFrame import UpdateFrame
 from Source.UI_UX.Menus.menuBar import MainApplicationWindowMenuBar
+from Source.UI_UX.changePasswordWindow import ChangePasswordWindow
 from passwordWindow import PasswordWindow
 
 
@@ -106,7 +107,7 @@ class App(tk.Tk):
             frame (Frame): The frame passed in order to be set as active
 
         """
-        PasswordWindow(self.options, frame) if frame.askForPassword else self.setActiveFrame(frame)
+        self.__askForPassword(frame) if frame.askForPassword else self.setActiveFrame(frame)
 
     def setActiveFrame(self, frame: IFrame | None):
         """ The setActiveFrame() method sets the given frame as an active one to the application.
@@ -121,6 +122,16 @@ class App(tk.Tk):
         self.active_frame = frame
         self.active_frame.build()
         self.active_frame.pack()
+
+    def changePassword(self):
+        """ Displays a UX window that alloaws the user to change the password of the application. """
+
+        ChangePasswordWindow(self.options)
+
+    def __askForPassword(self, widget: tk.Widget) -> None:
+        """ Asks the user for the application password. """
+
+        PasswordWindow(self.options, widget)
 
     def __createOptions(self) -> None:
         """ The __createOptions() method creates all the useful options for the application.

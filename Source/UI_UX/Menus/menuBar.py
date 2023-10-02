@@ -21,6 +21,7 @@ class MainApplicationWindowMenuBar(tk.Menu):
 
 	def __createEditSubMenu(self):
 		self.editMenu = tk.Menu(self, tearoff=0)
+		self.editMenu.add_cascade(label="Αλλαγή Κωδικού Πρόσβασης", command=self.parentWidget.changePassword)
 		self.add_cascade(label="Επεξεργασία", menu=self.editMenu)
 
 	def __createHelpSubMenu(self):

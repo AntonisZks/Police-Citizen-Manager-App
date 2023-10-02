@@ -52,6 +52,11 @@ class PasswordEntry:
             self.hideViewButton['image'] = self.viewImage  # Changing the button image
             self.view = True                               # Updating the state
 
+    def focus(self):
+        """ Focuses in the password entry. """
+
+        self.entry.focus()
+
     def getItem(self) -> str:
         """ Returns the current text value of the entry. """
 
@@ -72,8 +77,6 @@ class PasswordEntry:
         self.viewImage = resizeImage(self.viewLogoImage, round(2 * self.font[1]))
         self.hideImage = resizeImage(self.hideLogoImage, round(2 * self.font[1]))
         self.hideViewButton = tk.Button(self.parentWidget, text="", image=self.hideImage, command=self.__changeState)
-
-        self.entry.focus()  # Focuses on the entry
 
         self.entry.grid(row=0, column=0)  # Placing the entry on the left
         self.hideViewButton.grid(row=0, column=1)  # Placing the entry on the right
