@@ -79,7 +79,7 @@ class UpdateFrame(IFrame):
 
         # Setting up the Header Options
         self.header_options = {
-            "title": "ΑΝΑΖΗΤΗΣΗ ΦΑΚΕΛΩΝ ΜΕ:",
+            "title": "ΑΝΑΖΗΤΗΣΗ ΦΑΚΕΛΩΝ\nΓΙΑ ΔΙΟΡΘΩΣΗ ή\nΔΙΑΓΡΑΦΗ ΣΤΟΙΧΕΙΩΝ:",
             "image-path": POLICE_LOGO_PNG_PATH,
             "font": ('Arial', round(0.022 * max(self.applicationSettings['window-width'], self.applicationSettings['window-height'])), 'bold')
         }
@@ -262,6 +262,10 @@ class UpdateFrame(IFrame):
         # Creating the record buttons containing the returned results
         self.resultsRecordsListVisualizer.createRecordButtons(filtered_df, self.body_options['record-button-font'])
 
+        if filtered_df.empty:
+            messagebox.showinfo("Κανένα Αποτέλεσμα", "Δεν βρέθηκε φάκελος με τα συγκεκριμένα δεδομένα")
+            return
+
     def __searchBySurname(self) -> None:
         """ Gains access to the database the user is currently working with, and returns all of its data that their 'surname' field starts with the
             one the user entered inside the 'Search By Surname' input field. The 'surname' field of the results must start with the 'surname' value
@@ -284,6 +288,10 @@ class UpdateFrame(IFrame):
 
         # Creating the record buttons containing the returned results
         self.resultsRecordsListVisualizer.createRecordButtons(filtered_df, self.body_options['record-button-font'])
+
+        if filtered_df.empty:
+            messagebox.showinfo("Κανένα Αποτέλεσμα", "Δεν βρέθηκε φάκελος με τα συγκεκριμένα δεδομένα")
+            return
 
     def _createHeaderFrame(self) -> None:
         """ The _createHeaderFrame() method is used by the __buildStructure() method, and it builds the header frame of the main structure.

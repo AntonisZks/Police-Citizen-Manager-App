@@ -9,6 +9,7 @@ result record. Therefore, the user can navigate threw different result records t
 main menu frame.
 
 """
+from tkinter import messagebox
 
 from Source.UI_UX.Frames.frame import IFrame
 from Source.UI_UX.Other.searchBar import SearchBar
@@ -152,6 +153,10 @@ class SearchFrame(IFrame):
         # Creating the record buttons containing the returned results
         self.resultsRecordsListVisualizer.createRecordButtons(filtered_df, self.body_options['record-button-font'])
 
+        if filtered_df.empty:
+            messagebox.showinfo("Κανένα Αποτέλεσμα", "Δεν βρέθηκε φάκελος με τα συγκεκριμένα δεδομένα")
+            return
+
     def __searchBySurname(self) -> None:
         """ Gains access to the database the user is currently working with, and returns all of its data that their 'surname' field starts with the
             one the user entered inside the 'Search By Surname' input field. The 'surname' field of the results must start with the 'surname' value
@@ -173,6 +178,10 @@ class SearchFrame(IFrame):
 
         # Creating the record buttons containing the returned results
         self.resultsRecordsListVisualizer.createRecordButtons(filtered_df, self.body_options['record-button-font'])
+
+        if filtered_df.empty:
+            messagebox.showinfo("Κανένα Αποτέλεσμα", "Δεν βρέθηκε φάκελος με τα συγκεκριμένα δεδομένα")
+            return
 
     def _createHeaderFrame(self) -> None:
         """ The _createHeaderFrame() method is used by the __buildStructure() method, and it builds the header frame of the main structure.
