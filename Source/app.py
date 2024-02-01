@@ -126,9 +126,12 @@ class App(tk.Tk):
     def changePassword(self):
         """ Displays a UX window that alloaws the user to change the password of the application. """
 
-        ChangePasswordWindow(self.options)
+        changePasswordWindow = ChangePasswordWindow(self.options)  # Create a Change Password Window object
+        changePasswordWindow.withdraw()                            # Make it hidden
 
-    def __askForPassword(self, widget: tk.Widget) -> None:
+        PasswordWindow(self.options, changePasswordWindow)  # Call the password window in order to ask the user for the current password
+
+    def __askForPassword(self, widget: tk.Widget = None) -> None:
         """ Asks the user for the application password. """
 
         PasswordWindow(self.options, widget)

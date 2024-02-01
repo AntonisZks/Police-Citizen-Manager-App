@@ -4,14 +4,15 @@ making sure that not everybody has access to that frame. The window pops up in f
 password. If an incorrect password is being typed then the window closes again, but this time an error message box pops up too, notifying the user about the wrong password.
 
 """
-
+import tkinter
 from tkinter import messagebox
 from Source.Extras.support import *
 from Source.UI_UX.Other.passwordEntry import PasswordEntry
+from UI_UX.changePasswordWindow import ChangePasswordWindow
 
 
 class PasswordWindow(tk.Toplevel):
-	def __init__(self, applicationSettings: dict[str, Any], widgetToOpen: tk.Widget) -> None:
+	def __init__(self, applicationSettings: dict[str, Any], widgetToOpen: tk.Widget | ChangePasswordWindow = None) -> None:
 		""" The constructor of the Password window. The class inherits from the tkinter.Toplevel class to make sure that it is a tkinter window type.
 
 		Args:
@@ -114,8 +115,14 @@ class PasswordWindow(tk.Toplevel):
 
 		# Checking if the entered password is correct
 		if inputPassword == savedPassword:
-			self.destroy()														  # Destroying the password window
-			self.applicationSettings['object'].setActiveFrame(self.widgetToOpen)  # Setting the active frame to be the given widget
+			self.destroy()  # Destroying the password window
+
+			# Check whether the widget to open is either a frame or a change password window
+			if isinstance(self.widgetToOpen, tkinter.Frame):
+				self.applicationSettings['object'].setActiveFrame(self.widgetToOpen)  # Setting the active frame to be the given widget
+			else:
+				self.widgetToOpen.deiconify()				# Make the window visible
+				self.widgetToOpen.newPasswordEntry.focus()  # Focus on the window first entry
 
 		else:
 			messagebox.showerror("Λάθος Κωδικός Πρόσβασης", "Ο κωδικός πρόσβασης που δώσατε είναι λανθασμένος.")  # Pop up a message box saying that the password is incorrect
