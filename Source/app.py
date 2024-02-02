@@ -126,7 +126,7 @@ class App(tk.Tk):
         self.active_frame.pack()
 
     def changePassword(self):
-        """ Displays a UX window that alloaws the user to change the password of the application. """
+        """ Displays a UX window that allows the user to change the password of the application. """
 
         changePasswordWindow = ChangePasswordWindow(self.options)  # Create a Change Password Window object
         changePasswordWindow.withdraw()                            # Make it hidden

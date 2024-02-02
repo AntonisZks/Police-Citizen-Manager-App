@@ -4,6 +4,7 @@ making sure that not everybody has access to that frame. The window pops up in f
 password. If an incorrect password is being typed then the window closes again, but this time an error message box pops up too, notifying the user about the wrong password.
 
 """
+
 import tkinter
 from tkinter import messagebox
 from Source.Extras.support import *

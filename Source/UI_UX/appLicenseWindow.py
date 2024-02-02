@@ -1,4 +1,3 @@
-import tkinter as tk
 from Source.Extras.support import *
 
 
@@ -44,7 +43,7 @@ class AppLicenseWindow(tk.Toplevel):
 
 	def __buildStructure(self) -> None:
 		self.__createHeaderFrame()  # Making the header frame
-		self.__createBodyFrame()    # Making the body frame
+		self.__createBodyFrame()  # Making the body frame
 
 	def __createHeaderFrame(self):
 		self.header = tk.Frame(self.frame, bg=self.applicationSettings['theme-color'])
@@ -53,21 +52,20 @@ class AppLicenseWindow(tk.Toplevel):
 		self.header_image = resizeImage(self.police_logo_image, round(0.10 * self.applicationSettings['window-width']))
 		self.header_label = tk.Label(
 			self.header,
-			text="ΑΔΕΙΑ ΧΡΗΣΗΣ ΕΦΑΡΜΟΓΗΣ", font=('Arial', round(0.03*self.applicationSettings['window-width']), 'bold'),
+			text="ΑΔΕΙΑ ΧΡΗΣΗΣ ΕΦΑΡΜΟΓΗΣ", font=('Arial', round(0.03 * self.applicationSettings['window-width']), 'bold'),
 			bg=self.applicationSettings['theme-color'], fg=self.applicationSettings['label-fg-color'],
 			image=self.header_image, compound=tk.LEFT,
 			padx=round(0.04 * self.applicationSettings['window-width']), pady=round(0.04 * (self.applicationSettings['window-height']))
 		)
 		self.header_label.pack()
 
-
 	def __createBodyFrame(self):
 		self.body = tk.Frame(self.frame, bg=self.applicationSettings['theme-color'])
 		self.body.pack()
 
-		self.description_area = tk.Text(
+		self.license_area = tk.Text(
 			self.body,
-			wrap="word", font=('Arial', round(0.015*self.applicationSettings['window-width'])),
+			wrap="word", font=('Arial', round(0.015 * self.applicationSettings['window-width'])),
 			padx=round(0.04 * self.applicationSettings['window-width']), pady=round(0.04 * (self.applicationSettings['window-height'])),
 			fg="white", bg=self.applicationSettings['theme-color-dark'], borderwidth=0
 		)
@@ -75,5 +73,7 @@ class AppLicenseWindow(tk.Toplevel):
 		with open(APPLICATION_LICENSE_INFO_PATH_, "r", encoding='utf-8') as file:
 			app_description = file.read()
 
-		self.description_area.insert('1.0', app_description)
-		self.description_area.pack(padx=round(0.04 * self.applicationSettings['window-width']), pady=round(0.04 * (self.applicationSettings['window-height'])))
+		self.license_area.insert('1.0', app_description)
+		self.license_area.pack(padx=round(0.04 * self.applicationSettings['window-width']), pady=round(0.04 * (self.applicationSettings['window-height'])))
+
+		self.license_area.config(state=tk.DISABLED)

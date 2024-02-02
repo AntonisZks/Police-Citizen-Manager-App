@@ -156,10 +156,27 @@ def onEntry(event: Any, dataHolderFields: list[DataHolderField]) -> None:
 	"""
 
 	dataHolders = [dataHolderField.dataHolder for dataHolderField in dataHolderFields]  # First extract all the data holders and store them in a list
-	current_index = dataHolders.index(event.widget)										# Take the current field index
-	next_index = (current_index + 1) % len(dataHolders)									# Calculate the index of the next field
-	dataHolders[next_index].focus()														# Focus on the next field
+	current_index = dataHolders.index(event.widget)  # Take the current field index
+	next_index = (current_index + 1) % len(dataHolders)  # Calculate the index of the next field
+	dataHolders[next_index].focus()  # Focus on the next field
 
+
+# Defining a list that contains the columns names of every Excel file the user is going to work on
+COLUMNS_NAMES = [
+	"ΑΡΙΘΜΟΣ ΦΑΚΕΛΟΥ: 1020/",
+	"ΕΠΩΝΥΜΟ:",
+	"ΟΝΟΜΑ:",
+	"ΠΑΤΡΩΝΥΜΟ:",
+	"ΜΗΤΡΩΝΥΜΟ:",
+	"ΗΜΕΡΟΜΗΝΙΑ ΓΕΝΝΗΣΗΣ:",
+	"ΤΟΠΟΣ ΓΕΝΝΗΣΗΣ:",
+	"ΔΙΕΥΘΥΝΣΗ ΚΑΤΟΙΚΙΑΣ:",
+	"ΠΕΡΙΟΧΗ:",
+	"ΤΗΛΕΦΩΝΟ:",
+	"ΕΙΔΟΣ ΕΠΙΧΕΙΡΗΣΗΣ:",
+	"ΠΑΡΑΤΗΡΗΣΕΙΣ:",
+	"ΣΧΟΛΙΑ:"
+]
 
 # Defining all the colors used for the Application
 BACKGROUND_COLOR_1 = "#2A508C"
@@ -185,20 +202,3 @@ APPLICATION_LICENSE_INFO_PATH_ = resourcePath("docs\\license.txt")
 
 # Defining the App Data path
 APP_DATA_PATH = resourcePath('Data/appData.json')
-
-# Defining a list that contains the columns names of every Excel file the user is going to work on
-COLUMNS_NAMES = [
-	"ΑΡΙΘΜΟΣ ΦΑΚΕΛΟΥ: 1020/",
-	"ΕΠΩΝΥΜΟ:",
-	"ΟΝΟΜΑ:",
-	"ΠΑΤΡΩΝΥΜΟ:",
-	"ΜΗΤΡΩΝΥΜΟ:",
-	"ΗΜΕΡΟΜΗΝΙΑ ΓΕΝΝΗΣΗΣ:",
-	"ΤΟΠΟΣ ΓΕΝΝΗΣΗΣ:",
-	"ΔΙΕΥΘΥΝΣΗ ΚΑΤΟΙΚΙΑΣ:",
-	"ΠΕΡΙΟΧΗ:",
-	"ΤΗΛΕΦΩΝΟ:",
-	"ΕΙΔΟΣ ΕΠΙΧΕΙΡΗΣΗΣ:",
-	"ΠΑΡΑΤΗΡΗΣΕΙΣ:",
-	"ΣΧΟΛΙΑ:"
-]
