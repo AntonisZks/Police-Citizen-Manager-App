@@ -26,4 +26,6 @@ class MainApplicationWindowMenuBar(tk.Menu):
 
 	def __createHelpSubMenu(self):
 		self.helpMenu = tk.Menu(self, tearoff=0)
+		self.helpMenu.add_cascade(label="Σχετικά με την Εφαρμογή", command=self.parentWidget.showAppDescription)
+		self.helpMenu.add_cascade(label="Άδεια Χρήσης", command=self.parentWidget.showAppPermission)
 		self.add_cascade(label="Βοήθεια", menu=self.helpMenu)

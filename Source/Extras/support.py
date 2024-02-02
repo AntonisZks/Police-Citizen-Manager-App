@@ -180,6 +180,8 @@ DELETE_PNG_PATH = resourcePath("Assets/Images/delete.png")
 HIDE_PNG_PATH = resourcePath("Assets/Images/hide_password.png")
 VIEW_PNG_PATH = resourcePath("Assets/Images/view_password.png")
 
+APPLICATION_DESCRIPTION_INFO_PATH_ = resourcePath("docs\\app_info.txt")
+APPLICATION_LICENSE_INFO_PATH_ = resourcePath("docs\\license.txt")
 
 # Defining the App Data path
 APP_DATA_PATH = resourcePath('Data/appData.json')

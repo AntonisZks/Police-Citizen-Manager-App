@@ -14,6 +14,8 @@ from Source.UI_UX.Frames.insertFrame import InsertFrame
 from Source.UI_UX.Frames.updateFrame import UpdateFrame
 from Source.UI_UX.Menus.menuBar import MainApplicationWindowMenuBar
 from Source.UI_UX.changePasswordWindow import ChangePasswordWindow
+from Source.UI_UX.appDescriptionWindow import AppDescriptionWindow
+from Source.UI_UX.appLicenseWindow import AppLicenseWindow
 from passwordWindow import PasswordWindow
 
 
@@ -130,6 +132,12 @@ class App(tk.Tk):
         changePasswordWindow.withdraw()                            # Make it hidden
 
         PasswordWindow(self.options, changePasswordWindow)  # Call the password window in order to ask the user for the current password
+
+    def showAppDescription(self):
+        AppDescriptionWindow(self.options)
+
+    def showAppPermission(self):
+        AppLicenseWindow(self.options)
 
     def __askForPassword(self, widget: tk.Widget = None) -> None:
         """ Asks the user for the application password. """
