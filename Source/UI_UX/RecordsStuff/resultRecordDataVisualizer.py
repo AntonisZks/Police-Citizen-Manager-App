@@ -8,7 +8,7 @@ tabs in the notebook are being chosen by the user in the 'recordsManager.py' fil
 import tkinter as tk
 from tkinter import ttk
 from typing import Any
-from Source.UI_UX.RecordsStuff.record import Record
+from UI_UX.RecordsStuff.record import Record
 
 
 class ResultRecordDataVisualizer:

@@ -6,7 +6,7 @@ and a button which is used to execute the search process.
 """
 
 import tkinter as tk
-from Source.Extras.support import *
+from Extras.support import *
 
 
 class SearchBar:

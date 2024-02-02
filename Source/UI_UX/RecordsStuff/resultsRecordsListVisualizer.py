@@ -7,8 +7,8 @@ multiple records at the same time. The way it is implemented is actually by maki
 """
 
 from tkinter import ttk
-from Source.Extras.support import *
-from Source.UI_UX.RecordsStuff.record import Record
+from Extras.support import *
+from UI_UX.RecordsStuff.record import Record
 from typing import Any
 
 

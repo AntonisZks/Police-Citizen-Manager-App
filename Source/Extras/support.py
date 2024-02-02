@@ -10,7 +10,7 @@ import os
 import pandas as pd
 from typing import Any
 
-from Source.UI_UX.RecordsStuff.dataHolderFields import DataHolderField
+from UI_UX.RecordsStuff.dataHolderFields import DataHolderField
 
 
 def resourcePath(relative_path: str) -> str:

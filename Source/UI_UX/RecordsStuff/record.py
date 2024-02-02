@@ -9,8 +9,8 @@ the same frame, but this time it doesn't contain any data. Instead, the frame al
 
 from tkinter import Frame
 
-from Source.Extras.support import *
-from Source.UI_UX.RecordsStuff.dataHolderFields import SmallDataHolderField, BigDataHolderField
+from Extras.support import *
+from UI_UX.RecordsStuff.dataHolderFields import SmallDataHolderField, BigDataHolderField
 
 
 correctInsertion = lambda item: "" if (item is None) or (isinstance(item, float) and math.isnan(item)) else item

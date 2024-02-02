@@ -1,4 +1,4 @@
-from Source.Extras.support import *
+from Extras.support import *
 
 
 class AppDescriptionWindow(tk.Toplevel):

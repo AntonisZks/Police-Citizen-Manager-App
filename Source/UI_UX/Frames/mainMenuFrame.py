@@ -7,8 +7,8 @@ at Any moment and also the option to change it if the want, by navigating back t
 """
 
 import json
-from Source.Extras.support import *
-from Source.UI_UX.Frames.frame import IFrame
+from Extras.support import *
+from UI_UX.Frames.frame import IFrame
 
 
 def createNavigationButton(parent: tk.Widget, text: str, font: tuple, width: int, image: tk.PhotoImage, pad_x: int, pad_y: int, command: callable) -> tk.Button:

@@ -7,9 +7,9 @@ password. If an incorrect password is being typed then the window closes again, 
 
 import tkinter
 from tkinter import messagebox
-from Source.Extras.support import *
-from Source.UI_UX.Other.passwordEntry import PasswordEntry
-from Source.UI_UX.Windows.changePasswordWindow import ChangePasswordWindow
+from Extras.support import *
+from UI_UX.Other.passwordEntry import PasswordEntry
+from UI_UX.Windows.changePasswordWindow import ChangePasswordWindow
 
 
 class PasswordWindow(tk.Toplevel):
