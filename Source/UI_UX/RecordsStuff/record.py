@@ -86,10 +86,17 @@ class Record:
         # Creating the Data Holders
         index = 0
         fieldState = "readonly" if not edit else "normal"
+        data_texts = list(vars(self).values())
         for row in range(6):
             for column in range(2):
                 if not (row == 0 and column == 1):
-                    SmallDataHolderField(primary_data_frame, formSettings, COLUMNS_NAMES[index], list(vars(self).values())[index], fieldState, "", row, column).put()  # Create a small data holder field and put it onto the scene
+                    label_text = COLUMNS_NAMES[index]
+                    data_text = str(data_texts[index])
+
+                    if label_text == "ΤΗΛΕΦΩΝΟ:":
+                        data_text = data_text.replace('.0', '') if '.0' in data_text else data_text
+
+                    SmallDataHolderField(primary_data_frame, formSettings, label_text, data_text, fieldState, "", row, column).put()  # Create a small data holder field and put it onto the scene
                     index += 1
 
         fieldState = "disabled" if not edit else "normal"
