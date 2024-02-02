@@ -2,16 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e4fcf6d7-0f2d-436e-a3f9-4039bae0a477" name="Changes" comment="Added a messagebox when there is no results.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Examples/ΑΡΧΕΙΟ ΑΤ ΗΡΑΚΛΕΙΟΥ.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/Examples/ΑΡΧΕΙΟ ΑΤ ΗΡΑΚΛΕΙΟΥ.xlsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Extras/support.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Extras/support.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Testing/dropDownMenu.py" beforeDir="false" afterPath="$PROJECT_DIR$/Testing/dropDownMenu.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Testing/menu.py" beforeDir="false" afterPath="$PROJECT_DIR$/Testing/menu.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Testing/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/Testing/test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/UI_UX/appDescriptionWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/UI_UX/appDescriptionWindow.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/UI_UX/appLicenseWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/UI_UX/appLicenseWindow.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/UI_UX/appDescriptionWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/UI_UX/Windows/appDescriptionWindow.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/UI_UX/appLicenseWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/UI_UX/Windows/appLicenseWindow.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/UI_UX/changePasswordWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/UI_UX/Windows/changePasswordWindow.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/app_info.txt" beforeDir="false" afterPath="$PROJECT_DIR$/docs/app_info.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/passwordWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/UI_UX/Windows/passwordWindow.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,10 +66,10 @@
       <recent name="C:\Users\Antonis\PycharmProjects\Police-Citizen-manager-App-Version-2-\docs" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Antonis\PycharmProjects\Police-Citizen-manager-App-Version-2-\Source\UI_UX\Windows" />
       <recent name="C:\Users\Antonis\PycharmProjects\Police-Citizen-manager-App-Version-2-" />
       <recent name="C:\Users\Antonis\PycharmProjects\Police-Citizen-manager-App-Version-2-\Source\UI_UX\Windows\Main\Frames" />
       <recent name="C:\Users\Antonis\PycharmProjects\Police-Citizen-manager-App-Version-2-\Source\UI_UX\Windows\OtherWindows" />
-      <recent name="C:\Users\Antonis\PycharmProjects\Police-Citizen-manager-App-Version-2-\Source\UI_UX\Windows" />
       <recent name="C:\Users\Antonis\PycharmProjects\Police-Citizen-manager-App-Version-2-\Source" />
     </key>
   </component>

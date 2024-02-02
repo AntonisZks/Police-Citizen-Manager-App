@@ -13,10 +13,10 @@ from Source.UI_UX.Frames.searchFrame import SearchFrame
 from Source.UI_UX.Frames.insertFrame import InsertFrame
 from Source.UI_UX.Frames.updateFrame import UpdateFrame
 from Source.UI_UX.Menus.menuBar import MainApplicationWindowMenuBar
-from Source.UI_UX.changePasswordWindow import ChangePasswordWindow
-from Source.UI_UX.appDescriptionWindow import AppDescriptionWindow
-from Source.UI_UX.appLicenseWindow import AppLicenseWindow
-from passwordWindow import PasswordWindow
+from Source.UI_UX.Windows.changePasswordWindow import ChangePasswordWindow
+from Source.UI_UX.Windows.appDescriptionWindow import AppDescriptionWindow
+from Source.UI_UX.Windows.appLicenseWindow import AppLicenseWindow
+from Source.UI_UX.Windows.passwordWindow import PasswordWindow
 
 
 # The class App stands for the main application

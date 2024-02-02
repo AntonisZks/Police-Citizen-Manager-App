@@ -9,7 +9,7 @@ import tkinter
 from tkinter import messagebox
 from Source.Extras.support import *
 from Source.UI_UX.Other.passwordEntry import PasswordEntry
-from UI_UX.changePasswordWindow import ChangePasswordWindow
+from Source.UI_UX.Windows.changePasswordWindow import ChangePasswordWindow
 
 
 class PasswordWindow(tk.Toplevel):
