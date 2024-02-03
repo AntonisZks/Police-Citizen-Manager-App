@@ -162,7 +162,7 @@ class DatabasePickerFrame(IFrame):
             Button: The final button ready to be used
 
         """
-        button_width = round(0.022 * self.applicationSettings['window-width'])
+        button_width = round(21.3*(self.applicationSettings['window-height']/self.applicationSettings['window-height']))
         newExcelFileButton = tk.Button(parent, text=getFileName(database_path), font=self.body_options['files-font'], width=button_width, command=lambda: f"{self.__setActiveDatabase(database_path)}{self.__gotoMainMenu()}")
 
         return newExcelFileButton

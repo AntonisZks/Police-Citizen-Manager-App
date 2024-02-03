@@ -160,7 +160,7 @@ class ResultsRecordsListVisualizer:
 
         # Creating the label
         self.no_records_message = tk.Label(self.frame, text=self.no_records_message_options['text'], font=self.no_records_message_options['font'], bg=self.no_records_message_options['bg'], fg=self.no_records_message_options['fg'])
-        self.no_records_message.pack(pady=round(0.26 * self.app_data['window-height']))  # Packing the label onto the screen
+        self.no_records_message.pack(pady=round(0.20 * self.app_data['window-height']))  # Packing the label onto the screen
 
     def createScrollBar(self):
         """ Creates a side scrollbar in order to let the user navigate through all the returned result record buttons in the list. """

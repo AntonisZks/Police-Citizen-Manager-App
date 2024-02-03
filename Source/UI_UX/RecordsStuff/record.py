@@ -65,15 +65,15 @@ class Record:
         # Initialize some settings of the form inside the frame
         formSettings = {
             "info-padx": round(0.01 * applicationSettings['window-width']),
-            "info-pady": round(0.005 * applicationSettings['window-height']),
+            "info-pady": round((applicationSettings['window-width']/applicationSettings['window-height'])),
             "label-font": ('Arial', round(0.010 * applicationSettings['window-width'])),
             "fg": "white",
             "bg": applicationSettings['theme-color-dark'],
-            "entry-font": ('Arial', round(0.015 * applicationSettings['window-width'])),
+            "entry-font": ('Arial', round(0.014*(applicationSettings['window-width']))),
             "text-area-font": ('Arial', round(0.015 * applicationSettings['window-width'])),
             "entry-border-width": round(0.005 * applicationSettings['window-width']),
             "text-area-border-width": round(0.005 * applicationSettings['window-width']),
-            'big-info-width': round(0.041 * applicationSettings['window-width']),
+            'big-info-width': round(52.5*(applicationSettings['window-width']/applicationSettings['window-height'])),
             'big-info-height': round(0.006 * applicationSettings['window-width'])
         }
 
@@ -125,19 +125,21 @@ class Record:
 
         # Initialize some settings of the form inside the frame
         options = {
-            "info-padx": round(0.02 * applicationSettings['window-width']), "info-pady": round(0.005 * applicationSettings['window-height']),
-            "label-font": ('Arial', round(0.015 * applicationSettings['window-width'])),
+            "info-padx": round(0.02 * applicationSettings['window-width']), 
+            "info-pady": round(0.000 * applicationSettings['window-height']),
+            "label-font": ('Arial', round(0.010 * applicationSettings['window-width'])),
             "fg": "white", "bg": applicationSettings['theme-color-dark'],
             "entry-font": ('Arial', round(0.018 * applicationSettings['window-width'])), "text-area-font": ('Arial', round(0.013 * applicationSettings['window-width'])),
             "entry-border-width": round(0.005 * applicationSettings['window-width']), "text-area-border-width": round(0.005 * applicationSettings['window-width']),
-            'big-info-width': round(0.066 * applicationSettings['window-width']), 'big-info-height': round(0.005 * applicationSettings['window-width'])
+            'big-info-width': round(75*(applicationSettings['window-width']/applicationSettings['window-height'])), 
+            'big-info-height': round(0.005 * applicationSettings['window-width'])
         }
 
         # Creating the two general frames that will hold the Data Holders (primary_data_frame, secondary_data_frame)
         primary_data_frame = tk.Frame(frame, background=options['bg'], pady=round(0.01 * applicationSettings['window-height']))
         primary_data_frame.pack()
 
-        secondary_data_frame = tk.Frame(frame, background=options['bg'])
+        secondary_data_frame = tk.Frame(frame, background=options['bg'], pady=round(0.03 * applicationSettings['window-height']))
         secondary_data_frame.pack()
 
         # Creating the Data Holders

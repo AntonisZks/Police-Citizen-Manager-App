@@ -101,7 +101,7 @@ class RecordsManager:
 
 		data[5].removePlaceHolder()
 		if data[5].dataHolder.get() != "" and not re.match(datePattern, data[5].dataHolder.get()):
-			messagebox.showerror("Μη Έγκυρη Ημερομηνία", f"Το πεδίο 'Ημερομηνία Γέννησης' ωφείλει να ικανοποιεί το πρότυπο DD/MM/YY. Η τιμή '{data[5].dataHolder.get()}' δεν το ικανοποιεί. Το πεδίο μπορεί να είναι κενό")
+			messagebox.showerror("Μη Έγκυρη Ημερομηνία", f"Το πεδίο 'Ημερομηνία Γέννησης' ωφείλει να ικανοποιεί το πρότυπο DD/MM/YYYY. Η τιμή '{data[5].dataHolder.get()}' δεν το ικανοποιεί. Το πεδίο μπορεί να είναι κενό")
 			data[5].dataHolder.focus()
 			return False
 
@@ -135,7 +135,7 @@ class RecordsManager:
 		datePattern = r'\b\d{2}/\d{2}/\d{4}\b'
 
 		if data[5] != "" and not re.match(datePattern, data[5]):
-			messagebox.showerror("Μη Έγκυρη Ημερομηνία", f"Το πεδίο 'Ημερομηνία Γέννησης' ωφείλει να ικανοποιεί το πρότυπο DD/MM/YY. Η τιμή '{data[5]}' δεν το ικανοποιεί. Το πεδίο μπορεί να είναι κενό")
+			messagebox.showerror("Μη Έγκυρη Ημερομηνία", f"Το πεδίο 'Ημερομηνία Γέννησης' ωφείλει να ικανοποιεί το πρότυπο DD/MM/YYYY. Η τιμή '{data[5]}' δεν το ικανοποιεί. Το πεδίο μπορεί να είναι κενό")
 			return False
 
 		# Checking if the given phone number is valid

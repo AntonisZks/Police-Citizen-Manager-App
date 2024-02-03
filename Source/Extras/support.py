@@ -27,7 +27,7 @@ def resourcePath(relative_path: str) -> str:
 	try:
 		base_path = sys._MEIPASS2
 	except Exception:
-		base_path = os.path.abspath("..")
+		base_path = os.path.abspath(".")
 
 	return os.path.join(base_path, relative_path)
 
@@ -185,20 +185,20 @@ BACKGROUND_COLOR_3 = "#0D2750"
 BACKGROUND_COLOR_4 = "#3399FF"
 
 # Defining all the images used for the Application
-POLICE_LOGO_PNG_PATH = resourcePath("Police-Citizen-manager-App-Version-2\\Assets\\Images\\greek_police_logo.png")
-ADD_PNG_PATH = resourcePath("Police-Citizen-manager-App-Version-2\\Assets\\Images\\add.png")
-CHANGE_PNG_PATH = resourcePath("Police-Citizen-manager-App-Version-2\\Assets\\Images\\change.png")
-SEARCH_PNG_PATH = resourcePath("Police-Citizen-manager-App-Version-2\\Assets\\Images\\search.png")
-INSERT_PNG_PATH = resourcePath("Police-Citizen-manager-App-Version-2\\Assets\\Images\\insert.png")
-UPDATE_PNG_PATH = resourcePath("Police-Citizen-manager-App-Version-2\\Assets\\Images\\update.png")
-RETURN_PNG_PATH = resourcePath("Police-Citizen-manager-App-Version-2\\Assets\\Images\\back_arrow.png")
-SAVE_PNG_PATH = resourcePath("Police-Citizen-manager-App-Version-2\\Assets\\Images\\save.png")
-DELETE_PNG_PATH = resourcePath("Police-Citizen-manager-App-Version-2\\Assets\\Images\\delete.png")
-HIDE_PNG_PATH = resourcePath("Police-Citizen-manager-App-Version-2\\Assets\\Images\\hide_password.png")
-VIEW_PNG_PATH = resourcePath("Police-Citizen-manager-App-Version-2\\Assets\\Images\\view_password.png")
+POLICE_LOGO_PNG_PATH = resourcePath("Assets\\Images\\greek_police_logo.png")
+ADD_PNG_PATH = resourcePath("Assets\\Images\\add.png")
+CHANGE_PNG_PATH = resourcePath("Assets\\Images\\change.png")
+SEARCH_PNG_PATH = resourcePath("Assets\\Images\\search.png")
+INSERT_PNG_PATH = resourcePath("Assets\\Images\\insert.png")
+UPDATE_PNG_PATH = resourcePath("Assets\\Images\\update.png")
+RETURN_PNG_PATH = resourcePath("Assets\\Images\\back_arrow.png")
+SAVE_PNG_PATH = resourcePath("Assets\\Images\\save.png")
+DELETE_PNG_PATH = resourcePath("Assets\\Images\\delete.png")
+HIDE_PNG_PATH = resourcePath("Assets\\Images\\hide_password.png")
+VIEW_PNG_PATH = resourcePath("Assets\\Images\\view_password.png")
 
-APPLICATION_DESCRIPTION_INFO_PATH_ = resourcePath("Police-Citizen-manager-App-Version-2\\docs\\app_info.txt")
-APPLICATION_LICENSE_INFO_PATH_ = resourcePath("Police-Citizen-manager-App-Version-2\\docs\\license.txt")
+APPLICATION_DESCRIPTION_INFO_PATH_ = resourcePath("docs\\app_info.txt")
+APPLICATION_LICENSE_INFO_PATH_ = resourcePath("docs\\license.txt")
 
 # Defining the App Data path
-APP_DATA_PATH = resourcePath('Police-Citizen-manager-App-Version-2\\Data\\appData.json')
+APP_DATA_PATH = resourcePath('Data\\appData.json')

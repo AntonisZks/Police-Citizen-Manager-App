@@ -75,7 +75,7 @@ class InsertFrame(IFrame):
 		# Setting up the Body Options
 		self.body_options = {
 			"empty-form-padx": round(0.04 * self.applicationSettings['window-width']),
-			"empty-form-pady": round(0.04 * self.applicationSettings['window-height']),
+			"empty-form-pady": 0,
 			"title": "Σ Υ Μ Π Λ Η Ρ Ω Σ Η   Φ Ο Ρ Μ Α Σ",
 			"title-font": ('Arial', round(0.022 * max(self.applicationSettings['window-width'], self.applicationSettings['window-height'])), 'bold', 'italic', 'underline'),
 			"title-pady": round(0.02 * self.applicationSettings['window-height'])

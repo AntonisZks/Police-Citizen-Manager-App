@@ -119,7 +119,7 @@ class ChangePasswordWindow(tk.Toplevel):
 		self.confirmPasswordEntry = PasswordEntry(
 			self.confirmPasswordFrame,
 			self.applicationSettings,
-			round(0.02 * self.applicationSettings['window-width']),
+			round(30 * (self.applicationSettings['window-width']/self.applicationSettings['window-height'])),
 			round(0.01 * self.applicationSettings['window-width']),
 			('Arial', round(0.03 * self.applicationSettings['window-width'])),
 			self.updatePassword
@@ -129,7 +129,7 @@ class ChangePasswordWindow(tk.Toplevel):
 		self.newPasswordEntry = PasswordEntry(
 			self.newPasswordFrame,
 			self.applicationSettings,
-			round(0.02 * self.applicationSettings['window-width']),
+			round(30 * (self.applicationSettings['window-width']/self.applicationSettings['window-height'])),
 			round(0.01 * self.applicationSettings['window-width']),
 			('Arial', round(0.03 * self.applicationSettings['window-width'])),
 			self.confirmPasswordEntry.focus

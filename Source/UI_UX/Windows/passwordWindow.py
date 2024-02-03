@@ -96,7 +96,7 @@ class PasswordWindow(tk.Toplevel):
 		self.body.pack()															  # Packing the main frame
 
 		# Creating a password entry object
-		self.passwordEntry = PasswordEntry(self.body, self.applicationSettings, round(0.02 * self.applicationSettings['window-width']), round(0.01 * self.applicationSettings['window-width']), ('Arial', round(0.03 * self.applicationSettings['window-width'])), self.check)
+		self.passwordEntry = PasswordEntry(self.body, self.applicationSettings, round(30*(self.applicationSettings['window-width']/self.applicationSettings['window-height'])), round(0.01 * self.applicationSettings['window-width']), ('Arial', round(0.03 * self.applicationSettings['window-width'])), self.check)
 		self.passwordEntry.build()  # Building the password entry object
 		self.passwordEntry.focus()  # Focus in the password entry
 
