@@ -9,10 +9,10 @@ so as the user enters the data inside it. All the previous are implemented with 
 """
 
 from tkinter import messagebox
-from UI_UX.Frames.frame import IFrame
-from Extras.support import *
-from UI_UX.RecordsStuff.record import Record
-from UI_UX.RecordsStuff.recordsManager import RecordsManager
+from Source.UI_UX.Frames.frame import IFrame
+from Source.Extras.support import *
+from Source.UI_UX.RecordsStuff.record import Record
+from Source.UI_UX.RecordsStuff.recordsManager import RecordsManager
 
 
 class InsertFrame(IFrame):

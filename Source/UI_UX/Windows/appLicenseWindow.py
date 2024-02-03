@@ -1,4 +1,4 @@
-from Extras.support import *
+from Source.Extras.support import *
 
 
 class AppLicenseWindow(tk.Toplevel):

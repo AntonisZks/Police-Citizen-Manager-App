@@ -9,8 +9,8 @@ the same frame, but this time it doesn't contain any data. Instead, the frame al
 
 from tkinter import Frame
 
-from Extras.support import *
-from UI_UX.RecordsStuff.dataHolderFields import SmallDataHolderField, BigDataHolderField
+from Source.Extras.support import *
+from Source.UI_UX.RecordsStuff.dataHolderFields import SmallDataHolderField, BigDataHolderField
 from typing import Union
 
 

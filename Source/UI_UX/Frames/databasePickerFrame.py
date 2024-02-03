@@ -10,8 +10,8 @@ right-clicking on it.
 
 import json
 from tkinter import ttk, filedialog, messagebox
-from UI_UX.Frames.frame import IFrame
-from Extras.support import *
+from Source.UI_UX.Frames.frame import IFrame
+from Source.Extras.support import *
 
 
 class DatabasePickerFrame(IFrame):

@@ -6,18 +6,18 @@ the program starts from. In order to start the application we create an App obje
 
 import json
 from typing import Union
-from Extras.support import *
-from UI_UX.Frames.frame import IFrame
-from UI_UX.Frames.databasePickerFrame import DatabasePickerFrame
-from UI_UX.Frames.mainMenuFrame import MainMenuFrame
-from UI_UX.Frames.searchFrame import SearchFrame
-from UI_UX.Frames.insertFrame import InsertFrame
-from UI_UX.Frames.updateFrame import UpdateFrame
-from UI_UX.Menus.menuBar import MainApplicationWindowMenuBar
-from UI_UX.Windows.changePasswordWindow import ChangePasswordWindow
-from UI_UX.Windows.appDescriptionWindow import AppDescriptionWindow
-from UI_UX.Windows.appLicenseWindow import AppLicenseWindow
-from UI_UX.Windows.passwordWindow import PasswordWindow
+from Source.Extras.support import *
+from Source.UI_UX.Frames.frame import IFrame
+from Source.UI_UX.Frames.databasePickerFrame import DatabasePickerFrame
+from Source.UI_UX.Frames.mainMenuFrame import MainMenuFrame
+from Source.UI_UX.Frames.searchFrame import SearchFrame
+from Source.UI_UX.Frames.insertFrame import InsertFrame
+from Source.UI_UX.Frames.updateFrame import UpdateFrame
+from Source.UI_UX.Menus.menuBar import MainApplicationWindowMenuBar
+from Source.UI_UX.Windows.changePasswordWindow import ChangePasswordWindow
+from Source.UI_UX.Windows.appDescriptionWindow import AppDescriptionWindow
+from Source.UI_UX.Windows.appLicenseWindow import AppLicenseWindow
+from Source.UI_UX.Windows.passwordWindow import PasswordWindow
 
 
 # The class App stands for the main application
@@ -198,8 +198,3 @@ class App(tk.Tk):
             of the window object. """
 
         self.mainloop()
-
-
-if __name__ == '__main__':
-    myApp = App()  # Create an App object
-    myApp.run()    # Call the run() method of the App object to start the application

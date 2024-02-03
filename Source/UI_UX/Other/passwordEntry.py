@@ -4,7 +4,7 @@ this time the user is typing a password inside it, and they have the option to k
 
 """
 
-from Extras.support import *
+from Source.Extras.support import *
 
 
 class PasswordEntry:

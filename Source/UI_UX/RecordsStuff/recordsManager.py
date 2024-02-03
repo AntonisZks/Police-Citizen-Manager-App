@@ -9,7 +9,7 @@ import pandas as pd
 from tkinter import messagebox
 from typing import Any, Union
 from functools import singledispatchmethod
-from UI_UX.RecordsStuff.dataHolderFields import SmallDataHolderField, BigDataHolderField
+from Source.UI_UX.RecordsStuff.dataHolderFields import SmallDataHolderField, BigDataHolderField
 
 
 class RecordsManager:

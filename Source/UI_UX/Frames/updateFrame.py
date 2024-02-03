@@ -11,12 +11,12 @@ main menu frame.
 """
 from tkinter import messagebox
 
-from UI_UX.Frames.frame import IFrame
-from UI_UX.Other.searchBar import SearchBar
-from Extras.support import *
-from UI_UX.RecordsStuff.recordsManager import RecordsManager
-from UI_UX.RecordsStuff.resultsRecordsListVisualizer import ResultsRecordsListVisualizer
-from UI_UX.RecordsStuff.resultsRecordsDataEditor import ResultsRecordsDataEditor
+from Source.UI_UX.Frames.frame import IFrame
+from Source.UI_UX.Other.searchBar import SearchBar
+from Source.Extras.support import *
+from Source.UI_UX.RecordsStuff.recordsManager import RecordsManager
+from Source.UI_UX.RecordsStuff.resultsRecordsListVisualizer import ResultsRecordsListVisualizer
+from Source.UI_UX.RecordsStuff.resultsRecordsDataEditor import ResultsRecordsDataEditor
 
 
 class UpdateFrame(IFrame):
