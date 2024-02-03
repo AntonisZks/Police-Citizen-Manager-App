@@ -7,13 +7,14 @@ password. If an incorrect password is being typed then the window closes again, 
 
 import tkinter
 from tkinter import messagebox
+from typing import Union
 from Extras.support import *
 from UI_UX.Other.passwordEntry import PasswordEntry
 from UI_UX.Windows.changePasswordWindow import ChangePasswordWindow
 
 
 class PasswordWindow(tk.Toplevel):
-	def __init__(self, applicationSettings: dict[str, Any], widgetToOpen: tk.Widget | ChangePasswordWindow = None) -> None:
+	def __init__(self, applicationSettings: dict[str, Any], widgetToOpen: Union[tk.Widget, ChangePasswordWindow] = None) -> None:
 		""" The constructor of the Password window. The class inherits from the tkinter.Toplevel class to make sure that it is a tkinter window type.
 
 		Args:

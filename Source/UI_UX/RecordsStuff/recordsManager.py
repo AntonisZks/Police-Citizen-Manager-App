@@ -7,7 +7,7 @@ check for records' validation or even delete records from databases. All these i
 import re
 import pandas as pd
 from tkinter import messagebox
-from typing import Any
+from typing import Any, Union
 from functools import singledispatchmethod
 from UI_UX.RecordsStuff.dataHolderFields import SmallDataHolderField, BigDataHolderField
 
@@ -24,7 +24,7 @@ class RecordsManager:
 		return data_df
 
 	@staticmethod
-	def saveRecordToDatabase(record: list[str | Any], database: str) -> None:
+	def saveRecordToDatabase(record: list[Union[str, Any]], database: str) -> None:
 		"""	Saves one record into the given database. """
 
 		data_df = pd.read_excel(database)   # Getting the data from the given database
@@ -34,7 +34,7 @@ class RecordsManager:
 		data_df.to_excel(database, index=False)
 
 	@staticmethod
-	def saveRecordsToDatabase(records: list[list[str | Any]], database: str) -> None:
+	def saveRecordsToDatabase(records: list[list[Union[str, Any]]], database: str) -> None:
 		""" Saves several records into the given database. """
 
 		data_df = pd.read_excel(database)  # Getting the data from the given database
@@ -47,7 +47,7 @@ class RecordsManager:
 		data_df.to_excel(database, index=False)
 
 	@staticmethod
-	def updateDataInDatabase(records: list[list[str | Any]], recordsIndexes: list[int], database: str) -> None:
+	def updateDataInDatabase(records: list[list[Union[str, Any]]], recordsIndexes: list[int], database: str) -> None:
 		""" Updates the given data into the given database. """
 
 		database_df = pd.read_excel(database)  # Getting the data from the given database
@@ -80,7 +80,7 @@ class RecordsManager:
 		raise NotImplementedError(f"{type(data)} is not supported as a type of argument in validData().")
 
 	@staticmethod
-	def validData(*data: SmallDataHolderField | BigDataHolderField) -> bool:
+	def validData(*data: Union[SmallDataHolderField, BigDataHolderField]) -> bool:
 		""" Checks if the given data are valid according to the application record's data prototypes. """
 
 		# Checking if the folderID and surname fields are filled

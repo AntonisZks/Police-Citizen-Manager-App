@@ -11,6 +11,7 @@ from tkinter import Frame
 
 from Extras.support import *
 from UI_UX.RecordsStuff.dataHolderFields import SmallDataHolderField, BigDataHolderField
+from typing import Union
 
 
 correctInsertion = lambda item: "" if (item is None) or (isinstance(item, float) and math.isnan(item)) else item
@@ -106,7 +107,7 @@ class Record:
         return frame
 
     @staticmethod
-    def createEmptyDataFrame(parent_widget: tk.Widget, applicationSettings: dict[str, Any]) -> tuple[Frame, list[SmallDataHolderField | BigDataHolderField]]:
+    def createEmptyDataFrame(parent_widget: tk.Widget, applicationSettings: dict[str, Any]) -> tuple[Frame, list[Union[SmallDataHolderField, BigDataHolderField]]]:
         """ Creates an empty form ready to be filled by the user.
 
         Args:

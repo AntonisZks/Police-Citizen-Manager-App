@@ -5,6 +5,7 @@ the program starts from. In order to start the application we create an App obje
 """
 
 import json
+from typing import Union
 from Extras.support import *
 from UI_UX.Frames.frame import IFrame
 from UI_UX.Frames.databasePickerFrame import DatabasePickerFrame
@@ -102,7 +103,7 @@ class App(tk.Tk):
         self.insertFrame = InsertFrame(self.options)
         self.updateFrame = UpdateFrame(self.options, askForPassword=True)
 
-    def tryToSetActiveFrame(self, frame: IFrame | None) -> None:
+    def tryToSetActiveFrame(self, frame: Union[IFrame, None]) -> None:
         """ The tryToSetActiveFrame() method checks if the given frame needs a password verification and then sets it as an active one in the application.
 
         Args:
@@ -111,7 +112,7 @@ class App(tk.Tk):
         """
         self.__askForPassword(frame) if frame.askForPassword else self.setActiveFrame(frame)
 
-    def setActiveFrame(self, frame: IFrame | None):
+    def setActiveFrame(self, frame: Union[IFrame, None]):
         """ The setActiveFrame() method sets the given frame as an active one to the application.
 
         Args:
